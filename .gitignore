@@ -1,0 +1,21 @@
+# Unity generated files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# IDE-generated files
+.vs/
+.idea/
+*.csproj
+*.sln
+*.user
+*.suo
+
+# Large files intentionally excluded from this repository
+/Assets/dbeaver-ce-26.2.2-windows-x86_64.exe
+/Assets/dbeaver-ce-26.2.2-windows-x86_64.exe.meta
+/Assets/Roger+FBX/Roger.Fbx
