@@ -205,6 +205,6 @@ git clone https://github.com/<usuario>/<repositorio>.git
 - [ ] Pruebas con usuarios y ajustes
 
 
-## ✍️ Autoría
+## Autoría
 
 Proyecto académico desarrollado por **María Victoria Arteaga Revelo** y **Karol Isabella Cabrera Pantoja**, estudiantes de Ingeniería de Software, Universidad Cooperativa de Colombia, Campus Pasto.
