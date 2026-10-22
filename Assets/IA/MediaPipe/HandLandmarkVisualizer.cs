@@ -83,6 +83,18 @@ namespace Senas.AI.MediaPipe
         );
       }
 
+      var handCount = _latestFrame != null && _latestFrame.Hands != null
+        ? _latestFrame.Hands.Count
+        : -1;
+      var status = handCount < 0
+        ? "Esperando resultados de MediaPipe..."
+        : $"Manos detectadas: {handCount}";
+      var statusRect = new Rect(12f, 12f, 280f, 32f);
+      GUI.color = new Color(0f, 0f, 0f, 0.7f);
+      GUI.DrawTexture(statusRect, _pixel);
+      GUI.color = Color.white;
+      GUI.Label(new Rect(20f, 16f, 264f, 24f), status);
+
       if (_latestFrame == null || _latestFrame.Hands == null)
       {
         GUI.color = Color.white;
