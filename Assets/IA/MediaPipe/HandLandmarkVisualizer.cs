@@ -71,8 +71,21 @@ namespace Senas.AI.MediaPipe
 
     private void OnGUI()
     {
+      var cameraTexture = _capture != null ? _capture.CameraTexture : null;
+      if (cameraTexture != null && cameraTexture.isPlaying)
+      {
+        GUI.color = Color.white;
+        GUI.DrawTexture(
+          new Rect(0f, 0f, Screen.width, Screen.height),
+          cameraTexture,
+          ScaleMode.StretchToFill,
+          false
+        );
+      }
+
       if (_latestFrame == null || _latestFrame.Hands == null)
       {
+        GUI.color = Color.white;
         return;
       }
 

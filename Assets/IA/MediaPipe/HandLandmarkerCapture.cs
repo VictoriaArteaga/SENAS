@@ -31,6 +31,11 @@ namespace Senas.AI.MediaPipe
     /// </summary>
     public event Action<HandLandmarkFrame> LandmarksUpdated;
 
+    /// <summary>
+    /// Textura de webcam usada para inferencia y vista previa opcional.
+    /// </summary>
+    public WebCamTexture CameraTexture => _webCamTexture;
+
     private WebCamTexture _webCamTexture;
     private HandLandmarker _handLandmarker;
     private TextureFramePool _textureFramePool;
