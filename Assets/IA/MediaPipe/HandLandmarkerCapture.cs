@@ -106,6 +106,7 @@ namespace Senas.AI.MediaPipe
 
         textureFrame.ReadTextureOnCPU(_webCamTexture, flipHorizontally: false, flipVertically: _webCamTexture.videoVerticallyMirrored);
         var image = textureFrame.BuildCPUImage();
+        textureFrame.Release();
         var imageProcessingOptions = new ImageProcessingOptions(rotationDegrees: _webCamTexture.videoRotationAngle);
         _handLandmarker.DetectAsync(image, GetNextTimestampMilliseconds(), imageProcessingOptions);
       }
