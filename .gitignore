@@ -6,6 +6,17 @@
 [Uu]ser[Ss]ettings/
 [Mm]emoryCaptures/
 [Rr]ecordings/
+/[Bb]uild/
+/[Bb]uilds/
+/[Mm]emoryCaptures/
+
+# Asset packages & heavy archives (Ignorar paquetes de Unity y ejecutables en todo el proyecto)
+*.unitypackage
+*.exe
+*.zip
+*.rar
+*.tar
+*.gz
 
 # IDE-generated files
 .vs/
