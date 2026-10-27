@@ -999,7 +999,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ClothingItem: {fileID: 11400000, guid: f761cce5e0ead104a8335c9317b6e2a9, type: 2}
-  VariationIndex: 0
+  VariationIndex: 1
   IsEquipped: 1
 --- !u!33 &849016776256660160
 MeshFilter:
@@ -1032,7 +1032,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5c8ad7b9e9759914096a2f657911809e, type: 2}
+  - {fileID: 2100000, guid: ce6e5474a64399042b31a58d6a1735c4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1239,13 +1239,13 @@ MonoBehaviour:
   ClothingItemHat: {fileID: 11400000, guid: 0eb399b7aa290fb458f815b313897a21, type: 2}
   ClothingItemHatVariationIndex: 0
   ClothingItemTop: {fileID: 11400000, guid: f761cce5e0ead104a8335c9317b6e2a9, type: 2}
-  ClothingItemTopVariationIndex: 0
+  ClothingItemTopVariationIndex: 1
   ClothingItemBottom: {fileID: 11400000, guid: 52453fb03e83d554b96fc0ef43e4904e, type: 2}
   ClothingItemBottomVariationIndex: 0
   ClothingItemGlasses: {fileID: 11400000, guid: 636aff77b4b75954a9d9642e51412c5d, type: 2}
   ClothingItemGlassesVariationIndex: 0
   ClothingItemShoes: {fileID: 11400000, guid: bd0a4384161c5654cbda693888a17df3, type: 2}
-  ClothingItemShoesVariationIndex: 1
+  ClothingItemShoesVariationIndex: 0
   BlinkingInterval: 1.98
   BlinkSpeed: 0.8
   ExpressionChangeSpeed: 5
@@ -3584,7 +3584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ClothingItem: {fileID: 11400000, guid: bd0a4384161c5654cbda693888a17df3, type: 2}
-  VariationIndex: 1
+  VariationIndex: 0
   IsEquipped: 1
 --- !u!33 &8951116649633240666
 MeshFilter:
@@ -3617,7 +3617,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e7bb814508f7b7549b9cd83f829c6c35, type: 2}
+  - {fileID: 2100000, guid: 763db61b4cbf4684e92a5e50c8df907c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
