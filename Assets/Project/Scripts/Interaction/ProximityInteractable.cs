@@ -20,9 +20,13 @@ namespace Lumina.Interaction
         public UnityEvent onInteract;
 
         private Transform _player;
+        private bool _promptSuppressed;
 
         public bool PlayerInRange { get; private set; }
         public Transform Player => _player;
+
+        /// <summary>Oculta el aviso de interacción mientras otro sistema (p. ej. un diálogo) ya está en uso.</summary>
+        public void SetPromptSuppressed(bool suppressed) => _promptSuppressed = suppressed;
 
         private void Start()
         {
@@ -51,7 +55,7 @@ namespace Lumina.Interaction
 
         private void OnGUI()
         {
-            if (!showPrompt || !PlayerInRange) return;
+            if (!showPrompt || _promptSuppressed || !PlayerInRange) return;
 
             var style = new GUIStyle(GUI.skin.label)
             {
