@@ -2,13 +2,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Lumina.UI
 {
     /// <summary>
-    /// Conecta los botones del menú principal. Solo gestiona avisos informativos y la salida de la
-    /// aplicación; la navegación entre escenas y los datos de usuario quedan para fases posteriores.
+    /// Conecta los botones del menú principal. Gestiona la carga del mundo, los avisos informativos y la
+    /// salida de la aplicación; los datos de usuario quedan para fases posteriores.
     /// </summary>
     public class MainMenuController : MonoBehaviour
     {
@@ -25,7 +26,7 @@ namespace Lumina.UI
         [SerializeField] private TMP_Text noticeBody;
         [SerializeField] private Button noticeCloseButton;
 
-        [Header("Preparado para la fase siguiente")]
+        [Header("Navegación")]
         [SerializeField] private string worldSceneName = "LuminaWorld";
 
         private Selectable _returnSelection;
@@ -56,8 +57,19 @@ namespace Lumina.UI
 
         private void OnPlayClicked()
         {
-            // La carga de worldSceneName se conecta en la fase de navegación entre escenas.
-            Debug.Log($"[MainMenu] JUGAR: pendiente de conectar con la escena '{worldSceneName}'.");
+            if (string.IsNullOrWhiteSpace(worldSceneName))
+            {
+                Debug.LogError("[MainMenu] El nombre de la escena del mundo está vacío.");
+                return;
+            }
+
+            if (!Application.CanStreamedLevelBeLoaded(worldSceneName))
+            {
+                Debug.LogError($"[MainMenu] La escena '{worldSceneName}' no está registrada en Build Settings.");
+                return;
+            }
+
+            SceneManager.LoadScene(worldSceneName);
         }
 
         private void OnQuitClicked()
