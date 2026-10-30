@@ -43,8 +43,20 @@ namespace Senas.AI.MediaPipe
     private AlphabetLandmarkEvaluation _latestEvaluation;
     private readonly List<MotionObservation> _motionHistory = new List<MotionObservation>();
     private long _lastMotionTimestamp;
+    private string _targetLetter;
 
     public bool ShowDebugOverlay => _showDebugOverlay;
+    public AlphabetLandmarkEvaluation LatestEvaluation => _latestEvaluation;
+
+    /// <summary>Configura las referencias cuando el evaluador se crea desde el nivel de aprendizaje.</summary>
+    public void Configure(AlphabetLandmarkTemplateSet templateSet, bool showDebugOverlay = false, string targetLetter = null)
+    {
+      _templateSet = templateSet;
+      _showDebugOverlay = showDebugOverlay;
+      _targetLetter = targetLetter;
+      ResetStability();
+      ResetMotionHistory();
+    }
 
     private string _candidateLetter;
     private int _consecutiveFrames;
@@ -83,6 +95,14 @@ namespace Senas.AI.MediaPipe
       {
         ResetStability();
         Publish(AlphabetEvaluationStatus.NoTemplates, null, 0f);
+        return;
+      }
+
+      if (!string.IsNullOrWhiteSpace(_targetLetter) && !HasTemplateForTarget(templates, motionTemplates))
+      {
+        ResetStability();
+        ResetMotionHistory();
+        Publish(AlphabetEvaluationStatus.NoTemplates, _targetLetter, 0f);
         return;
       }
 
@@ -127,6 +147,7 @@ namespace Senas.AI.MediaPipe
       foreach (var template in templates ?? Array.Empty<AlphabetLandmarkTemplate>())
       {
         if (template == null || string.IsNullOrWhiteSpace(template.Letter)) continue;
+        if (!MatchesTarget(template.Letter)) continue;
         if (template.RequiresMotion)
         {
           hasMotionTemplate = true;
@@ -222,6 +243,7 @@ namespace Senas.AI.MediaPipe
         if (template == null || string.IsNullOrWhiteSpace(template.Letter) || template.Frames == null ||
             template.Frames.Count < _minimumMotionFrames || _motionHistory.Count < _minimumMotionFrames)
           continue;
+        if (!MatchesTarget(template.Letter)) continue;
 
         var candidateCounts = new[]
         {
@@ -254,6 +276,23 @@ namespace Senas.AI.MediaPipe
         ? Mathf.Clamp01(1f - bestDistance / bestThreshold)
         : 0f;
       return true;
+    }
+
+    private bool HasTemplateForTarget(
+      IReadOnlyList<AlphabetLandmarkTemplate> staticTemplates,
+      IReadOnlyList<AlphabetMotionTemplate> motionTemplates)
+    {
+      foreach (var template in staticTemplates ?? Array.Empty<AlphabetLandmarkTemplate>())
+        if (template != null && MatchesTarget(template.Letter)) return true;
+      foreach (var template in motionTemplates ?? Array.Empty<AlphabetMotionTemplate>())
+        if (template != null && MatchesTarget(template.Letter)) return true;
+      return false;
+    }
+
+    private bool MatchesTarget(string letter)
+    {
+      return string.IsNullOrWhiteSpace(_targetLetter) ||
+        string.Equals(letter, _targetLetter, StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool HasMotionEnergy(IReadOnlyList<MotionObservation> frames)
