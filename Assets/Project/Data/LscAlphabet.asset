@@ -1,0 +1,1206 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: befee40d6faa824458840af1f9d4c339, type: 3}
+  m_Name: LscAlphabet
+  m_EditorClassIdentifier: 
+  letters:
+  - letter: A
+    instruction: "Pu\xF1o cerrado con el pulgar extendido hacia arriba."
+    validation: 0
+    pose:
+      thumb:
+        spread: -10
+        proximal: 0
+        middle: 0
+        distal: 0
+      index:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: B
+    instruction: Mano abierta con los cuatro dedos juntos y el pulgar sobre la palma.
+    validation: 0
+    pose:
+      thumb:
+        spread: 0
+        proximal: 45
+        middle: 40
+        distal: 25
+      index:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      ring:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      pinky:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: C
+    instruction: Dedos y pulgar curvados formando una C.
+    validation: 0
+    pose:
+      thumb:
+        spread: -20
+        proximal: 20
+        middle: 25
+        distal: 20
+      index:
+        spread: 0
+        proximal: 35
+        middle: 45
+        distal: 30
+      middle:
+        spread: 0
+        proximal: 35
+        middle: 45
+        distal: 30
+      ring:
+        spread: 0
+        proximal: 35
+        middle: 45
+        distal: 30
+      pinky:
+        spread: 0
+        proximal: 35
+        middle: 45
+        distal: 30
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: D
+    instruction: "\xCDndice extendido hacia arriba; los dem\xE1s dedos curvados tocan
+      el pulgar."
+    validation: 0
+    pose:
+      thumb:
+        spread: 0
+        proximal: 35
+        middle: 35
+        distal: 25
+      index:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: E
+    instruction: Dedos curvados sobre la palma con el pulgar cruzado por delante.
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 45
+        middle: 40
+        distal: 20
+      index:
+        spread: 0
+        proximal: 70
+        middle: 85
+        distal: 45
+      middle:
+        spread: 0
+        proximal: 70
+        middle: 85
+        distal: 45
+      ring:
+        spread: 0
+        proximal: 70
+        middle: 85
+        distal: 45
+      pinky:
+        spread: 0
+        proximal: 70
+        middle: 85
+        distal: 45
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: F
+    instruction: "\xCDndice y pulgar se tocan; los otros tres dedos quedan extendidos."
+    validation: 1
+    pose:
+      thumb:
+        spread: -5
+        proximal: 30
+        middle: 30
+        distal: 15
+      index:
+        spread: 0
+        proximal: 45
+        middle: 60
+        distal: 35
+      middle:
+        spread: 4
+        proximal: 0
+        middle: 0
+        distal: 0
+      ring:
+        spread: 8
+        proximal: 0
+        middle: 0
+        distal: 0
+      pinky:
+        spread: 12
+        proximal: 0
+        middle: 0
+        distal: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: G
+    instruction: "\xCDndice extendido de lado con el pulgar abierto; los dem\xE1s
+      dedos cerrados."
+    validation: 1
+    pose:
+      thumb:
+        spread: -30
+        proximal: 0
+        middle: 0
+        distal: 0
+      index:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 80}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: H
+    instruction: "\xCDndice y medio extendidos de lado, juntos; los dem\xE1s dedos
+      cerrados."
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 35
+        middle: 35
+        distal: 20
+      index:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 80}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: I
+    instruction: "Pu\xF1o con el me\xF1ique extendido."
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 45
+        middle: 40
+        distal: 25
+      index:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: J
+    instruction: Como la I, trazando una J en el aire con la mano.
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 45
+        middle: 40
+        distal: 25
+      index:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion:
+    - time: 0
+      pose:
+        thumb:
+          spread: 0
+          proximal: 45
+          middle: 40
+          distal: 25
+        index:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        pinky:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: -0.04, z: 0.01}
+    - time: 0.7
+      pose:
+        thumb:
+          spread: 0
+          proximal: 45
+          middle: 40
+          distal: 25
+        index:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        pinky:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0.05, z: 0.01}
+    - time: 1.2
+      pose:
+        thumb:
+          spread: 0
+          proximal: 45
+          middle: 40
+          distal: 25
+        index:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        pinky:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+        wristEuler: {x: 0, y: 0, z: 40}
+        wristOffset: {x: 0, y: 0.07, z: -0.04}
+  - letter: K
+    instruction: "\xCDndice y medio extendidos y separados, con el pulgar hacia arriba
+      entre ellos."
+    validation: 1
+    pose:
+      thumb:
+        spread: -25
+        proximal: 0
+        middle: 0
+        distal: 0
+      index:
+        spread: -8
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 8
+        proximal: 0
+        middle: 0
+        distal: 0
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: L
+    instruction: "\xCDndice extendido hacia arriba y pulgar abierto, formando una
+      L."
+    validation: 0
+    pose:
+      thumb:
+        spread: -40
+        proximal: 0
+        middle: 0
+        distal: 0
+      index:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: M
+    instruction: "Pu\xF1o con el pulgar escondido bajo los dedos."
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 60
+        middle: 50
+        distal: 35
+      index:
+        spread: 0
+        proximal: 90
+        middle: 100
+        distal: 50
+      middle:
+        spread: 0
+        proximal: 90
+        middle: 100
+        distal: 50
+      ring:
+        spread: 0
+        proximal: 90
+        middle: 100
+        distal: 50
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: N
+    instruction: "Pu\xF1o con el pulgar bajo los dos primeros dedos."
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 55
+        middle: 45
+        distal: 30
+      index:
+        spread: 0
+        proximal: 90
+        middle: 100
+        distal: 50
+      middle:
+        spread: 0
+        proximal: 90
+        middle: 100
+        distal: 50
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: "\xD1"
+    instruction: "Como la N, con un peque\xF1o movimiento de la mano."
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 55
+        middle: 45
+        distal: 30
+      index:
+        spread: 0
+        proximal: 90
+        middle: 100
+        distal: 50
+      middle:
+        spread: 0
+        proximal: 90
+        middle: 100
+        distal: 50
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion:
+    - time: 0
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 45
+          distal: 30
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 50
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 50
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0, z: 0}
+    - time: 0.35
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 45
+          distal: 30
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 50
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 50
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        wristEuler: {x: 0, y: 0, z: 10}
+        wristOffset: {x: 0, y: 0, z: 0}
+    - time: 0.7
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 45
+          distal: 30
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 50
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 50
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        wristEuler: {x: 0, y: 0, z: -6}
+        wristOffset: {x: 0, y: 0, z: 0}
+    - time: 1
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 45
+          distal: 30
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 50
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 50
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0, z: 0}
+  - letter: O
+    instruction: Todos los dedos curvados tocan la punta del pulgar formando una
+      O.
+    validation: 1
+    pose:
+      thumb:
+        spread: -10
+        proximal: 35
+        middle: 40
+        distal: 30
+      index:
+        spread: 0
+        proximal: 50
+        middle: 60
+        distal: 45
+      middle:
+        spread: 0
+        proximal: 50
+        middle: 60
+        distal: 45
+      ring:
+        spread: 0
+        proximal: 50
+        middle: 60
+        distal: 45
+      pinky:
+        spread: 0
+        proximal: 50
+        middle: 60
+        distal: 45
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: P
+    instruction: "\xCDndice y medio extendidos con el pulgar abierto, apuntando hacia
+      abajo."
+    validation: 1
+    pose:
+      thumb:
+        spread: -25
+        proximal: 0
+        middle: 0
+        distal: 0
+      index:
+        spread: -8
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 8
+        proximal: 0
+        middle: 0
+        distal: 0
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: -60, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: Q
+    instruction: "\xCDndice extendido y pulgar abierto, apuntando hacia abajo."
+    validation: 1
+    pose:
+      thumb:
+        spread: -30
+        proximal: 0
+        middle: 0
+        distal: 0
+      index:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: -60, y: 0, z: 80}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: R
+    instruction: "\xCDndice y medio extendidos y cruzados; los dem\xE1s dedos cerrados."
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 45
+        middle: 40
+        distal: 25
+      index:
+        spread: 6
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: -6
+        proximal: 0
+        middle: 0
+        distal: 0
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: S
+    instruction: "Pu\xF1o cerrado con el pulgar cruzado por delante."
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 55
+        middle: 50
+        distal: 35
+      index:
+        spread: 0
+        proximal: 90
+        middle: 100
+        distal: 65
+      middle:
+        spread: 0
+        proximal: 90
+        middle: 100
+        distal: 65
+      ring:
+        spread: 0
+        proximal: 90
+        middle: 100
+        distal: 65
+      pinky:
+        spread: 0
+        proximal: 90
+        middle: 100
+        distal: 65
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: T
+    instruction: "Pu\xF1o con el pulgar asomando entre el \xEDndice y el medio."
+    validation: 1
+    pose:
+      thumb:
+        spread: -5
+        proximal: 35
+        middle: 30
+        distal: 20
+      index:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: U
+    instruction: "\xCDndice y medio extendidos y juntos; los dem\xE1s dedos cerrados."
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 45
+        middle: 40
+        distal: 25
+      index:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: V
+    instruction: "\xCDndice y medio extendidos y separados en V."
+    validation: 0
+    pose:
+      thumb:
+        spread: 0
+        proximal: 45
+        middle: 40
+        distal: 25
+      index:
+        spread: -14
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 10
+        proximal: 0
+        middle: 0
+        distal: 0
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: W
+    instruction: "\xCDndice, medio y anular extendidos y separados; el pulgar sujeta
+      el me\xF1ique."
+    validation: 0
+    pose:
+      thumb:
+        spread: 0
+        proximal: 45
+        middle: 40
+        distal: 25
+      index:
+        spread: -16
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      ring:
+        spread: 16
+        proximal: 0
+        middle: 0
+        distal: 0
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: X
+    instruction: "\xCDndice en gancho; los dem\xE1s dedos cerrados."
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 45
+        middle: 40
+        distal: 25
+      index:
+        spread: 0
+        proximal: 35
+        middle: 90
+        distal: 45
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: Y
+    instruction: "Pulgar y me\xF1ique extendidos; los dem\xE1s dedos cerrados."
+    validation: 0
+    pose:
+      thumb:
+        spread: -40
+        proximal: 0
+        middle: 0
+        distal: 0
+      index:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion: []
+  - letter: Z
+    instruction: "\xCDndice extendido trazando una Z en el aire."
+    validation: 1
+    pose:
+      thumb:
+        spread: 0
+        proximal: 45
+        middle: 40
+        distal: 25
+      index:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+    motion:
+    - time: 0
+      pose:
+        thumb:
+          spread: 0
+          proximal: 45
+          middle: 40
+          distal: 25
+        index:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: -0.05, z: -0.05}
+    - time: 0.5
+      pose:
+        thumb:
+          spread: 0
+          proximal: 45
+          middle: 40
+          distal: 25
+        index:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: -0.05, z: 0.05}
+    - time: 1.1
+      pose:
+        thumb:
+          spread: 0
+          proximal: 45
+          middle: 40
+          distal: 25
+        index:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0.05, z: -0.05}
+    - time: 1.6
+      pose:
+        thumb:
+          spread: 0
+          proximal: 45
+          middle: 40
+          distal: 25
+        index:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0.05, z: 0.05}
