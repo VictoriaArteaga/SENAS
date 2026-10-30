@@ -30,6 +30,18 @@ namespace Lumina.Alphabet
         [SerializeField] private Button replayButton;
         [SerializeField] private Button backButton;
 
+        [Header("Vistas de la mano (solo mueven la cámara; no tocan la pose)")]
+        [SerializeField] private Button viewButton;
+        [SerializeField] private TMP_Text viewLabel;
+        [Tooltip("Giro de la cámara (grados) alrededor de la mano, en el eje vertical. 0 = vista frontal original.")]
+        [SerializeField] private float[] viewYaws = { 0f, -90f, 180f };
+        [SerializeField] private string[] viewNames = { "FRENTE", "PERFIL", "DORSO" };
+        [Tooltip("Las vistas distintas de la frontal se acercan a la mano multiplicando la distancia por este valor.")]
+        [SerializeField] private float sideViewDistanceScale = 0.75f;
+        [Tooltip("Panel liso que se coloca detrás de la mano en las vistas laterales para que no se vea la habitación.")]
+        [SerializeField] private Transform viewBackdrop;
+        [SerializeField] private float backdropDistance = 0.9f;
+
         [Header("Cámaras y jugador")]
         [SerializeField] private Camera learningCamera;
         [SerializeField] private Camera playerCamera;
@@ -45,6 +57,10 @@ namespace Lumina.Alphabet
         private static readonly Color TurquoiseSoft = new Color(0.56f, 0.89f, 0.85f);
         private static readonly Color Ink = new Color(0.059f, 0.227f, 0.267f);
 
+        private Vector3 _frontPosition;
+        private Quaternion _frontRotation;
+        private Vector3 _viewPivot;
+        private int _view;
         private bool[] _seen;
         private int _current;
         private bool _open;
@@ -82,6 +98,15 @@ namespace Lumina.Alphabet
             replayButton.onClick.AddListener(hand.Replay);
             backButton.onClick.AddListener(Close);
 
+            // La vista frontal es la posición original de la cámara; las demás la giran alrededor de la mano.
+            _frontPosition = learningCamera.transform.position;
+            _frontRotation = learningCamera.transform.rotation;
+            // El pivote es la muñeca real de la mano (el objeto raíz de la mano no coincide con la malla visible).
+            var wrist = System.Array.Find(hand.GetComponentsInChildren<Transform>(true), t => t.name == "J_Right_Hand");
+            Vector3 center = wrist != null ? wrist.position : hand.transform.position;
+            _viewPivot = new Vector3(center.x, _frontPosition.y, center.z);
+            if (viewButton != null) viewButton.onClick.AddListener(NextView);
+
             uiRoot.SetActive(false);
             learningCamera.enabled = false;
         }
@@ -99,7 +124,29 @@ namespace Lumina.Alphabet
             foreach (var go in hideWhileOpen) if (go != null) go.SetActive(false);
             foreach (var b in disableWhileOpen) if (b != null) b.enabled = false;
 
+            SetView(0);
             Select(_current);
+        }
+
+        /// <summary>Cambia a la siguiente vista (frente, perfil, dorso). La letra y la pose no cambian.</summary>
+        public void NextView() => SetView((_view + 1) % Mathf.Min(viewYaws.Length, viewNames.Length));
+
+        private void SetView(int index)
+        {
+            _view = index;
+            var yaw = Quaternion.Euler(0f, viewYaws[index], 0f);
+            float scale = index == 0 ? 1f : sideViewDistanceScale;
+            learningCamera.transform.position = _viewPivot + yaw * ((_frontPosition - _viewPivot) * scale);
+            learningCamera.transform.rotation = yaw * _frontRotation;
+            if (viewBackdrop != null)
+            {
+                // En la vista frontal ya hay un telón; en las demás se coloca un panel liso detrás de la mano.
+                viewBackdrop.gameObject.SetActive(index != 0);
+                Vector3 away = learningCamera.transform.forward;
+                viewBackdrop.position = _viewPivot + away * backdropDistance;
+                viewBackdrop.rotation = Quaternion.LookRotation(away);
+            }
+            if (viewLabel != null) viewLabel.text = "VISTA: " + viewNames[index];
         }
 
         public void Close()
@@ -107,6 +154,7 @@ namespace Lumina.Alphabet
             if (!_open) return;
 
             _open = false;
+            SetView(0);
             uiRoot.SetActive(false);
             learningCamera.enabled = false;
             if (playerCamera != null) playerCamera.enabled = true;
@@ -126,6 +174,7 @@ namespace Lumina.Alphabet
 
             if (keyboard.escapeKey.wasPressedThisFrame) Close();
             else if (keyboard.rKey.wasPressedThisFrame) hand.Replay();
+            else if (keyboard.vKey.wasPressedThisFrame) NextView();
             else if (keyboard.pageUpKey.wasPressedThisFrame || keyboard.commaKey.wasPressedThisFrame) previousButton.onClick.Invoke();
             else if (keyboard.pageDownKey.wasPressedThisFrame || keyboard.periodKey.wasPressedThisFrame) nextButton.onClick.Invoke();
         }

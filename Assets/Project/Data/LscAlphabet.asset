@@ -14,295 +14,940 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   letters:
   - letter: A
-    instruction: "Pu\xF1o cerrado con el pulgar extendido hacia arriba."
+    instruction: "Pu\xF1o cerrado con el pulgar pegado al costado del \xEDndice,
+      apuntando hacia arriba."
     validation: 0
     pose:
       thumb:
-        spread: -10
+        spread: -4
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 1
+        spreadMiddle: 40
+        opposition: 0
       index:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: B
-    instruction: Mano abierta con los cuatro dedos juntos y el pulgar sobre la palma.
+    instruction: Mano abierta con los cuatro dedos extendidos y juntos, y el pulgar
+      plegado sobre la palma.
     validation: 0
     pose:
       thumb:
-        spread: 0
-        proximal: 45
-        middle: 40
-        distal: 25
+        spread: 42
+        proximal: 20
+        middle: 20
+        distal: 10
+        adduction: 0
+        twist: 0
+        spreadMiddle: 40
+        opposition: 0
       index:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 1.1
     motion: []
   - letter: C
-    instruction: Dedos y pulgar curvados formando una C.
+    instruction: Dedos juntos y curvados en arco; el pulgar enfrentado forma la abertura
+      de la C. Mano de canto.
     validation: 0
     pose:
       thumb:
-        spread: -20
-        proximal: 20
-        middle: 25
-        distal: 20
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 1
       index:
         spread: 0
         proximal: 35
         middle: 45
-        distal: 30
+        distal: 25
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 35
         middle: 45
-        distal: 30
+        distal: 25
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 35
         middle: 45
-        distal: 30
+        distal: 25
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 35
         middle: 45
-        distal: 30
-      wristEuler: {x: 0, y: 0, z: 0}
+        distal: 25
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 90, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 1
     motion: []
   - letter: D
     instruction: "\xCDndice extendido hacia arriba; los dem\xE1s dedos curvados tocan
-      el pulgar."
+      la punta del pulgar formando un c\xEDrculo."
     validation: 0
     pose:
       thumb:
-        spread: 0
-        proximal: 35
-        middle: 35
-        distal: 25
+        spread: 34
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 10
+        spreadMiddle: 40
+        opposition: 0
       index:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
+        proximal: 50
+        middle: 65
+        distal: 45
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
+        proximal: 50
+        middle: 65
+        distal: 45
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
+        proximal: 50
+        middle: 65
+        distal: 45
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: E
-    instruction: Dedos curvados sobre la palma con el pulgar cruzado por delante.
+    instruction: "Dedos curvados sobre la palma; el pulgar cruza por delante, visible.
+      (Posici\xF3n exacta del pulgar sin confirmar.)"
     validation: 1
     pose:
       thumb:
-        spread: 0
-        proximal: 45
-        middle: 40
-        distal: 20
+        spread: 42
+        proximal: 20
+        middle: 20
+        distal: 10
+        adduction: 0
+        twist: 0
+        spreadMiddle: 40
+        opposition: 0
       index:
         spread: 0
-        proximal: 70
-        middle: 85
+        proximal: 60
+        middle: 90
         distal: 45
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
-        proximal: 70
-        middle: 85
+        proximal: 60
+        middle: 90
         distal: 45
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
-        proximal: 70
-        middle: 85
+        proximal: 60
+        middle: 90
         distal: 45
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
-        proximal: 70
-        middle: 85
+        proximal: 60
+        middle: 90
         distal: 45
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 1
     motion: []
   - letter: F
-    instruction: "\xCDndice y pulgar se tocan; los otros tres dedos quedan extendidos."
-    validation: 1
+    instruction: "\xCDndice extendido hacia arriba, los dem\xE1s dedos curvados y
+      el pulgar pegado al costado del \xEDndice."
+    validation: 0
     pose:
       thumb:
-        spread: -5
-        proximal: 30
-        middle: 30
-        distal: 15
+        spread: -4
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 1
+        spreadMiddle: 40
+        opposition: 0
       index:
         spread: 0
-        proximal: 45
-        middle: 60
-        distal: 35
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
-        spread: 4
-        proximal: 0
-        middle: 0
-        distal: 0
+        spread: 0
+        proximal: 70
+        middle: 85
+        distal: 50
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
-        spread: 8
-        proximal: 0
-        middle: 0
-        distal: 0
+        spread: 0
+        proximal: 70
+        middle: 85
+        distal: 50
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
-        spread: 12
-        proximal: 0
-        middle: 0
-        distal: 0
+        spread: 0
+        proximal: 70
+        middle: 85
+        distal: 50
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: G
-    instruction: "\xCDndice extendido de lado con el pulgar abierto; los dem\xE1s
-      dedos cerrados."
+    instruction: "Mano de lado: \xEDndice extendido apuntando hacia arriba y a la
+      izquierda; los dem\xE1s dedos cerrados."
     validation: 1
     pose:
       thumb:
-        spread: -30
+        spread: 42
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 40
+        opposition: 0
       index:
         spread: 0
         proximal: 0
-        middle: 0
-        distal: 0
-      middle:
-        spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
-      ring:
-        spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
-      pinky:
-        spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
-      wristEuler: {x: 0, y: 0, z: 80}
-      wristOffset: {x: 0, y: 0, z: 0}
-    motion: []
-  - letter: H
-    instruction: "\xCDndice y medio extendidos de lado, juntos; los dem\xE1s dedos
-      cerrados."
-    validation: 1
-    pose:
-      thumb:
-        spread: 0
-        proximal: 35
-        middle: 35
-        distal: 20
-      index:
-        spread: 0
-        proximal: 0
-        middle: 0
-        distal: 0
-      middle:
-        spread: 0
-        proximal: 0
-        middle: 0
-        distal: 0
-      ring:
-        spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
-      pinky:
-        spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
-      wristEuler: {x: 0, y: 0, z: 80}
-      wristOffset: {x: 0, y: 0, z: 0}
-    motion: []
-  - letter: I
-    instruction: "Pu\xF1o con el me\xF1ique extendido."
-    validation: 1
-    pose:
-      thumb:
-        spread: 0
-        proximal: 45
-        middle: 40
+        middle: 20
         distal: 25
-      index:
-        spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 60}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+    motion:
+    - time: 0
+      pose:
+        thumb:
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 0
+          middle: 20
+          distal: 25
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 60}
+        wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 0
+    - time: 0.45
+      pose:
+        thumb:
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 0
+          middle: 20
+          distal: 25
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 75}
+        wristOffset: {x: 0, y: 0, z: -0.02}
+        adduction: 0
+    - time: 0.9
+      pose:
+        thumb:
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 0
+          middle: 20
+          distal: 25
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 68}
+        wristOffset: {x: 0, y: 0.025, z: -0.01}
+        adduction: 0
+    - time: 1.35
+      pose:
+        thumb:
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 0
+          middle: 20
+          distal: 25
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 60}
+        wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 0
+  - letter: H
+    instruction: "Mano de lado: \xEDndice y medio extendidos y juntos, apuntando
+      a la derecha; los dem\xE1s dedos cerrados."
+    validation: 1
+    pose:
+      thumb:
+        spread: 42
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 40
+        opposition: 0
+      index:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 1
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 180, z: 90}
+      wristOffset: {x: 0, y: 0, z: -0.16}
+      adduction: 0
+    motion:
+    - time: 0
+      pose:
+        thumb:
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 1
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 180, z: 90}
+        wristOffset: {x: 0, y: 0, z: -0.16}
+        adduction: 0
+    - time: 0.5
+      pose:
+        thumb:
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 1
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 180, z: 90}
+        wristOffset: {x: 0, y: -0.02, z: -0.13}
+        adduction: 0
+    - time: 1
+      pose:
+        thumb:
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 1
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 180, z: 90}
+        wristOffset: {x: 0, y: 0, z: -0.1}
+        adduction: 0
+    - time: 1.5
+      pose:
+        thumb:
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 1
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 180, z: 90}
+        wristOffset: {x: 0, y: 0.03, z: -0.08}
+        adduction: 0
+    - time: 2
+      pose:
+        thumb:
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 1
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 180, z: 90}
+        wristOffset: {x: 0, y: 0, z: -0.16}
+        adduction: 0
+  - letter: I
+    instruction: "\xCDndice extendido hacia arriba, los dem\xE1s dedos cerrados y
+      el pulgar cruzado por delante."
+    validation: 0
+    pose:
+      thumb:
+        spread: 42
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 40
+        opposition: 0
+      index:
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: J
     instruction: Como la I, trazando una J en el aire con la mano.
@@ -313,28 +958,49 @@ MonoBehaviour:
         proximal: 45
         middle: 40
         distal: 25
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       index:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion:
     - time: 0
       pose:
@@ -343,118 +1009,302 @@ MonoBehaviour:
           proximal: 45
           middle: 40
           distal: 25
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         index:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         middle:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         ring:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         pinky:
           spread: 0
           proximal: 0
           middle: 0
           distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 0
+    - time: 0.3
+      pose:
+        thumb:
+          spread: 0
+          proximal: 45
+          middle: 40
+          distal: 25
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         wristEuler: {x: 0, y: 0, z: 0}
         wristOffset: {x: 0, y: -0.04, z: 0.01}
-    - time: 0.7
+        adduction: 0
+    - time: 1
       pose:
         thumb:
           spread: 0
           proximal: 45
           middle: 40
           distal: 25
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         index:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         middle:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         ring:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         pinky:
           spread: 0
           proximal: 0
           middle: 0
           distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         wristEuler: {x: 0, y: 0, z: 0}
         wristOffset: {x: 0, y: 0.05, z: 0.01}
-    - time: 1.2
+        adduction: 0
+    - time: 1.5
       pose:
         thumb:
           spread: 0
           proximal: 45
           middle: 40
           distal: 25
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         index:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         middle:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         ring:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         pinky:
           spread: 0
           proximal: 0
           middle: 0
           distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         wristEuler: {x: 0, y: 0, z: 40}
         wristOffset: {x: 0, y: 0.07, z: -0.04}
+        adduction: 0
+    - time: 2.1
+      pose:
+        thumb:
+          spread: 0
+          proximal: 45
+          middle: 40
+          distal: 25
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 0
   - letter: K
-    instruction: "\xCDndice y medio extendidos y separados, con el pulgar hacia arriba
-      entre ellos."
+    instruction: "Mano de lado: \xEDndice hacia arriba y a la izquierda, medio horizontal
+      hacia la izquierda, separados; pulgar cruzado."
     validation: 1
     pose:
       thumb:
-        spread: -25
+        spread: 42
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 40
+        opposition: 0
       index:
-        spread: -8
+        spread: -30
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
-        spread: 8
+        spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
-      wristEuler: {x: 0, y: 0, z: 0}
-      wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 80}
+      wristOffset: {x: 0, y: 0, z: 0.12}
+      adduction: 0
     motion: []
   - letter: L
     instruction: "\xCDndice extendido hacia arriba y pulgar abierto, formando una
@@ -466,273 +1316,465 @@ MonoBehaviour:
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       index:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: M
-    instruction: "Pu\xF1o con el pulgar escondido bajo los dedos."
+    instruction: "Mano boca abajo: \xEDndice, medio y anular extendidos y juntos
+      hacia abajo; me\xF1ique y pulgar recogidos."
     validation: 1
     pose:
       thumb:
         spread: 0
-        proximal: 60
-        middle: 50
-        distal: 35
+        proximal: 70
+        middle: 60
+        distal: 40
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       index:
         spread: 0
-        proximal: 90
-        middle: 100
-        distal: 50
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 1
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
-        proximal: 90
-        middle: 100
-        distal: 50
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
-        proximal: 90
-        middle: 100
-        distal: 50
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 1
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
-      wristEuler: {x: 0, y: 0, z: 0}
-      wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 180}
+      wristOffset: {x: 0, y: -0.3, z: 0}
+      adduction: 0
     motion: []
   - letter: N
-    instruction: "Pu\xF1o con el pulgar bajo los dos primeros dedos."
+    instruction: "Mano boca abajo: \xEDndice y medio extendidos y juntos hacia abajo;
+      los dem\xE1s dedos recogidos."
     validation: 1
     pose:
       thumb:
         spread: 0
-        proximal: 55
-        middle: 45
-        distal: 30
+        proximal: 70
+        middle: 60
+        distal: 40
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       index:
         spread: 0
-        proximal: 90
-        middle: 100
-        distal: 50
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 1
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
-        proximal: 90
-        middle: 100
-        distal: 50
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
-      wristEuler: {x: 0, y: 0, z: 0}
-      wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 180}
+      wristOffset: {x: 0, y: -0.3, z: 0}
+      adduction: 0
     motion: []
   - letter: "\xD1"
-    instruction: "Como la N, con un peque\xF1o movimiento de la mano."
+    instruction: "Como la N (\xEDndice y medio hacia abajo). El movimiento lateral
+      actual es provisional."
     validation: 1
     pose:
       thumb:
         spread: 0
-        proximal: 55
-        middle: 45
-        distal: 30
+        proximal: 70
+        middle: 60
+        distal: 40
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       index:
         spread: 0
-        proximal: 90
-        middle: 100
-        distal: 50
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 1
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
-        proximal: 90
-        middle: 100
-        distal: 50
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
-      wristEuler: {x: 0, y: 0, z: 0}
-      wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 180}
+      wristOffset: {x: 0, y: -0.3, z: 0}
+      adduction: 0
     motion:
     - time: 0
       pose:
         thumb:
           spread: 0
-          proximal: 55
-          middle: 45
-          distal: 30
+          proximal: 70
+          middle: 60
+          distal: 40
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         index:
           spread: 0
-          proximal: 90
-          middle: 100
-          distal: 50
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 1
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         middle:
           spread: 0
-          proximal: 90
-          middle: 100
-          distal: 50
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         ring:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         pinky:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
-        wristEuler: {x: 0, y: 0, z: 0}
-        wristOffset: {x: 0, y: 0, z: 0}
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 180}
+        wristOffset: {x: 0, y: -0.3, z: 0}
+        adduction: 0
     - time: 0.35
       pose:
         thumb:
           spread: 0
-          proximal: 55
-          middle: 45
-          distal: 30
+          proximal: 70
+          middle: 60
+          distal: 40
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         index:
           spread: 0
-          proximal: 90
-          middle: 100
-          distal: 50
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 1
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         middle:
           spread: 0
-          proximal: 90
-          middle: 100
-          distal: 50
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         ring:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         pinky:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
-        wristEuler: {x: 0, y: 0, z: 10}
-        wristOffset: {x: 0, y: 0, z: 0}
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 190}
+        wristOffset: {x: 0, y: -0.3, z: 0}
+        adduction: 0
     - time: 0.7
       pose:
         thumb:
           spread: 0
-          proximal: 55
-          middle: 45
-          distal: 30
+          proximal: 70
+          middle: 60
+          distal: 40
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         index:
           spread: 0
-          proximal: 90
-          middle: 100
-          distal: 50
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 1
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         middle:
           spread: 0
-          proximal: 90
-          middle: 100
-          distal: 50
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         ring:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         pinky:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
-        wristEuler: {x: 0, y: 0, z: -6}
-        wristOffset: {x: 0, y: 0, z: 0}
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 174}
+        wristOffset: {x: 0, y: -0.3, z: 0}
+        adduction: 0
     - time: 1
       pose:
         thumb:
           spread: 0
-          proximal: 55
-          middle: 45
-          distal: 30
+          proximal: 70
+          middle: 60
+          distal: 40
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         index:
           spread: 0
-          proximal: 90
-          middle: 100
-          distal: 50
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 1
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         middle:
           spread: 0
-          proximal: 90
-          middle: 100
-          distal: 50
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         ring:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         pinky:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
-        wristEuler: {x: 0, y: 0, z: 0}
-        wristOffset: {x: 0, y: 0, z: 0}
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 180}
+        wristOffset: {x: 0, y: -0.3, z: 0}
+        adduction: 0
   - letter: O
-    instruction: Todos los dedos curvados tocan la punta del pulgar formando una
-      O.
-    validation: 1
+    instruction: "Dedos curvados y juntos que se acercan al pulgar formando un c\xEDrculo.
+      Mano de canto."
+    validation: 0
     pose:
       thumb:
-        spread: -10
-        proximal: 35
-        middle: 40
-        distal: 30
+        spread: 0
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 1
       index:
         spread: 0
         proximal: 50
         middle: 60
         distal: 45
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 50
         middle: 60
         distal: 45
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 50
         middle: 60
         distal: 45
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 50
         middle: 60
         distal: 45
-      wristEuler: {x: 0, y: 0, z: 0}
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 70, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0.8
     motion: []
   - letter: P
     instruction: "\xCDndice y medio extendidos con el pulgar abierto, apuntando hacia
@@ -744,28 +1786,49 @@ MonoBehaviour:
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       index:
         spread: -8
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 8
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: -60, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: Q
     instruction: "\xCDndice extendido y pulgar abierto, apuntando hacia abajo."
@@ -776,60 +1839,102 @@ MonoBehaviour:
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       index:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: -60, y: 0, z: 80}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: R
     instruction: "\xCDndice y medio extendidos y cruzados; los dem\xE1s dedos cerrados."
     validation: 1
     pose:
       thumb:
-        spread: 0
-        proximal: 45
-        middle: 40
-        distal: 25
+        spread: 42
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 40
+        opposition: 0
       index:
-        spread: 6
+        spread: 8
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
-        spread: -6
+        spread: -8
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 1
     motion: []
   - letter: S
     instruction: "Pu\xF1o cerrado con el pulgar cruzado por delante."
@@ -840,92 +1945,607 @@ MonoBehaviour:
         proximal: 55
         middle: 50
         distal: 35
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       index:
         spread: 0
         proximal: 90
         middle: 100
         distal: 65
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 90
         middle: 100
         distal: 65
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 90
         middle: 100
         distal: 65
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 90
         middle: 100
         distal: 65
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
-    motion: []
+      adduction: 0
+    motion:
+    - time: 0
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 50
+          distal: 35
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 0
+    - time: 0.35
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 50
+          distal: 35
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: -0.04, z: 0.02}
+        adduction: 0
+    - time: 0.6
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 50
+          distal: 35
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: -0.05, z: 0}
+        adduction: 0
+    - time: 0.85
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 50
+          distal: 35
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: -0.025, z: -0.022}
+        adduction: 0
+    - time: 1.1
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 50
+          distal: 35
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 0
+    - time: 1.35
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 50
+          distal: 35
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0.025, z: 0.022}
+        adduction: 0
+    - time: 1.6
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 50
+          distal: 35
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0.05, z: 0}
+        adduction: 0
+    - time: 1.85
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 50
+          distal: 35
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0.04, z: -0.02}
+        adduction: 0
+    - time: 2.4
+      pose:
+        thumb:
+          spread: 0
+          proximal: 55
+          middle: 50
+          distal: 35
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 90
+          middle: 100
+          distal: 65
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 0
   - letter: T
-    instruction: "Pu\xF1o con el pulgar asomando entre el \xEDndice y el medio."
+    instruction: "\xCDndice y medio extendidos y juntos, me\xF1ique extendido aparte,
+      anular cerrado bajo el pulgar. (Identidad del dedo corto sin confirmar.)"
     validation: 1
     pose:
       thumb:
-        spread: -5
-        proximal: 35
-        middle: 30
-        distal: 20
+        spread: 42
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 40
+        opposition: 0
       index:
         spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 1
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: U
-    instruction: "\xCDndice y medio extendidos y juntos; los dem\xE1s dedos cerrados."
-    validation: 1
+    instruction: "\xCDndice y me\xF1ique extendidos; medio y anular cerrados bajo
+      el pulgar."
+    validation: 0
     pose:
       thumb:
-        spread: 0
-        proximal: 45
-        middle: 40
-        distal: 25
+        spread: 42
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 40
+        opposition: 0
       index:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
-        proximal: 0
-        middle: 0
-        distal: 0
+        proximal: 85
+        middle: 100
+        distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: V
     instruction: "\xCDndice y medio extendidos y separados en V."
@@ -936,28 +2556,49 @@ MonoBehaviour:
         proximal: 45
         middle: 40
         distal: 25
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       index:
         spread: -14
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 10
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: W
     instruction: "\xCDndice, medio y anular extendidos y separados; el pulgar sujeta
@@ -969,60 +2610,102 @@ MonoBehaviour:
         proximal: 45
         middle: 40
         distal: 25
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       index:
         spread: -16
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 16
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: X
-    instruction: "\xCDndice en gancho; los dem\xE1s dedos cerrados."
-    validation: 1
+    instruction: "\xCDndice en gancho; los dem\xE1s dedos cerrados y el pulgar cruzado."
+    validation: 0
     pose:
       thumb:
-        spread: 0
-        proximal: 45
-        middle: 40
-        distal: 25
+        spread: 42
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 40
+        opposition: 0
       index:
         spread: 0
-        proximal: 35
-        middle: 90
-        distal: 45
+        proximal: 15
+        middle: 95
+        distal: 30
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: Y
     instruction: "Pulgar y me\xF1ique extendidos; los dem\xE1s dedos cerrados."
@@ -1033,174 +2716,400 @@ MonoBehaviour:
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       index:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
     motion: []
   - letter: Z
-    instruction: "\xCDndice extendido trazando una Z en el aire."
+    instruction: "\xCDndice y medio extendidos y juntos trazando una Z en el aire."
     validation: 1
     pose:
       thumb:
-        spread: 0
-        proximal: 45
-        middle: 40
-        distal: 25
+        spread: 42
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 40
+        opposition: 0
       index:
         spread: 0
         proximal: 0
         middle: 0
         distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       middle:
         spread: 0
-        proximal: 85
-        middle: 100
-        distal: 60
+        proximal: 0
+        middle: 0
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       ring:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       pinky:
         spread: 0
         proximal: 85
         middle: 100
         distal: 60
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
       wristEuler: {x: 0, y: 0, z: 0}
       wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 1.15
     motion:
     - time: 0
       pose:
         thumb:
-          spread: 0
-          proximal: 45
-          middle: 40
-          distal: 25
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
         index:
           spread: 0
           proximal: 0
           middle: 0
           distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         middle:
           spread: 0
-          proximal: 85
-          middle: 100
-          distal: 60
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         ring:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         pinky:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 1.15
+    - time: 0.35
+      pose:
+        thumb:
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         wristEuler: {x: 0, y: 0, z: 0}
         wristOffset: {x: 0, y: -0.05, z: -0.05}
-    - time: 0.5
+        adduction: 1.15
+    - time: 0.85
       pose:
         thumb:
-          spread: 0
-          proximal: 45
-          middle: 40
-          distal: 25
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
         index:
           spread: 0
           proximal: 0
           middle: 0
           distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         middle:
           spread: 0
-          proximal: 85
-          middle: 100
-          distal: 60
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         ring:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         pinky:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         wristEuler: {x: 0, y: 0, z: 0}
         wristOffset: {x: 0, y: -0.05, z: 0.05}
-    - time: 1.1
+        adduction: 1.15
+    - time: 1.45
       pose:
         thumb:
-          spread: 0
-          proximal: 45
-          middle: 40
-          distal: 25
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
         index:
           spread: 0
           proximal: 0
           middle: 0
           distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         middle:
           spread: 0
-          proximal: 85
-          middle: 100
-          distal: 60
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         ring:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         pinky:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         wristEuler: {x: 0, y: 0, z: 0}
         wristOffset: {x: 0, y: 0.05, z: -0.05}
-    - time: 1.6
+        adduction: 1.15
+    - time: 1.95
       pose:
         thumb:
-          spread: 0
-          proximal: 45
-          middle: 40
-          distal: 25
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
         index:
           spread: 0
           proximal: 0
           middle: 0
           distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         middle:
           spread: 0
-          proximal: 85
-          middle: 100
-          distal: 60
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         ring:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         pinky:
           spread: 0
           proximal: 85
           middle: 100
           distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
         wristEuler: {x: 0, y: 0, z: 0}
         wristOffset: {x: 0, y: 0.05, z: 0.05}
+        adduction: 1.15
+    - time: 2.55
+      pose:
+        thumb:
+          spread: 42
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 40
+          opposition: 0
+        index:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        middle:
+          spread: 0
+          proximal: 0
+          middle: 0
+          distal: 0
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        ring:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        pinky:
+          spread: 0
+          proximal: 85
+          middle: 100
+          distal: 60
+          adduction: 0
+          twist: 0
+          spreadMiddle: 0
+          opposition: 0
+        wristEuler: {x: 0, y: 0, z: 0}
+        wristOffset: {x: 0, y: 0, z: 0}
+        adduction: 1.15
