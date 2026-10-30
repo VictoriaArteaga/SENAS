@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68409ff9e54da464faf1ac9d770cc466, type: 3}
+  m_Name: AvatarCatalog
+  m_EditorClassIdentifier: 
+  avatars:
+  - id: luna
+    displayName: Luna
+    prefab: {fileID: 428645807501582668, guid: bcf74bac3ad76a642853e76443e53eb8, type: 3}
+  - id: nube
+    displayName: Nube
+    prefab: {fileID: 675476952758915829, guid: 4eb3afd98e1ba2f408778bdef481d80c, type: 3}
+  - id: rio
+    displayName: "R\xEDo"
+    prefab: {fileID: 4725134108650131783, guid: 59428fc9705600d4991b2af6dcdb6503, type: 3}
+  - id: sol
+    displayName: Sol
+    prefab: {fileID: 7692019102000394263, guid: ffabd43a64d710746a6f6c84522f24fe, type: 3}
