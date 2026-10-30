@@ -60,6 +60,7 @@ namespace Lumina.UI
             }
 
             errorLabel.text = string.Empty;
+            errorLabel.gameObject.SetActive(false);
             Refresh();
         }
 
@@ -82,6 +83,8 @@ namespace Lumina.UI
         {
             _hasError = true;
             errorLabel.text = message;
+            // El campo está dentro de un layout vertical: al activar el mensaje, lo que hay debajo se desplaza para hacerle sitio.
+            errorLabel.gameObject.SetActive(true);
             Refresh();
             if (_shake != null) StopCoroutine(_shake);
             _shake = StartCoroutine(Shake());
@@ -91,6 +94,7 @@ namespace Lumina.UI
         {
             _hasError = false;
             errorLabel.text = string.Empty;
+            errorLabel.gameObject.SetActive(false);
             Refresh();
         }
 
@@ -113,7 +117,8 @@ namespace Lumina.UI
 
         private IEnumerator Shake()
         {
-            var rect = (RectTransform)transform;
+            // Se sacude el cuadro de texto (hijo con anclas estiradas), no el campo: la posición del campo la manda el layout.
+            var rect = (RectTransform)input.transform;
             Vector2 home = rect.anchoredPosition;
             const float duration = 0.32f;
             for (float t = 0f; t < duration; t += Time.unscaledDeltaTime)

@@ -16,7 +16,9 @@ namespace Lumina.Auth
         public static string Email(string value)
         {
             if (string.IsNullOrWhiteSpace(value)) return "Escribe tu correo electrónico.";
-            return EmailPattern.IsMatch(value.Trim()) ? null : "Revisa el correo: debe verse como nombre@correo.com";
+            string email = value.Trim();
+            if (email.IndexOf('@') < 0) return "El correo debe tener un @.";
+            return EmailPattern.IsMatch(email) ? null : "Revisa el formato: nombre@correo.com";
         }
 
         public static string Password(string value)

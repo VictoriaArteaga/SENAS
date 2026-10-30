@@ -178,19 +178,66 @@ namespace Lumina.EditorTools
 
         // ---------- Campo de formulario ----------
 
-        public static AuthField MakeField(Transform parent, string name, string labelText, string placeholder, bool password,
-            float yFromTop, float width, float labelHeight, float inputHeight, float errorHeight, bool withReveal, float fontSize = 28f)
+        /// <summary>
+        /// Contenedor vertical de un formulario: coloca los campos uno bajo otro y hace sitio a los mensajes de error
+        /// (los campos usan layout, no coordenadas fijas), de modo que nada se monta sobre lo siguiente.
+        /// </summary>
+        public static RectTransform MakeForm(Transform parent, string name, float yFromTop, float width, float spacing)
         {
-            float total = labelHeight + inputHeight + errorHeight + 4f;
+            var form = Rect(name, parent);
+            TopCenter(form, yFromTop, width, 0f);
+            var layout = form.gameObject.AddComponent<VerticalLayoutGroup>();
+            layout.spacing = spacing;
+            layout.childAlignment = TextAnchor.UpperCenter;
+            layout.childControlWidth = true; layout.childControlHeight = true;
+            layout.childForceExpandWidth = true; layout.childForceExpandHeight = false;
+            var fitter = form.gameObject.AddComponent<ContentSizeFitter>();
+            fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            return form;
+        }
+
+        /// <summary>Fila de altura fija dentro de un formulario (para casilla + enlace, etc.).</summary>
+        public static RectTransform LayoutRow(Transform parent, string name, float height)
+        {
+            var row = Rect(name, parent);
+            var element = row.gameObject.AddComponent<LayoutElement>();
+            element.preferredHeight = height; element.minHeight = height;
+            return row;
+        }
+
+        public static LayoutElement FixHeight(Component target, float height)
+        {
+            var element = target.gameObject.GetComponent<LayoutElement>() ?? target.gameObject.AddComponent<LayoutElement>();
+            element.preferredHeight = height; element.minHeight = height;
+            return element;
+        }
+
+        /// <summary>
+        /// Campo de formulario: etiqueta, cuadro de texto y mensaje de error apilados con un VerticalLayoutGroup. El mensaje está
+        /// desactivado mientras no hay error (no ocupa espacio) y es de una sola línea (se reduce para caber, nunca desborda).
+        /// Con <paramref name="inLayout"/> el campo lo coloca un layout padre; si no, se ancla a <paramref name="yFromTop"/>.
+        /// </summary>
+        public static AuthField MakeField(Transform parent, string name, string labelText, string placeholder, bool password,
+            float yFromTop, float width, float labelHeight, float inputHeight, float errorHeight, bool withReveal, float fontSize = 28f,
+            bool inLayout = false)
+        {
             var root = Rect(name, parent);
-            TopCenter(root, yFromTop, width, total);
+            if (!inLayout) TopCenter(root, yFromTop, width, labelHeight + inputHeight + errorHeight + 6f);
+
+            var stack = root.gameObject.AddComponent<VerticalLayoutGroup>();
+            stack.spacing = 2f;
+            stack.childAlignment = TextAnchor.UpperLeft;
+            stack.childControlWidth = true; stack.childControlHeight = true;
+            stack.childForceExpandWidth = true; stack.childForceExpandHeight = false;
 
             var label = Label(root, "Label", labelText, labelHeight * 0.85f, Ink, FontStyles.Bold, TextAlignmentOptions.BottomLeft, 1f);
-            Place(label.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(8f, 0f), new Vector2(-8f, labelHeight));
+            label.margin = new Vector4(8f, 0f, 8f, 0f);
+            FixHeight(label, labelHeight);
 
             // Contorno (cambia de color con el foco o el error) y relleno claro.
             var outline = Panel(root, "Outline", TurquoiseSoft);
-            Place(outline.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -(labelHeight + 2f)), new Vector2(0f, inputHeight));
+            FixHeight(outline, inputHeight);
             var fill = Panel(outline.transform, "Fill", Color.white);
             Stretch(fill.rectTransform, 4f, 4f, 4f, 4f);
             fill.raycastTarget = true;
@@ -228,7 +275,12 @@ namespace Lumina.EditorTools
             input.characterLimit = 64;
 
             var error = Label(root, "Error", string.Empty, errorHeight * 0.8f, new Color(0.78f, 0.22f, 0.18f), FontStyles.Bold, TextAlignmentOptions.TopLeft);
-            Place(error.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(8f, 0f), new Vector2(-8f, errorHeight));
+            error.margin = new Vector4(8f, 2f, 8f, 0f);
+            error.enableAutoSizing = true;
+            error.fontSizeMin = 12f;
+            error.fontSizeMax = errorHeight * 0.8f;
+            error.overflowMode = TextOverflowModes.Ellipsis;
+            FixHeight(error, errorHeight);
 
             var field = root.gameObject.AddComponent<AuthField>();
             Set(field, "input", input);
@@ -252,6 +304,10 @@ namespace Lumina.EditorTools
         {
             var root = Rect(name, parent);
             root.sizeDelta = size;
+            // Superficie invisible que recibe el clic: así toda la fila (casilla y texto) alterna la opción.
+            var hit = root.gameObject.AddComponent<Image>();
+            hit.color = new Color(1f, 1f, 1f, 0f);
+            hit.raycastTarget = true;
 
             var box = Panel(root, "Box", TurquoiseSoft);
             Place(box.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), Vector2.zero, new Vector2(38f, 38f));

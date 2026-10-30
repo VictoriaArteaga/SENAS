@@ -79,6 +79,23 @@ namespace Lumina.EditorTools
             Debug.Log("[Lumina] Escenas de autenticación construidas.");
         }
 
+        /// <summary>Reconstruye solo LoginScene y RegisterScene con los prefabs ya generados (no regenera avatares ni toca MainMenu).</summary>
+        [MenuItem("Lumina/Autenticación/Reconstruir Login y Register")]
+        public static void RebuildLoginAndRegister()
+        {
+            EnsureFolders();
+            var bubble = AssetDatabase.LoadAssetAtPath<GameObject>(BubblePrefabPath);
+            var avatarPrefabs = new GameObject[Avatars.Length];
+            for (int i = 0; i < Avatars.Length; i++)
+                avatarPrefabs[i] = AssetDatabase.LoadAssetAtPath<GameObject>(AvatarPrefabDir + "Avatar_" + Avatars[i].Id + ".prefab");
+            if (bubble == null || System.Array.Exists(avatarPrefabs, p => p == null))
+                throw new System.InvalidOperationException("Faltan prefabs de la burbuja o de los avatares; ejecuta primero 'Construir todo'.");
+            BuildLogin(bubble);
+            BuildRegister(avatarPrefabs);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Lumina] LoginScene y RegisterScene reconstruidas.");
+        }
+
         [MenuItem("Lumina/Autenticación/Registrar escenas en Build Settings")]
         public static void RegisterInBuildSettings()
         {
@@ -238,16 +255,20 @@ namespace Lumina.EditorTools
             LuminaUiKit.ShadowedTitle(inner, "Title", "LÚMINA", 104f, LuminaUiKit.Coral, LuminaUiKit.TurquoiseSoft, new Vector2(5f, 6f), 22f, 640f, 120f, 6f);
             LuminaUiKit.Pill(inner, "SubtitlePill", "INICIAR SESIÓN", 26f, LuminaUiKit.Coral, LuminaUiKit.Cream, 148f, 360f, 54f, 6f);
 
-            var email = LuminaUiKit.MakeField(inner, "EmailField", "Correo electrónico", "nombre@correo.com", false, 224f, 620f, 28f, 66f, 28f, false);
-            var password = LuminaUiKit.MakeField(inner, "PasswordField", "Contraseña", "Tu contraseña", true, 354f, 620f, 28f, 66f, 28f, true);
+            // Los campos, la fila de opciones y el estado van en un layout vertical: un mensaje de error empuja hacia abajo lo que sigue.
+            var form = LuminaUiKit.MakeForm(inner, "Form", 214f, 620f, 10f);
+            var email = LuminaUiKit.MakeField(form, "EmailField", "Correo electrónico", "nombre@correo.com", false, 0f, 620f, 28f, 66f, 28f, false, 28f, true);
+            var password = LuminaUiKit.MakeField(form, "PasswordField", "Contraseña", "Tu contraseña", true, 0f, 620f, 28f, 66f, 28f, true, 28f, true);
 
-            var remember = LuminaUiKit.MakeToggle(inner, "RememberToggle", "Recordar sesión", 24f, new Vector2(300f, 44f));
-            LuminaUiKit.Place((RectTransform)remember.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, 1f), new Vector2(-310f, -490f), new Vector2(300f, 44f));
-            var forgot = LuminaUiKit.MakeLink(inner, "ForgotButton", "¿Olvidé mi contraseña?", 22f, LuminaUiKit.CoralDark, new Vector2(300f, 44f), TextAlignmentOptions.MidlineRight);
-            LuminaUiKit.Place((RectTransform)forgot.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(1f, 1f), new Vector2(310f, -490f), new Vector2(300f, 44f));
+            var options = LuminaUiKit.LayoutRow(form, "OptionsRow", 44f);
+            var remember = LuminaUiKit.MakeToggle(options, "RememberToggle", "Recordar sesión", 24f, new Vector2(300f, 44f));
+            LuminaUiKit.Place((RectTransform)remember.transform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0f), new Vector2(300f, 44f));
+            var forgot = LuminaUiKit.MakeLink(options, "ForgotButton", "¿Olvidé mi contraseña?", 22f, LuminaUiKit.CoralDark, new Vector2(300f, 44f), TextAlignmentOptions.MidlineRight);
+            LuminaUiKit.Place((RectTransform)forgot.transform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0f, 0f), new Vector2(300f, 44f));
 
-            var statusLabel = LuminaUiKit.Label(inner, "StatusLabel", string.Empty, 24f, LuminaUiKit.Ink, FontStyles.Bold, TextAlignmentOptions.Center);
-            LuminaUiKit.TopCenter(statusLabel.rectTransform, 544f, 620f, 52f);
+            var statusLabel = LuminaUiKit.Label(form, "StatusLabel", string.Empty, 24f, LuminaUiKit.Ink, FontStyles.Bold, TextAlignmentOptions.Center);
+            statusLabel.enableAutoSizing = true; statusLabel.fontSizeMin = 16f; statusLabel.fontSizeMax = 24f;
+            LuminaUiKit.FixHeight(statusLabel, 52f);
             var status = statusLabel.gameObject.AddComponent<StatusMessage>();
             LuminaUiKit.Set(status, "label", statusLabel);
 
@@ -337,14 +358,16 @@ namespace Lumina.EditorTools
             LuminaUiKit.Pill(inner, "SubtitlePill", "TU AVENTURA EMPIEZA AQUÍ", 22f, LuminaUiKit.Coral, LuminaUiKit.Cream, 108f, 460f, 46f, 5f);
 
             const float w = 620f;
-            var nameField = LuminaUiKit.MakeField(inner, "NameField", "Nombre del jugador", "Como te llamas", false, 170f, w, 24f, 56f, 24f, false, 26f);
-            var userField = LuminaUiKit.MakeField(inner, "UsernameField", "Nombre de usuario", "tu_usuario", false, 282f, w, 24f, 56f, 24f, false, 26f);
-            var emailField = LuminaUiKit.MakeField(inner, "EmailField", "Correo electrónico", "nombre@correo.com", false, 394f, w, 24f, 56f, 24f, false, 26f);
-            var passField = LuminaUiKit.MakeField(inner, "PasswordField", "Contraseña", "Mínimo 6 caracteres", true, 506f, w, 24f, 56f, 24f, true, 26f);
-            var confirmField = LuminaUiKit.MakeField(inner, "ConfirmField", "Confirmar contraseña", "Repite tu contraseña", true, 618f, w, 24f, 56f, 24f, false, 26f);
+            var form = LuminaUiKit.MakeForm(inner, "Form", 168f, w, 6f);
+            var nameField = LuminaUiKit.MakeField(form, "NameField", "Nombre del jugador", "Como te llamas", false, 0f, w, 24f, 56f, 24f, false, 26f, true);
+            var userField = LuminaUiKit.MakeField(form, "UsernameField", "Nombre de usuario", "tu_usuario", false, 0f, w, 24f, 56f, 24f, false, 26f, true);
+            var emailField = LuminaUiKit.MakeField(form, "EmailField", "Correo electrónico", "nombre@correo.com", false, 0f, w, 24f, 56f, 24f, false, 26f, true);
+            var passField = LuminaUiKit.MakeField(form, "PasswordField", "Contraseña", "Mínimo 6 caracteres", true, 0f, w, 24f, 56f, 24f, true, 26f, true);
+            var confirmField = LuminaUiKit.MakeField(form, "ConfirmField", "Confirmar contraseña", "Repite tu contraseña", true, 0f, w, 24f, 56f, 24f, false, 26f, true);
 
-            var statusLabel = LuminaUiKit.Label(inner, "StatusLabel", string.Empty, 22f, LuminaUiKit.Ink, FontStyles.Bold, TextAlignmentOptions.Center);
-            LuminaUiKit.TopCenter(statusLabel.rectTransform, 734f, w, 44f);
+            var statusLabel = LuminaUiKit.Label(form, "StatusLabel", string.Empty, 22f, LuminaUiKit.Ink, FontStyles.Bold, TextAlignmentOptions.Center);
+            statusLabel.enableAutoSizing = true; statusLabel.fontSizeMin = 14f; statusLabel.fontSizeMax = 22f;
+            LuminaUiKit.FixHeight(statusLabel, 44f);
             var status = statusLabel.gameObject.AddComponent<StatusMessage>();
             LuminaUiKit.Set(status, "label", statusLabel);
 

@@ -19,6 +19,20 @@ namespace Lumina.Auth.Tests
         [TestCase("@correo.com")]
         public void Email_FormatoInvalidoSeRechaza(string value) => Assert.IsNotNull(AuthValidation.Email(value));
 
+        [Test]
+        public void Email_SinArrobaDiceQueFaltaElArroba()
+        {
+            StringAssert.Contains("@", AuthValidation.Email("anacorreo.com"));
+            StringAssert.Contains("@", AuthValidation.Email("abc"));
+        }
+
+        [Test]
+        public void Email_MensajesCortosParaQueEntrenEnUnaLinea()
+        {
+            foreach (var v in new[] { "", "abc", "ana@correo", "@correo.com" })
+                Assert.LessOrEqual(AuthValidation.Email(v).Length, 50, v);
+        }
+
         [TestCase("ana@correo.com")]
         [TestCase("  ana.perez+lsc@dominio.co  ")]
         public void Email_FormatoValidoSeAcepta(string value) => Assert.IsNull(AuthValidation.Email(value));

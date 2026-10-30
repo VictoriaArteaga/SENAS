@@ -73,7 +73,7 @@ namespace Lumina.UI
 
             foreach (var field in new[] { nameField, usernameField, emailField, passwordField, confirmField })
                 field.TextChanged += () => { if (!_busy) status.Clear(); };
-            avatars.Selected += _ => status.Clear();
+            avatars.Selected += id => { AuthSession.SelectAvatar(id); status.Clear(); };
 
             if (loading != null) loading.gameObject.SetActive(false);
             welcomeGroup.gameObject.SetActive(false);
