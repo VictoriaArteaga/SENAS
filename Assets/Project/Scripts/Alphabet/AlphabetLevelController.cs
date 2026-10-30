@@ -76,6 +76,7 @@ namespace Lumina.Alphabet
         private string _practiceStatus = "Practica la letra seleccionada con la webcam.";
         private float _practiceSimilarity;
         private bool _showPracticeFeedback;
+        private bool _hasPracticeScore;
 
         public bool IsOpen => _open;
 
@@ -142,8 +143,16 @@ namespace Lumina.Alphabet
             _practiceStatus = "Practica la letra seleccionada con la webcam.";
             _practiceSimilarity = 0f;
             _showPracticeFeedback = false;
-            _current = GetNextUnpracticedIndex();
+            _hasPracticeScore = false;
+            var completed = CountPracticedLetters() == _practiced.Length;
+            _current = completed ? _practiced.Length - 1 : GetNextUnpracticedIndex();
             Select(_current);
+            if (completed)
+            {
+                _practiceStatus = "¡Nivel 1 completado! Terminaste el abecedario LSC.";
+                _showPracticeFeedback = true;
+                RefreshPracticeUI();
+            }
         }
 
         /// <summary>Cambia a la siguiente vista (frente, perfil, dorso). La letra y la pose no cambian.</summary>
@@ -213,6 +222,7 @@ namespace Lumina.Alphabet
                 _practiceStatus = "Practica la letra seleccionada con la webcam.";
                 _practiceSimilarity = 0f;
                 _showPracticeFeedback = false;
+                _hasPracticeScore = false;
             }
             _current = index;
             if (!_seen[index])
@@ -281,6 +291,7 @@ namespace Lumina.Alphabet
             _practiceEvaluator.Configure(landmarkTemplates, false, alphabet.letters[_current].letter);
             _practiceEvaluator.EvaluationUpdated += OnPracticeEvaluation;
             _practiceSimilarity = 0f;
+            _hasPracticeScore = false;
             _practiceStatus = "Iniciando webcam… muestra la seña completa.";
             _showPracticeFeedback = true;
             RefreshPracticeUI();
@@ -318,6 +329,7 @@ namespace Lumina.Alphabet
             _practiceSimilarity = evaluation.Similarity;
             if (evaluation.Status == AlphabetEvaluationStatus.NoHand)
             {
+                _hasPracticeScore = false;
                 _practiceStatus = "No detecto la mano. Centra la mano y mejora la iluminación.";
                 RefreshPracticeUI();
                 return;
@@ -326,10 +338,14 @@ namespace Lumina.Alphabet
             if (evaluation.Status == AlphabetEvaluationStatus.NoTemplates ||
                 evaluation.Status == AlphabetEvaluationStatus.MotionTemplateNeedsSequence)
             {
+                _hasPracticeScore = false;
                 _practiceStatus = $"No hay una secuencia de referencia suficiente para {alphabet.letters[_current].letter}. Captúrala antes de practicarla.";
                 RefreshPracticeUI();
                 return;
             }
+
+            _hasPracticeScore = evaluation.Status == AlphabetEvaluationStatus.Recognized ||
+                                evaluation.Status == AlphabetEvaluationStatus.Uncertain;
 
             if (evaluation.Status == AlphabetEvaluationStatus.Recognized &&
                 string.Equals(evaluation.CandidateLetter, alphabet.letters[_current].letter,
@@ -370,8 +386,13 @@ namespace Lumina.Alphabet
             instruction.text = _showPracticeFeedback
                 ? $"{entry.instruction}\n\n{_practiceStatus}"
                 : entry.instruction;
-            validationBadge.text = _showPracticeFeedback
-                ? $"Precisión estimada {_practiceSimilarity:P0} · {GetPracticeStars(_practiceSimilarity)} estrellas · provisional"
+            var levelCompleted = CountPracticedLetters() == _practiced.Length;
+            validationBadge.text = levelCompleted
+                ? "¡Abecedario completado!"
+                : _showPracticeFeedback && _hasPracticeScore
+                ? $"Similitud estimada {_practiceSimilarity:P0} · {GetPracticeStars(_practiceSimilarity)} estrellas · experimental"
+                : _showPracticeFeedback
+                    ? "Esperando una evaluación válida…"
                 : entry.validation == PoseValidation.ApproximateFromReference
                     ? "Referencia aproximada · pendiente de validación"
                     : "Pose provisional · pendiente de validación";
