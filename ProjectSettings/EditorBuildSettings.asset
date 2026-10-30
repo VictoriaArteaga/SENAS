@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Project/Scenes/LuminaWorld.unity
     guid: c5ac911f61c02814bafb0a28caa6d091
+  - enabled: 1
+    path: Assets/Project/Scenes/AlphabetHouse.unity
+    guid: 65c64879c29459f4a9c39c1ab0060f8c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
