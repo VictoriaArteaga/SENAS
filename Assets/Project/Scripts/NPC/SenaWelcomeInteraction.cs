@@ -7,48 +7,66 @@ using Lumina.UI;
 namespace Lumina.NPC
 {
     /// <summary>
-    /// Primera interacción con Sena: al pulsar E dentro del radio de proximidad abre una única
-    /// bienvenida. No bloquea al jugador; la burbuja se cierra sola al alejarse.
+    /// Primera interacción con Sena: al pulsar E dentro del radio de proximidad abre la bienvenida,
+    /// que se avanza frase a frase (E o botón). No bloquea al jugador y se cierra sola al alejarse.
+    /// Una vez completada no vuelve a iniciarse.
     /// </summary>
     [RequireComponent(typeof(ProximityInteractable))]
     public class SenaWelcomeInteraction : MonoBehaviour
     {
         [Header("Referencias")]
         [SerializeField] private DialogueBubble bubble;
+        [SerializeField] private InteractionPrompt prompt;
         [SerializeField] private FirstPersonController player;
 
         [Header("Contenido")]
         [SerializeField] private string speakerName = "Sena";
-        [SerializeField, TextArea(3, 6)] private string welcomeMessage =
-            "¡Hola! Te doy la bienvenida a Lúmina. Aquí las manos comparten ideas, emociones e historias. " +
-            "Soy Sena y te acompañaré mientras descubres la Lengua de Señas Colombiana. ¿Comenzamos?";
+        [SerializeField] private string nextLabel = "SIGUIENTE";
+        [SerializeField] private string finishLabel = "¡LISTO!";
+        [SerializeField, TextArea(2, 4)] private string[] welcomeLines =
+        {
+            "¡Hola! Soy Sena.",
+            "Te doy la bienvenida a Lúmina.",
+            "Aquí aprenderás a comunicarte con tus manos.",
+            "Yo te acompañaré durante tu aprendizaje.",
+            "Cuando estés listo, comenzaremos con tu primera seña."
+        };
 
         private ProximityInteractable _interactable;
+        private int _lineIndex;
+        private bool _completed;
         private bool _cursorWasLocked;
 
         private void Awake()
         {
             _interactable = GetComponent<ProximityInteractable>();
 
-            if (bubble == null)
+            if (bubble == null || prompt == null || welcomeLines == null || welcomeLines.Length == 0)
             {
-                Debug.LogError($"[SenaWelcomeInteraction] Falta la referencia 'bubble' en '{name}'.", this);
+                Debug.LogError($"[SenaWelcomeInteraction] Falta 'bubble', 'prompt' o 'welcomeLines' en '{name}'.", this);
                 enabled = false;
                 return;
             }
 
-            _interactable.onInteract.AddListener(OpenWelcome);
-            _interactable.onPlayerExit.AddListener(bubble.Close);
+            _interactable.onPlayerEnter.AddListener(OnPlayerEnter);
+            _interactable.onPlayerExit.AddListener(OnPlayerExit);
+            _interactable.onInteract.AddListener(OnInteract);
+            bubble.ActionPressed += Advance;
             bubble.Closed += OnBubbleClosed;
         }
 
         private void OnDestroy()
         {
-            if (bubble != null) bubble.Closed -= OnBubbleClosed;
             if (_interactable != null)
             {
-                _interactable.onInteract.RemoveListener(OpenWelcome);
-                if (bubble != null) _interactable.onPlayerExit.RemoveListener(bubble.Close);
+                _interactable.onPlayerEnter.RemoveListener(OnPlayerEnter);
+                _interactable.onPlayerExit.RemoveListener(OnPlayerExit);
+                _interactable.onInteract.RemoveListener(OnInteract);
+            }
+            if (bubble != null)
+            {
+                bubble.ActionPressed -= Advance;
+                bubble.Closed -= OnBubbleClosed;
             }
         }
 
@@ -68,15 +86,55 @@ namespace Lumina.NPC
             if (player != null) _cursorWasLocked = player.CursorLocked;
         }
 
-        private void OpenWelcome()
+        private void OnPlayerEnter()
         {
-            bubble.Show(speakerName, welcomeMessage);
-            _interactable.SetPromptSuppressed(true);
+            if (!_completed && !bubble.IsOpen) prompt.Show();
         }
 
+        private void OnPlayerExit()
+        {
+            prompt.Hide();
+            bubble.Close();
+        }
+
+        private void OnInteract()
+        {
+            if (_completed) return;
+
+            if (bubble.IsOpen) Advance();
+            else Open();
+        }
+
+        private void Open()
+        {
+            _lineIndex = 0;
+            prompt.Hide();
+            bubble.Show(speakerName, welcomeLines[0], ActionText(), ProgressText());
+        }
+
+        private void Advance()
+        {
+            if (!bubble.IsOpen) return;
+
+            _lineIndex++;
+            if (_lineIndex >= welcomeLines.Length)
+            {
+                _completed = true;
+                bubble.Close();
+                return;
+            }
+
+            bubble.SetMessage(welcomeLines[_lineIndex], ActionText(), ProgressText());
+        }
+
+        // Si se cierra sin terminar (Esc o alejarse), la bienvenida empieza de nuevo la próxima vez.
         private void OnBubbleClosed()
         {
-            _interactable.SetPromptSuppressed(false);
+            if (!_completed && _interactable.PlayerInRange) prompt.Show();
         }
+
+        private string ActionText() => _lineIndex == welcomeLines.Length - 1 ? finishLabel : nextLabel;
+
+        private string ProgressText() => $"{_lineIndex + 1}/{welcomeLines.Length}";
     }
 }

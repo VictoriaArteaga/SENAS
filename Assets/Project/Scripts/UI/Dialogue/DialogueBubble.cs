@@ -2,21 +2,26 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Lumina.UI
 {
     /// <summary>
     /// Burbuja de diálogo en el mundo 3D (Canvas World Space). Solo se encarga de la presentación:
-    /// muestra un nombre y un mensaje, se orienta hacia la cámara, mantiene un tamaño legible según la
-    /// distancia y entra/sale con una transición breve. La lógica de cuándo abrirse vive en quien la usa.
+    /// muestra un nombre, un mensaje y un botón de acción, se orienta hacia la cámara, mantiene un
+    /// tamaño legible según la distancia y entra/sale con una transición breve. Quien la usa decide
+    /// qué mensaje mostrar y qué hacer cuando el jugador pulsa la acción.
     /// </summary>
     public class DialogueBubble : MonoBehaviour
     {
         [Header("Contenido")]
         [SerializeField] private TMP_Text speakerLabel;
         [SerializeField] private TMP_Text messageLabel;
-        [SerializeField] private Button closeButton;
+        [SerializeField] private TMP_Text progressLabel;
+        [SerializeField] private TMP_Text actionLabel;
+        [FormerlySerializedAs("closeButton")]
+        [SerializeField] private Button actionButton;
 
         [Header("Presentación")]
         [SerializeField] private GameObject visualRoot;
@@ -48,6 +53,9 @@ namespace Lumina.UI
         /// <summary>Se emite una vez cada vez que la burbuja pasa de abierta a cerrada.</summary>
         public event Action Closed;
 
+        /// <summary>Se emite cuando el jugador pulsa el botón de acción (siguiente / listo).</summary>
+        public event Action ActionPressed;
+
         private void Awake()
         {
             if (!Validate()) { enabled = false; return; }
@@ -56,15 +64,20 @@ namespace Lumina.UI
             _visualBaseScale = _visualTransform.localScale;
             if (viewCamera == null && Camera.main != null) viewCamera = Camera.main.transform;
 
-            closeButton.onClick.AddListener(Close);
-            // El controlador del jugador recupera el cursor al pulsar el ratón; cerrar al presionar
-            // (no al soltar) evita que el clic se pierda por ese cambio de estado del cursor.
-            var trigger = closeButton.gameObject.AddComponent<EventTrigger>();
-            var pointerDown = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-            pointerDown.callback.AddListener(_ => Close());
-            trigger.triggers.Add(pointerDown);
+            // El controlador del jugador recupera el cursor al pulsar el ratón, y un clic completo
+            // (pulsar + soltar) se pierde por ese cambio. Se actúa al presionar; Submit cubre el teclado.
+            var trigger = actionButton.gameObject.AddComponent<EventTrigger>();
+            AddTrigger(trigger, EventTriggerType.PointerDown);
+            AddTrigger(trigger, EventTriggerType.Submit);
 
             Apply(0f);
+        }
+
+        private void AddTrigger(EventTrigger trigger, EventTriggerType type)
+        {
+            var entry = new EventTrigger.Entry { eventID = type };
+            entry.callback.AddListener(_ => ActionPressed?.Invoke());
+            trigger.triggers.Add(entry);
         }
 
         private bool Validate()
@@ -72,7 +85,9 @@ namespace Lumina.UI
             bool ok = true;
             ok &= Require(speakerLabel, nameof(speakerLabel));
             ok &= Require(messageLabel, nameof(messageLabel));
-            ok &= Require(closeButton, nameof(closeButton));
+            ok &= Require(progressLabel, nameof(progressLabel));
+            ok &= Require(actionLabel, nameof(actionLabel));
+            ok &= Require(actionButton, nameof(actionButton));
             ok &= Require(visualRoot, nameof(visualRoot));
             ok &= Require(canvasGroup, nameof(canvasGroup));
             return ok;
@@ -85,16 +100,24 @@ namespace Lumina.UI
             return false;
         }
 
-        public void Show(string speaker, string message)
+        public void Show(string speaker, string message, string actionText, string progressText)
         {
             if (!enabled || _wantsOpen) return;
 
             speakerLabel.text = speaker;
-            messageLabel.text = message;
+            SetMessage(message, actionText, progressText);
             _wantsOpen = true;
             visualRoot.SetActive(true);
             canvasGroup.blocksRaycasts = true;
             if (!animate) Apply(1f);
+        }
+
+        /// <summary>Cambia el texto mostrado sin reabrir la burbuja.</summary>
+        public void SetMessage(string message, string actionText, string progressText)
+        {
+            messageLabel.text = message;
+            actionLabel.text = actionText;
+            progressLabel.text = progressText;
         }
 
         public void Close()
@@ -138,7 +161,7 @@ namespace Lumina.UI
         {
             _progress = progress;
 
-            // Salida de ease-out fuerte: arranca rápido y asienta suave (solo opacidad y escala).
+            // Ease-out fuerte: arranca rápido y asienta suave (solo opacidad y escala).
             float eased = 1f - Mathf.Pow(1f - progress, 4f);
             canvasGroup.alpha = eased;
             _visualTransform.localScale = _visualBaseScale * Mathf.Lerp(hiddenScale, 1f, eased);
