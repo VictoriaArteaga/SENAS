@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Lumina.Interaction;
 using Lumina.Player;
@@ -31,6 +32,10 @@ namespace Lumina.NPC
             "Yo te acompañaré durante tu aprendizaje.",
             "Cuando estés listo, comenzaremos con tu primera seña."
         };
+
+        [Header("Eventos")]
+        [Tooltip("Se emite una vez, al terminar la última frase de la bienvenida.")]
+        public UnityEvent onWelcomeCompleted;
 
         private ProximityInteractable _interactable;
         private int _lineIndex;
@@ -121,6 +126,7 @@ namespace Lumina.NPC
             {
                 _completed = true;
                 bubble.Close();
+                onWelcomeCompleted.Invoke();
                 return;
             }
 
