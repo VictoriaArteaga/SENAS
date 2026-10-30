@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Senas.AI.MediaPipe
 {
-  public enum AlphabetEvaluationStatus { NoHand, NoTemplates, MotionTemplateNeedsSequence, Uncertain, Recognized }
+  public enum AlphabetEvaluationStatus { NoHand, NoTemplates, MotionTemplateNeedsSequence, MotionPending, Uncertain, Recognized }
 
   /// <summary>La similitud es proximidad geometrica, no una probabilidad calibrada.</summary>
   public sealed class AlphabetLandmarkEvaluation
@@ -174,8 +174,13 @@ namespace Senas.AI.MediaPipe
       if (string.IsNullOrEmpty(bestLetter))
       {
         ResetStability();
-        var hasMotionSamples = motionTemplates != null && motionTemplates.Count > 0;
-        var status = !hasStaticTemplate && (hasMotionTemplate || hasMotionSamples)
+        if (!hasStaticTemplate && HasMotionTemplateForTarget(motionTemplates))
+        {
+          Publish(AlphabetEvaluationStatus.MotionPending, _targetLetter, 0f);
+          return;
+        }
+
+        var status = !hasStaticTemplate && hasMotionTemplate
           ? AlphabetEvaluationStatus.MotionTemplateNeedsSequence
           : AlphabetEvaluationStatus.NoTemplates;
         Publish(status, null, 0f);
@@ -293,6 +298,16 @@ namespace Senas.AI.MediaPipe
     {
       return string.IsNullOrWhiteSpace(_targetLetter) ||
         string.Equals(letter, _targetLetter, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool HasMotionTemplateForTarget(IReadOnlyList<AlphabetMotionTemplate> templates)
+    {
+      if (templates == null) return false;
+      foreach (var template in templates)
+        if (template != null && MatchesTarget(template.Letter) && template.Frames != null &&
+            template.Frames.Count >= _minimumMotionFrames)
+          return true;
+      return false;
     }
 
     private static bool HasMotionEnergy(IReadOnlyList<MotionObservation> frames)

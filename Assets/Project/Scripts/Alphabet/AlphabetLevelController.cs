@@ -344,6 +344,14 @@ namespace Lumina.Alphabet
                 return;
             }
 
+            if (evaluation.Status == AlphabetEvaluationStatus.MotionPending)
+            {
+                _hasPracticeScore = false;
+                _practiceStatus = $"Haz el movimiento completo de {alphabet.letters[_current].letter} y mantén la mano dentro del encuadre.";
+                RefreshPracticeUI();
+                return;
+            }
+
             _hasPracticeScore = evaluation.Status == AlphabetEvaluationStatus.Recognized ||
                                 evaluation.Status == AlphabetEvaluationStatus.Uncertain;
 

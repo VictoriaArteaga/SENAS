@@ -135,6 +135,7 @@ namespace Senas.AI.MediaPipe
         AlphabetEvaluationStatus.NoHand => "Evaluador: muestra una mano",
         AlphabetEvaluationStatus.NoTemplates => "Evaluador: faltan plantillas estaticas",
         AlphabetEvaluationStatus.MotionTemplateNeedsSequence => "Evaluador: esta seña necesita una secuencia",
+        AlphabetEvaluationStatus.MotionPending => "Evaluador: realiza el movimiento completo",
         AlphabetEvaluationStatus.Uncertain => $"Candidata: {_latestEvaluation.CandidateLetter}  similitud geometrica: {_latestEvaluation.Similarity:P0}",
         AlphabetEvaluationStatus.Recognized => $"Letra aceptada: {_latestEvaluation.CandidateLetter}  similitud geometrica: {_latestEvaluation.Similarity:P0}",
         _ => "Evaluador listo"

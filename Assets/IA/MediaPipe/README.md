@@ -37,6 +37,7 @@ La referencia LSC validada por el equipo confirma como dinamicas **G, H, J, Ñ, 
 
 - El evaluador conserva hasta 90 observaciones, reinicia ante una perdida de tracking larga y compara ventanas de duracion variable mediante DTW con banda limitada.
 - La distancia combina forma de mano y trayectoria de muñeca; se requiere evidencia minima de movimiento antes de aceptar una coincidencia.
+- Si hay una referencia temporal guardada pero todavía no se completa el gesto, el estado es `MotionPending`; `MotionTemplateNeedsSequence` indica que hace falta capturar una referencia.
 - `Similarity` sigue siendo proximidad geometrica, no probabilidad ni medida de precision. `AlphabetHouse` ofrece una practica experimental; no usar sus coincidencias como nota o dominio aprendido hasta medir falsos positivos y negativos con distintas personas y velocidades.
 - El nivel requiere al menos 60 % de similitud estimada para registrar una letra como superada y desbloquear la siguiente en orden alfabetico. El progreso se conserva localmente. El umbral y las estrellas son provisionales: no equivalen a una calificacion lingüistica validada.
 
