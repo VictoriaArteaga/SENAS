@@ -212,7 +212,11 @@ namespace Lumina.Alphabet
             if (!IsUnlocked(index))
             {
                 _practiceStatus = $"Primero completa la letra {alphabet.letters[index - 1].letter} para desbloquear {alphabet.letters[index].letter}.";
+                _practiceSimilarity = 0f;
+                _hasPracticeScore = false;
+                _showPracticeFeedback = true;
                 RefreshButtons();
+                RefreshPracticeUI();
                 return;
             }
 
@@ -398,7 +402,7 @@ namespace Lumina.Alphabet
             validationBadge.text = levelCompleted
                 ? "¡Abecedario completado!"
                 : _showPracticeFeedback && _hasPracticeScore
-                ? $"Similitud estimada {_practiceSimilarity:P0} · {GetPracticeStars(_practiceSimilarity)} estrellas · experimental"
+                ? $"Similitud {_practiceSimilarity:P0} · {GetPracticeStars(_practiceSimilarity)}/3 ★ · estimada"
                 : _showPracticeFeedback
                     ? "Esperando una evaluación válida…"
                 : entry.validation == PoseValidation.ApproximateFromReference
