@@ -5167,6 +5167,7 @@ GameObject:
   - component: {fileID: 942561432}
   - component: {fileID: 942561431}
   - component: {fileID: 942561434}
+  - component: {fileID: 942561435}
   m_Layer: 0
   m_Name: Sena
   m_TagString: Untagged
@@ -5268,7 +5269,7 @@ MonoBehaviour:
   player: {fileID: 211803533}
   speakerName: SENA
   nextLabel: SIGUIENTE
-  finishLabel: "\xA1LISTO!"
+  finishLabel: COMENZAR
   welcomeLines:
   - "\xA1Hola! Soy Sena."
   - "Te doy la bienvenida a L\xFAmina."
@@ -5277,7 +5278,32 @@ MonoBehaviour:
   - "Cuando est\xE9s listo, comenzaremos con tu primera se\xF1a."
   onWelcomeCompleted:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 942561435}
+        m_TargetAssemblyTypeName: Lumina.Interaction.SceneEntrance, Assembly-CSharp
+        m_MethodName: Enter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &942561435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942561429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73c90a6f377fb7545a8551d50dd1d486, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: AlphabetHouse
 --- !u!1001 &951221160
 PrefabInstance:
   m_ObjectHideFlags: 0
