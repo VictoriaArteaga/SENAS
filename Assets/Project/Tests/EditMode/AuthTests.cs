@@ -124,6 +124,22 @@ namespace Lumina.Auth.Tests
         }
 
         [Test]
+        public void ElAvatarElegidoSobreviveAlCierreDeSesion()
+        {
+            AuthSession.Clear();
+            AuthSession.SelectAvatar("nube");
+            Assert.AreEqual("nube", AuthSession.AvatarId);
+            AuthSession.SignIn("Ana");
+            Assert.AreEqual("nube", AuthSession.AvatarId, "iniciar sesión sin avatar no debe borrar la elección");
+            AuthSession.Clear();
+            Assert.AreEqual("nube", AuthSession.AvatarId, "cerrar sesión conserva la elección en memoria");
+            AuthSession.SelectAvatar("sol");
+            Assert.AreEqual("sol", AuthSession.AvatarId);
+            AuthSession.SelectAvatar(null);
+            Assert.AreEqual("sol", AuthSession.AvatarId, "un valor vacío no pisa la elección");
+        }
+
+        [Test]
         public void LaSesionSoloViveEnMemoria()
         {
             AuthSession.SignIn("Ana", "luna");
