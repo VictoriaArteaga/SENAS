@@ -16,7 +16,7 @@ The bundled Windows native library is x64 and CPU-only. Windows support for the 
 
 La escena aislada `Assets/IA/Test_Webcam_MediaPipe.unity` ya tiene `AlphabetLandmarkEvaluator` conectado a `MediaPipeCapture` y referencia `AlphabetLandmarkTemplates.asset`. El asset contiene muestras estaticas capturadas para 21 letras; esto no significa que las 27 letras esten cubiertas ni que las muestras esten validadas. El umbral inicial de distancia es orientativo y requiere calibracion con muestras reales. La similitud mostrada es proximidad geometrica, no una probabilidad ni una medida de precision validada.
 
-Las letras dinamicas usan secuencias separadas de las plantillas de postura. El comparador temporal aplica DTW sobre landmarks normalizados y trayectoria de muñeca, con una ventana limitada y una comprobacion minima de movimiento. Los umbrales son iniciales; aun requieren calibracion y validacion con muestras reales.
+Las letras dinamicas usan secuencias separadas de las plantillas de postura. El comparador temporal aplica DTW sobre landmarks normalizados y trayectoria de muñeca, con una ventana limitada y una comprobacion minima de movimiento. En `AlphabetHouse`, el ejercicio filtra las referencias por la letra objetivo para no confundirla con otra candidata. La interfaz muestra una precision geometrica estimada y estrellas provisionales; requiere calibracion y validacion con muestras reales.
 
 ## Captura y evaluacion temporal
 
@@ -37,9 +37,10 @@ La referencia LSC validada por el equipo confirma como dinamicas **G, H, J, Ñ, 
 
 - El evaluador conserva hasta 90 observaciones, reinicia ante una perdida de tracking larga y compara ventanas de duracion variable mediante DTW con banda limitada.
 - La distancia combina forma de mano y trayectoria de muñeca; se requiere evidencia minima de movimiento antes de aceptar una coincidencia.
-- `Similarity` sigue siendo proximidad geometrica, no probabilidad ni medida de precision. No conectar al gameplay hasta evaluar falsos positivos y negativos con distintas personas y velocidades.
+- `Similarity` sigue siendo proximidad geometrica, no probabilidad ni medida de precision. `AlphabetHouse` ofrece una practica experimental; no usar sus coincidencias como nota o dominio aprendido hasta medir falsos positivos y negativos con distintas personas y velocidades.
+- El nivel requiere al menos 60 % de similitud estimada para registrar una letra como superada y desbloquear la siguiente en orden alfabetico. El progreso se conserva localmente. El umbral y las estrellas son provisionales: no equivalen a una calificacion lingüistica validada.
 
-La lista dinamica ya fue confirmada por el equipo contra la referencia aprobada: G, H, J, Ñ, S y Z. El asset conserva las muestras estaticas de G como referencia de postura y actualmente incluye 14 secuencias temporales: G (3), H (1), J (2), Ñ (3), S (3) y Z (2). Captura mas variantes antes de calibrar el umbral para evitar sobreajuste a una sola persona o velocidad.
+La lista dinamica ya fue confirmada por el equipo contra la referencia aprobada: G, H, J, Ñ, S y Z. El asset conserva las muestras estaticas como referencia de postura y actualmente incluye 22 secuencias temporales: G (7), H (1), J (2), Ñ (3), S (7) y Z (2). Captura mas variantes, en particular para H, antes de calibrar el umbral para evitar sobreajuste a una sola persona o velocidad.
 
 ## Capturar referencias estaticas
 
@@ -47,8 +48,8 @@ La lista dinamica ya fue confirmada por el equipo contra la referencia aprobada:
 2. Abre `Window > SENAS > LSC Template Capture`; la ventana carga `AlphabetLandmarkTemplates.asset` automaticamente.
 3. Selecciona la letra y la mano para la muestra. Sigue la demostracion aprobada del juego fuera de esta herramienta.
 4. Con la postura estatica visible en la webcam, pulsa `Capturar muestra estatica` y mantenla hasta completar el promedio.
-5. Repite capturas en condiciones variadas antes de calibrar el umbral. No uses la salida como evaluacion de gameplay hasta validar falsos positivos y negativos.
+5. Repite capturas en condiciones variadas antes de calibrar el umbral. En `AlphabetHouse` la practica con webcam es experimental; no debe presentarse como una evaluacion fiable hasta validar falsos positivos y negativos.
 
-El asset guarda solo los puntos promediados. El evaluador ya esta conectado en la escena de prueba y otros componentes podrian suscribirse a `EvaluationUpdated`; actualmente no hay conexion a gameplay ni retroalimentacion didactica.
+El asset guarda solo los puntos promediados. El evaluador esta disponible en la escena de prueba y el nivel `AlphabetHouse` permite iniciar una practica con webcam para la letra seleccionada. La interfaz presenta la precision geometrica estimada y retroalimentacion para reintentar; una letra requiere al menos 60 % para registrarse como superada y desbloquear la siguiente. Las estrellas y coincidencias son experimentales, se guardan localmente y no sustituyen la revision por una persona competente en LSC.
 
 Referencia de las plantillas: video del alfabeto LSC validado por el equipo: https://www.youtube.com/watch?v=7SmEeoNeZXY.
