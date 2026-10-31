@@ -1,0 +1,23 @@
+{
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": "..",
+  "testEnvironment": "node",
+  "testRegex": "test/.*\\.e2e-spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": [
+      "ts-jest",
+      {
+        "tsconfig": "tsconfig.spec.json"
+      }
+    ]
+  },
+  "resolver": "<rootDir>/test/support/jest-resolver.cjs",
+  "setupFiles": [
+    "<rootDir>/test/support/jest.setup.ts"
+  ],
+  "maxWorkers": 1
+}
