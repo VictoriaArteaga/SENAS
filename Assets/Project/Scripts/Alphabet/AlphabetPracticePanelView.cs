@@ -45,6 +45,7 @@ namespace Lumina.Alphabet
             Color turquoiseSoft)
         {
             _badge = badge;
+            _badgeBackground = badge != null ? badge.GetComponentInParent<Image>() : null;
             _cream = cream;
             _ink = ink;
             _turquoise = turquoise;
@@ -174,30 +175,23 @@ namespace Lumina.Alphabet
             if (_badge != null)
             {
                 var badgeRect = _badge.rectTransform;
-                var pill = new GameObject("PracticeStatusPill",
-                    typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Outline));
-                pill.transform.SetParent(card, false);
-                var pillRect = pill.GetComponent<RectTransform>();
-                pillRect.anchorMin = Vector2.zero;
-                pillRect.anchorMax = Vector2.zero;
-                pillRect.pivot = Vector2.zero;
-                pillRect.anchoredPosition = new Vector2(24f, 15f);
-                pillRect.sizeDelta = new Vector2(650f, 58f);
-                _badgeBackground = pill.GetComponent<Image>();
-                var cardImage = card.GetComponent<Image>();
-                if (cardImage != null)
+                var pillRect = _badgeBackground != null
+                    ? _badgeBackground.rectTransform
+                    : null;
+                if (pillRect != null)
                 {
-                    _badgeBackground.sprite = cardImage.sprite;
-                    _badgeBackground.type = cardImage.type;
+                    pillRect.anchorMin = Vector2.zero;
+                    pillRect.anchorMax = Vector2.zero;
+                    pillRect.pivot = Vector2.zero;
+                    pillRect.anchoredPosition = new Vector2(24f, 32f);
+                    pillRect.sizeDelta = new Vector2(650f, 58f);
                 }
-                _badgeBackground.color = _turquoiseSoft;
-                _badgeBackground.raycastTarget = false;
-                var pillOutline = pill.GetComponent<Outline>();
-                pillOutline.effectColor = _turquoise;
-                pillOutline.effectDistance = new Vector2(1f, -1f);
-                pillOutline.useGraphicAlpha = true;
-
-                badgeRect.SetParent(pill.transform, false);
+                if (_badgeBackground != null)
+                {
+                    var pillOutline = _badgeBackground.GetComponent<Outline>();
+                    if (pillOutline != null) Destroy(pillOutline);
+                }
+                badgeRect.SetParent(_badgeBackground != null ? _badgeBackground.transform : card, false);
                 badgeRect.anchorMin = Vector2.zero;
                 badgeRect.anchorMax = Vector2.one;
                 badgeRect.pivot = new Vector2(0.5f, 0.5f);
@@ -205,48 +199,45 @@ namespace Lumina.Alphabet
                 badgeRect.offsetMax = new Vector2(-12f, 0f);
                 _badge.alignment = TextAlignmentOptions.Center;
                 _badge.fontSize = Mathf.Max(_badge.fontSize, 21f);
-                CreateSuccessMark(pill.transform);
-                CreateStars(pill.transform);
+                if (_badgeBackground != null)
+                {
+                    _badgeBackground.color = _turquoiseSoft;
+                    _badgeBackground.raycastTarget = false;
+                    CreateSuccessMark(_badgeBackground.transform);
+                    CreateStars(_badgeBackground.transform);
+                }
             }
 
             var buttonRect = practiceButton.GetComponent<RectTransform>();
             buttonRect.anchorMin = Vector2.zero;
             buttonRect.anchorMax = Vector2.zero;
             buttonRect.pivot = Vector2.zero;
-            buttonRect.anchoredPosition = new Vector2(700f, 14f);
+            buttonRect.anchoredPosition = new Vector2(700f, 30f);
             buttonRect.sizeDelta = new Vector2(260f, 62f);
 
             _root = new GameObject("PracticeCameraPreview",
-                typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Outline));
+                typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             _root.transform.SetParent(card, false);
             var rootRect = _root.GetComponent<RectTransform>();
             rootRect.anchorMin = Vector2.one;
             rootRect.anchorMax = Vector2.one;
             rootRect.pivot = Vector2.one;
-            rootRect.anchoredPosition = new Vector2(-24f, -18f);
-            rootRect.sizeDelta = new Vector2(176f, 176f);
+            rootRect.anchoredPosition = new Vector2(-40f, -18f);
+            rootRect.sizeDelta = new Vector2(164f, 164f);
 
             var background = _root.GetComponent<Image>();
-            var cardBackground = card.GetComponent<Image>();
-            if (cardBackground != null)
-            {
-                background.sprite = cardBackground.sprite;
-                background.type = cardBackground.type;
-            }
+            background.sprite = null;
+            background.type = Image.Type.Simple;
             background.color = _ink;
             background.raycastTarget = false;
-            var outline = _root.GetComponent<Outline>();
-            outline.effectColor = _turquoise;
-            outline.effectDistance = new Vector2(2f, -2f);
-            outline.useGraphicAlpha = true;
 
             var viewport = new GameObject("CameraViewport", typeof(RectTransform), typeof(RectMask2D));
             viewport.transform.SetParent(_root.transform, false);
             _viewportRect = viewport.GetComponent<RectTransform>();
             _viewportRect.anchorMin = Vector2.zero;
             _viewportRect.anchorMax = Vector2.one;
-            _viewportRect.offsetMin = new Vector2(3f, 3f);
-            _viewportRect.offsetMax = new Vector2(-3f, -3f);
+            _viewportRect.offsetMin = Vector2.zero;
+            _viewportRect.offsetMax = Vector2.zero;
 
             var feed = new GameObject("CameraFeed",
                 typeof(RectTransform), typeof(CanvasRenderer), typeof(RawImage));
