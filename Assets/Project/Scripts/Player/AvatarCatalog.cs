@@ -22,6 +22,15 @@ namespace Lumina.Player
 
         public int Count => avatars != null ? avatars.Length : 0;
 
+        /// <summary>Primer avatar con modelo, para pantallas que necesitan mostrar uno aunque aún no se haya elegido.</summary>
+        public Entry First()
+        {
+            if (avatars == null) return null;
+            foreach (var entry in avatars)
+                if (entry != null && entry.prefab != null) return entry;
+            return null;
+        }
+
         /// <summary>Devuelve la entrada con ese id (sin distinguir mayúsculas) o null si no existe o no tiene modelo.</summary>
         public Entry Find(string id)
         {

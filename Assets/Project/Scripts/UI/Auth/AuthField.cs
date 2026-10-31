@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using Lumina.Core;
+
 namespace Lumina.UI
 {
     /// <summary>
@@ -75,14 +77,14 @@ namespace Lumina.UI
             _revealed = revealed;
             input.contentType = revealed ? TMP_InputField.ContentType.Standard : TMP_InputField.ContentType.Password;
             input.ForceLabelUpdate();
-            if (revealLabel != null) revealLabel.text = revealed ? "OCULTAR" : "VER";
+            if (revealLabel != null) revealLabel.text = Loc.T(revealed ? "auth.hide" : "auth.show");
             if (notify) RevealToggled?.Invoke(revealed);
         }
 
         public void SetError(string message)
         {
             _hasError = true;
-            errorLabel.text = message;
+            errorLabel.text = Loc.Translate(message);
             // El campo está dentro de un layout vertical: al activar el mensaje, lo que hay debajo se desplaza para hacerle sitio.
             errorLabel.gameObject.SetActive(true);
             Refresh();

@@ -8,6 +8,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Lumina.Auth;
 
+using Lumina.Core;
+
 namespace Lumina.UI
 {
     /// <summary>
@@ -188,8 +190,8 @@ namespace Lumina.UI
 
         private void ShowWelcome(string playerName)
         {
-            welcomeTitle.text = $"¡Bienvenido a Lúmina, {playerName}!";
-            welcomeBody.text = $"Tu compañero {avatars.SelectedName} ya te espera.\nEsta es una cuenta de prueba: no se guardó ninguna información.";
+            welcomeTitle.text = Loc.T("auth.welcomeNamed", playerName);
+            welcomeBody.text = Loc.T("auth.welcomeBody", avatars.SelectedName);
             welcomeGroup.gameObject.SetActive(true);
             StartCoroutine(FadeWelcome());
         }
