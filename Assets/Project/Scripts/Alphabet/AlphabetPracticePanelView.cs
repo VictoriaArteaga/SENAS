@@ -27,8 +27,6 @@ namespace Lumina.Alphabet
         private RectTransform _viewportRect;
         private TMP_Text _hint;
         private GameObject _successMark;
-        private Image[] _stars;
-        private static Sprite _ratingStarSprite;
         private Texture _configuredTexture;
         private int _configuredRotation = -1;
         private bool _configuredVerticalFlip;
@@ -128,25 +126,18 @@ namespace Lumina.Alphabet
         public void SetBadge(string message, PracticeBadgeTone tone, int stars = 0)
         {
             if (_badge == null) return;
-            _badge.text = message;
+            string ratingStars = tone == PracticeBadgeTone.Success && stars > 0
+                ? $"<color=#E9A11A><size=135%>{new string('*', stars).Replace('*', '★')}</size></color>  "
+                : string.Empty;
+            _badge.richText = true;
+            _badge.text = ratingStars + message;
             _badge.color = _ink;
             _badge.alignment = tone == PracticeBadgeTone.Success
                 ? TextAlignmentOptions.MidlineLeft
                 : TextAlignmentOptions.Center;
             _badge.fontSize = Mathf.Max(_badge.fontSize, 21f);
             if (_successMark != null) _successMark.SetActive(tone == PracticeBadgeTone.Success);
-            if (_stars != null)
-            {
-                for (int i = 0; i < _stars.Length; i++)
-                {
-                    bool showStars = tone == PracticeBadgeTone.Success && stars > 0;
-                    _stars[i].gameObject.SetActive(showStars);
-                    _stars[i].color = i < stars
-                        ? new Color(1f, 0.69f, 0.19f)
-                        : new Color(0.58f, 0.72f, 0.68f);
-                }
-            }
-            var badgeRect = _badge.rectTransform;
+var badgeRect = _badge.rectTransform;
             float textInsetLeft = tone == PracticeBadgeTone.Success ? 42f : 12f;
             float textInsetRight = tone == PracticeBadgeTone.Success ? 82f : 12f;
             badgeRect.anchorMin = Vector2.zero;
@@ -223,7 +214,6 @@ namespace Lumina.Alphabet
                     _badgeBackground.color = _turquoiseSoft;
                     _badgeBackground.raycastTarget = false;
                     CreateSuccessMark(_badgeBackground.transform);
-                    CreateStars(_badgeBackground.transform);
                 }
             }
 
@@ -301,92 +291,6 @@ namespace Lumina.Alphabet
             CreateCheckStroke(_successMark.transform, new Vector2(-2f, -2f), 13f, 4f, 45f);
             CreateCheckStroke(_successMark.transform, new Vector2(4f, 1f), 18f, 4f, -48f);
             _successMark.SetActive(false);
-        }
-
-        private void CreateStars(Transform parent)
-        {
-            _stars = new Image[3];
-            for (int i = 0; i < _stars.Length; i++)
-            {
-                var starObject = new GameObject($"SuccessStar{i + 1}", typeof(RectTransform),
-                    typeof(CanvasRenderer), typeof(Image));
-                starObject.transform.SetParent(parent, false);
-                var rect = starObject.GetComponent<RectTransform>();
-                rect.anchorMin = new Vector2(1f, 0.5f);
-                rect.anchorMax = new Vector2(1f, 0.5f);
-                rect.pivot = new Vector2(1f, 0.5f);
-                rect.anchoredPosition = new Vector2(-12f - i * 23f, 0f);
-                rect.sizeDelta = new Vector2(20f, 20f);
-                _stars[i] = starObject.GetComponent<Image>();
-                _stars[i].sprite = GetRatingStarSprite();
-                _stars[i].type = Image.Type.Simple;
-                _stars[i].raycastTarget = false;
-                _stars[i].color = new Color(1f, 0.69f, 0.19f);
-                starObject.SetActive(false);
-            }
-        }
-
-        private static Sprite GetRatingStarSprite()
-        {
-            if (_ratingStarSprite != null) return _ratingStarSprite;
-
-            const int textureSize = 128;
-            var vertices = new Vector2[10];
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                float angle = Mathf.PI * 0.5f - i * Mathf.PI / 5f;
-                float radius = i % 2 == 0 ? 0.48f : 0.22f;
-                vertices[i] = new Vector2(0.5f + Mathf.Cos(angle) * radius,
-                    0.5f + Mathf.Sin(angle) * radius);
-            }
-
-            var pixels = new Color32[textureSize * textureSize];
-            for (int y = 0; y < textureSize; y++)
-            {
-                for (int x = 0; x < textureSize; x++)
-                {
-                    int coverage = 0;
-                    for (int sampleY = 0; sampleY < 2; sampleY++)
-                    for (int sampleX = 0; sampleX < 2; sampleX++)
-                    {
-                        var point = new Vector2((x + (sampleX + 0.5f) * 0.5f) / textureSize,
-                            (y + (sampleY + 0.5f) * 0.5f) / textureSize);
-                        if (IsInsidePolygon(point, vertices)) coverage++;
-                    }
-
-                    byte alpha = (byte)(coverage * 255 / 4);
-                    pixels[y * textureSize + x] = new Color32(255, 255, 255, alpha);
-                }
-            }
-
-            var texture = new Texture2D(textureSize, textureSize, TextureFormat.RGBA32, false, true)
-            {
-                name = "SENAS Rating Star Texture",
-                filterMode = FilterMode.Bilinear,
-                wrapMode = TextureWrapMode.Clamp
-            };
-            texture.SetPixels32(pixels);
-            texture.Apply(false, true);
-            _ratingStarSprite = Sprite.Create(texture, new Rect(0f, 0f, textureSize, textureSize),
-                new Vector2(0.5f, 0.5f), textureSize);
-            _ratingStarSprite.name = "SENAS Rating Star";
-            return _ratingStarSprite;
-        }
-
-        private static bool IsInsidePolygon(Vector2 point, Vector2[] vertices)
-        {
-            bool inside = false;
-            for (int i = 0, previous = vertices.Length - 1; i < vertices.Length; previous = i++)
-            {
-                Vector2 currentVertex = vertices[i];
-                Vector2 previousVertex = vertices[previous];
-                bool crosses = (currentVertex.y > point.y) != (previousVertex.y > point.y) &&
-                    point.x < (previousVertex.x - currentVertex.x) *
-                    (point.y - currentVertex.y) / (previousVertex.y - currentVertex.y) + currentVertex.x;
-                if (crosses) inside = !inside;
-            }
-
-            return inside;
         }
 
         private static void CreateCheckStroke(Transform parent, Vector2 position, float width, float height, float angle)
