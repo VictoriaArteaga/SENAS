@@ -20,6 +20,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Project/Scenes/AlphabetHouse.unity
     guid: 65c64879c29459f4a9c39c1ab0060f8c
+  - enabled: 1
+    path: Assets/Project/Scenes/Practice.unity
+    guid: 0361a55c033604d49a5d9cb478c993e8
+  - enabled: 1
+    path: Assets/Project/Scenes/Profile.unity
+    guid: 302c5ed47e5d47648b332757ed3b04fa
+  - enabled: 1
+    path: Assets/Project/Scenes/Settings.unity
+    guid: e8ef707d8112af94c880b6c77a6d15f9
+  - enabled: 1
+    path: Assets/Project/Scenes/Results.unity
+    guid: 92f61a491ef0575469b2fb44be589b89
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
