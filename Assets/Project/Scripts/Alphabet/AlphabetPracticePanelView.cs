@@ -158,7 +158,9 @@ namespace Lumina.Alphabet
 
             if (_stars == null || _badgeBackground == null) return;
             _badge.ForceMeshUpdate();
-            float textWidth = _badge.GetPreferredValues(_badge.text, badgeRect.rect.width, 58f).x;
+            float textWidth = _badge.textInfo.lineCount > 0
+                ? _badge.textInfo.lineInfo[0].maxAdvance
+                : _badge.GetPreferredValues(_badge.text).x;
             var pillRect = _badgeBackground.rectTransform;
             for (int i = 0; i < _stars.Length; i++)
             {
