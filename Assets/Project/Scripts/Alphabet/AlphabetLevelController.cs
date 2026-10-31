@@ -349,7 +349,7 @@ namespace Lumina.Alphabet
             _practiceCapture = null;
             _practiceEvaluator = null;
             var previewHint = _practiced != null && _practiced.Length > _current && _practiced[_current]
-                ? "✓ Seña superada"
+                ? "Cámara pausada"
                 : _open ? "Cámara pausada. Pulsa PRACTICAR." : "La vista de tu mano aparecerá aquí.";
             _practiceView?.ClearFrame(previewHint, _open);
         }
@@ -488,9 +488,10 @@ namespace Lumina.Alphabet
 
         private static int GetPracticeStars(float similarity)
         {
-            if (similarity >= 0.9f) return 3;
-            if (similarity >= 0.75f) return 2;
-            if (similarity >= 0.6f) return 1;
+            int roundedPercent = Mathf.RoundToInt(Mathf.Clamp01(similarity) * 100f);
+            if (roundedPercent >= 90) return 3;
+            if (roundedPercent >= 75) return 2;
+            if (roundedPercent >= 60) return 1;
             return 0;
         }
 
