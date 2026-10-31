@@ -203,8 +203,8 @@ namespace Lumina.Alphabet
                 badgeRect.pivot = new Vector2(0.5f, 0.5f);
                 badgeRect.offsetMin = new Vector2(12f, 0f);
                 badgeRect.offsetMax = new Vector2(-12f, 0f);
-                badgeRect.alignment = TextAlignmentOptions.Center;
-                badgeRect.fontSize = Mathf.Max(badgeRect.fontSize, 21f);
+                _badge.alignment = TextAlignmentOptions.Center;
+                _badge.fontSize = Mathf.Max(_badge.fontSize, 21f);
                 CreateSuccessMark(pill.transform);
                 CreateStars(pill.transform);
             }
@@ -363,7 +363,7 @@ namespace Lumina.Alphabet
             var text = textObject.GetComponent<TextMeshProUGUI>();
             text.font = font;
             text.raycastTarget = false;
-            text.enableWordWrapping = true;
+            text.textWrappingMode = TextWrappingModes.Normal;
             return text;
         }
     }
