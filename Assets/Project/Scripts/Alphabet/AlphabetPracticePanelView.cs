@@ -15,7 +15,7 @@ namespace Lumina.Alphabet
     /// <summary>Construye y actualiza el panel compacto de webcam y retroalimentación del abecedario.</summary>
     internal sealed class AlphabetPracticePanelView
     {
-        private readonly TMP_Text _badge;
+        private TMP_Text _badge;
         private Image _badgeBackground;
         private readonly Color _cream;
         private readonly Color _ink;
@@ -174,7 +174,7 @@ namespace Lumina.Alphabet
 
             if (_badge != null)
             {
-                var badgeRect = _badge.rectTransform;
+                var sourceBadge = _badge;
                 var pillRect = _badgeBackground != null
                     ? _badgeBackground.rectTransform
                     : null;
@@ -186,7 +186,18 @@ namespace Lumina.Alphabet
                     pillRect.anchoredPosition = new Vector2(24f, 32f);
                     pillRect.sizeDelta = new Vector2(650f, 58f);
                 }
-                badgeRect.SetParent(_badgeBackground != null ? _badgeBackground.transform : card, false);
+                sourceBadge.gameObject.SetActive(false);
+                var badgeObject = new GameObject("PracticeStatusText",
+                    typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+                badgeObject.transform.SetParent(_badgeBackground != null ? _badgeBackground.transform : card, false);
+                _badge = badgeObject.GetComponent<TextMeshProUGUI>();
+                _badge.font = sourceBadge.font;
+                _badge.fontSize = Mathf.Max(sourceBadge.fontSize, 21f);
+                _badge.fontStyle = sourceBadge.fontStyle;
+                _badge.color = _ink;
+                _badge.raycastTarget = false;
+                _badge.textWrappingMode = TextWrappingModes.NoWrap;
+                var badgeRect = _badge.rectTransform;
                 badgeRect.anchorMin = Vector2.zero;
                 badgeRect.anchorMax = Vector2.one;
                 badgeRect.pivot = new Vector2(0.5f, 0.5f);
@@ -217,7 +228,7 @@ namespace Lumina.Alphabet
             rootRect.anchorMin = Vector2.one;
             rootRect.anchorMax = Vector2.one;
             rootRect.pivot = Vector2.one;
-            rootRect.anchoredPosition = new Vector2(-40f, -18f);
+            rootRect.anchoredPosition = new Vector2(-64f, -18f);
             rootRect.sizeDelta = new Vector2(164f, 164f);
 
             var background = _root.GetComponent<Image>();
