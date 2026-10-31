@@ -127,11 +127,7 @@ namespace Lumina.Alphabet
         public void SetBadge(string message, PracticeBadgeTone tone, int stars = 0)
         {
             if (_badge == null) return;
-            string visibleRating = tone == PracticeBadgeTone.Success && stars > 0
-                ? $"<color=#F2A900><size=140%>{new string('*', stars)}</size></color>  "
-                : string.Empty;
-            _badge.richText = true;
-            _badge.text = visibleRating + message;
+            _badge.text = message;
             _badge.color = _ink;
             _badge.alignment = tone == PracticeBadgeTone.Success
                 ? TextAlignmentOptions.MidlineLeft
