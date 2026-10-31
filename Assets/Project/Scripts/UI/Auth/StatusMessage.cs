@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 
+using Lumina.Core;
+
 namespace Lumina.UI
 {
     /// <summary>Línea de estado del formulario: informa, avisa de un error o confirma un éxito, con color según el caso.</summary>
@@ -32,8 +34,8 @@ namespace Lumina.UI
 
         private void Show(string message, Color color)
         {
-            label.text = message;
-            label.color = color;
+            label.text = Loc.Translate(message);
+            label.color = UiTheme.Text(color);
             _targetAlpha = 1f;
             _alpha = 0.2f;
         }

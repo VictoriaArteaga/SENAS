@@ -9,6 +9,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Lumina.Auth;
 
+using Lumina.Core;
+
 namespace Lumina.UI
 {
     /// <summary>
@@ -72,8 +74,8 @@ namespace Lumina.UI
             SetExplicitNavigation(confirmButton, cancelButton);
             SetExplicitNavigation(cancelButton, confirmButton);
 
-            titleLabel.text = Title;
-            messageLabel.text = Message;
+            titleLabel.text = Loc.Translate(Title);
+            messageLabel.text = Loc.Translate(Message);
             visualRoot.SetActive(false);
         }
 
@@ -95,8 +97,8 @@ namespace Lumina.UI
             if (_open || _leaving) return;
             _open = true;
 
-            titleLabel.text = Title;
-            messageLabel.text = Message;
+            titleLabel.text = Loc.Translate(Title);
+            messageLabel.text = Loc.Translate(Message);
             confirmButton.interactable = cancelButton.interactable = true;
 
             if (stage != null && stage.StageCamera != null && senaView != null)
@@ -130,7 +132,7 @@ namespace Lumina.UI
             if (_leaving) return;
             _leaving = true;
             confirmButton.interactable = cancelButton.interactable = false;
-            messageLabel.text = Farewell;
+            messageLabel.text = Loc.Translate(Farewell);
             PlayWave();
 
             try
@@ -144,7 +146,7 @@ namespace Lumina.UI
                     // Sin escena de acceso registrada no se puede salir: se restablece la ventana.
                     _leaving = false;
                     confirmButton.interactable = cancelButton.interactable = true;
-                    messageLabel.text = Message;
+                    messageLabel.text = Loc.Translate(Message);
                 }
             }
             catch (OperationCanceledException) { }
