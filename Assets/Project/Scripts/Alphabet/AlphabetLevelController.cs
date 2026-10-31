@@ -17,6 +17,7 @@ namespace Lumina.Alphabet
     {
         private const string SeenLetterPreferencePrefix = "Lumina.Alphabet.Seen.";
         private const string PracticedLetterPreferencePrefix = "Lumina.Alphabet.Practiced.Qualified.v1.";
+        private const string PracticedScorePreferencePrefix = "Lumina.Alphabet.Practiced.Score.v1.";
 
         [Header("Datos y mano")]
         [SerializeField] private LscAlphabet alphabet;
@@ -77,6 +78,8 @@ namespace Lumina.Alphabet
         private float _practiceSimilarity;
         private bool _showPracticeFeedback;
         private bool _hasPracticeScore;
+        private AlphabetPracticePanelView _practiceView;
+        private PracticeBadgeTone _practiceBadgeTone;
 
         public bool IsOpen => _open;
 
@@ -122,6 +125,9 @@ namespace Lumina.Alphabet
             _viewPivot = new Vector3(center.x, _frontPosition.y, center.z);
             if (viewButton != null) viewButton.onClick.AddListener(NextView);
 
+            _practiceView = AlphabetPracticePanelView.Create(
+                instruction, validationBadge, replayButton, Cream, Ink, Turquoise, TurquoiseSoft);
+
             uiRoot.SetActive(false);
             learningCamera.enabled = false;
         }
@@ -136,6 +142,7 @@ namespace Lumina.Alphabet
             learningCamera.enabled = true;
             player.enabled = false;
             player.SetCursorLocked(false);
+            _practiceView?.SetVisible(true);
             foreach (var go in hideWhileOpen) if (go != null) go.SetActive(false);
             foreach (var b in disableWhileOpen) if (b != null) b.enabled = false;
 
@@ -147,6 +154,7 @@ namespace Lumina.Alphabet
             var completed = CountPracticedLetters() == _practiced.Length;
             _current = completed ? _practiced.Length - 1 : GetNextUnpracticedIndex();
             Select(_current);
+            RefreshPracticeHint();
             if (completed)
             {
                 _practiceStatus = "¡Nivel 1 completado! Terminaste el abecedario LSC.";
@@ -198,6 +206,8 @@ namespace Lumina.Alphabet
             if (!_open) return;
 
             var keyboard = Keyboard.current;
+            if (_practiceCapture != null)
+                _practiceView?.UpdateFrame(_practiceCapture.CameraTexture);
             if (keyboard == null) return;
 
             if (keyboard.escapeKey.wasPressedThisFrame) Close();
@@ -211,10 +221,11 @@ namespace Lumina.Alphabet
         {
             if (!IsUnlocked(index))
             {
-                _practiceStatus = $"Primero completa la letra {alphabet.letters[index - 1].letter} para desbloquear {alphabet.letters[index].letter}.";
+                _practiceStatus = $"Completa {alphabet.letters[index - 1].letter} para desbloquear {alphabet.letters[index].letter}.";
                 _practiceSimilarity = 0f;
                 _hasPracticeScore = false;
                 _showPracticeFeedback = true;
+                _practiceBadgeTone = PracticeBadgeTone.Warning;
                 RefreshButtons();
                 RefreshPracticeUI();
                 return;
@@ -227,8 +238,10 @@ namespace Lumina.Alphabet
                 _practiceSimilarity = 0f;
                 _showPracticeFeedback = false;
                 _hasPracticeScore = false;
+                _practiceBadgeTone = PracticeBadgeTone.Neutral;
             }
             _current = index;
+            RefreshPracticeHint();
             if (!_seen[index])
             {
                 _seen[index] = true;
@@ -277,6 +290,11 @@ namespace Lumina.Alphabet
             return PracticedLetterPreferencePrefix + letter;
         }
 
+        private static string GetPracticedScorePreferenceKey(string letter)
+        {
+            return PracticedScorePreferencePrefix + letter;
+        }
+
         private void StartPractice()
         {
             if (landmarkTemplates == null)
@@ -296,8 +314,11 @@ namespace Lumina.Alphabet
             _practiceEvaluator.EvaluationUpdated += OnPracticeEvaluation;
             _practiceSimilarity = 0f;
             _hasPracticeScore = false;
-            _practiceStatus = "Iniciando webcam… muestra la seña completa.";
+            _practiceStatus = "Activando cámara… centra la mano en el recuadro.";
             _showPracticeFeedback = true;
+            _practiceBadgeTone = PracticeBadgeTone.Info;
+            _practiceView?.SetVisible(true);
+            _practiceView?.SetHint("Conectando cámara…");
             RefreshPracticeUI();
         }
 
@@ -308,6 +329,7 @@ namespace Lumina.Alphabet
                 StopPractice();
                 _practiceStatus = "Práctica detenida.";
                 _showPracticeFeedback = true;
+                _practiceBadgeTone = PracticeBadgeTone.Neutral;
                 RefreshPracticeUI();
                 return;
             }
@@ -325,6 +347,20 @@ namespace Lumina.Alphabet
 
             _practiceCapture = null;
             _practiceEvaluator = null;
+            _practiceView?.ClearFrame(GetPracticeHint(), _open);
+        }
+
+        private string GetPracticeHint()
+        {
+            if (!_open) return "La vista de tu mano aparecerá aquí.";
+            if (_practiced != null && _current >= 0 && _current < _practiced.Length && _practiced[_current])
+                return "Pulsa REPETIR para volver a practicar.";
+            return "Pulsa PRACTICAR para activar la cámara.";
+        }
+
+        private void RefreshPracticeHint()
+        {
+            _practiceView?.SetHint(GetPracticeHint());
         }
 
         private void OnPracticeEvaluation(AlphabetLandmarkEvaluation evaluation)
@@ -334,7 +370,8 @@ namespace Lumina.Alphabet
             if (evaluation.Status == AlphabetEvaluationStatus.NoHand)
             {
                 _hasPracticeScore = false;
-                _practiceStatus = "No detecto la mano. Centra la mano y mejora la iluminación.";
+                _practiceStatus = "No veo tu mano · centra y mejora la luz.";
+                _practiceBadgeTone = PracticeBadgeTone.Warning;
                 RefreshPracticeUI();
                 return;
             }
@@ -343,7 +380,8 @@ namespace Lumina.Alphabet
                 evaluation.Status == AlphabetEvaluationStatus.MotionTemplateNeedsSequence)
             {
                 _hasPracticeScore = false;
-                _practiceStatus = $"No hay una secuencia de referencia suficiente para {alphabet.letters[_current].letter}. Captúrala antes de practicarla.";
+                _practiceStatus = "Falta la referencia de esta letra.";
+                _practiceBadgeTone = PracticeBadgeTone.Warning;
                 RefreshPracticeUI();
                 return;
             }
@@ -351,7 +389,8 @@ namespace Lumina.Alphabet
             if (evaluation.Status == AlphabetEvaluationStatus.MotionPending)
             {
                 _hasPracticeScore = false;
-                _practiceStatus = $"Haz el movimiento completo de {alphabet.letters[_current].letter} y mantén la mano dentro del encuadre.";
+                _practiceStatus = $"Haz el movimiento completo de {alphabet.letters[_current].letter}.";
+                _practiceBadgeTone = PracticeBadgeTone.Info;
                 RefreshPracticeUI();
                 return;
             }
@@ -365,7 +404,8 @@ namespace Lumina.Alphabet
             {
                 if (evaluation.Similarity < minimumPracticeSimilarity)
                 {
-                    _practiceStatus = $"Aún no alcanza el mínimo de {minimumPracticeSimilarity:P0}. Ajusta la forma y orientación según el modelo y vuelve a intentar.";
+                    _practiceStatus = "Aún no alcanza el mínimo. Ajusta la forma y orientación.";
+                    _practiceBadgeTone = PracticeBadgeTone.Warning;
                     RefreshPracticeUI();
                     return;
                 }
@@ -373,8 +413,12 @@ namespace Lumina.Alphabet
                 var letter = alphabet.letters[_current].letter;
                 _practiced[_current] = true;
                 PlayerPrefs.SetInt(GetPracticedPreferenceKey(letter), 1);
+                string scoreKey = GetPracticedScorePreferenceKey(letter);
+                _practiceSimilarity = Mathf.Max(_practiceSimilarity, PlayerPrefs.GetFloat(scoreKey, 0f));
+                PlayerPrefs.SetFloat(scoreKey, _practiceSimilarity);
                 PlayerPrefs.Save();
                 _practiceStatus = $"¡Bien hecho! {letter} superó el mínimo. Ya puedes avanzar a la siguiente letra.";
+                _practiceBadgeTone = PracticeBadgeTone.Success;
                 RefreshButtons();
                 StopPractice();
                 _showPracticeFeedback = true;
@@ -383,9 +427,15 @@ namespace Lumina.Alphabet
             }
 
             if (evaluation.Similarity < minimumPracticeSimilarity)
-                _practiceStatus = "La forma todavía no coincide. Compara dedos, pulgar y orientación con el modelo 3D; inténtalo de nuevo.";
+            {
+                _practiceStatus = "Ajusta dedos y pulgar según el modelo e inténtalo de nuevo.";
+                _practiceBadgeTone = PracticeBadgeTone.Warning;
+            }
             else
+            {
                 _practiceStatus = "Vas bien. Mantén la seña quieta un momento para completar la evaluación.";
+                _practiceBadgeTone = PracticeBadgeTone.Info;
+            }
             RefreshPracticeUI();
         }
 
@@ -395,19 +445,41 @@ namespace Lumina.Alphabet
             var entry = alphabet.letters[_current];
             if (entry == null) return;
 
-            instruction.text = _showPracticeFeedback
-                ? $"{entry.instruction}\n\n{_practiceStatus}"
-                : entry.instruction;
+            instruction.text = entry.instruction;
             var levelCompleted = CountPracticedLetters() == _practiced.Length;
-            validationBadge.text = levelCompleted
-                ? "¡Abecedario completado!"
-                : _showPracticeFeedback && _hasPracticeScore
-                ? $"Similitud {_practiceSimilarity:P0} · {GetPracticeStars(_practiceSimilarity)}/3 ★ · estimada"
-                : _showPracticeFeedback
-                    ? "Esperando una evaluación válida…"
-                : entry.validation == PoseValidation.ApproximateFromReference
-                    ? "Referencia aproximada · pendiente de validación"
-                    : "Pose provisional · pendiente de validación";
+            bool letterPassed = _practiced[_current];
+            bool attemptRunning = _showPracticeFeedback && _practiceCapture != null;
+            if (levelCompleted && !attemptRunning)
+                _practiceView?.SetBadge("ABECEDARIO COMPLETADO", PracticeBadgeTone.Success);
+            else if (attemptRunning && _hasPracticeScore)
+                _practiceView?.SetBadge($"Coincidencia {_practiceSimilarity:P0} · " +
+                    (_practiceBadgeTone == PracticeBadgeTone.Warning ? "ajusta la seña" : "mantén la seña"),
+                    _practiceBadgeTone);
+            else if (attemptRunning)
+                _practiceView?.SetBadge(_practiceStatus, _practiceBadgeTone);
+            else if (levelCompleted)
+                _practiceView?.SetBadge("ABECEDARIO COMPLETADO", PracticeBadgeTone.Success);
+            else if (letterPassed)
+            {
+                string scoreKey = GetPracticedScorePreferenceKey(entry.letter);
+                bool hasSavedScore = _hasPracticeScore || PlayerPrefs.HasKey(scoreKey);
+                float displayedScore = _hasPracticeScore
+                    ? _practiceSimilarity
+                    : PlayerPrefs.GetFloat(scoreKey, 0f);
+                _practiceView?.SetBadge(hasSavedScore
+                    ? $"{entry.letter} SUPERADA · {displayedScore:P0}"
+                    : $"{entry.letter} SUPERADA", PracticeBadgeTone.Success);
+            }
+            else if (_showPracticeFeedback && _hasPracticeScore)
+                _practiceView?.SetBadge($"Coincidencia {_practiceSimilarity:P0} · " +
+                                   (_practiceBadgeTone == PracticeBadgeTone.Warning ? "ajusta la seña" : "mantén la seña"),
+                    _practiceBadgeTone);
+            else if (_showPracticeFeedback)
+                _practiceView?.SetBadge(_practiceStatus, _practiceBadgeTone);
+            else
+                _practiceView?.SetBadge(entry.validation == PoseValidation.ApproximateFromReference
+                    ? "Referencia aproximada · en revisión"
+                    : "Pose provisional · en revisión", PracticeBadgeTone.Neutral);
 
             var passed = CountPracticedLetters();
             int seen = 0;
@@ -415,7 +487,8 @@ namespace Lumina.Alphabet
             progressLabel.text = $"Vistas {seen}/{_seen.Length} · Superadas {passed}/{_practiced.Length}";
 
             var buttonLabel = replayButton.GetComponentInChildren<TMP_Text>();
-            if (buttonLabel != null) buttonLabel.text = _practiceCapture != null ? "DETENER" : "PRACTICAR";
+            if (buttonLabel != null)
+                buttonLabel.text = _practiceCapture != null ? "DETENER" : _practiced[_current] ? "REPETIR" : "PRACTICAR";
         }
 
         private int CountPracticedLetters()
@@ -429,14 +502,6 @@ namespace Lumina.Alphabet
         {
             for (var i = 0; i < _practiced.Length; i++)
                 if (!_practiced[i]) return i;
-            return 0;
-        }
-
-        private static int GetPracticeStars(float similarity)
-        {
-            if (similarity >= 0.9f) return 3;
-            if (similarity >= 0.75f) return 2;
-            if (similarity >= 0.6f) return 1;
             return 0;
         }
 
