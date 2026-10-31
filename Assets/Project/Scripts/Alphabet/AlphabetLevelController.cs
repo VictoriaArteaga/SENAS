@@ -143,7 +143,6 @@ namespace Lumina.Alphabet
             player.enabled = false;
             player.SetCursorLocked(false);
             _practiceView?.SetVisible(true);
-            _practiceView?.SetHint("Pulsa PRACTICAR para activar la cámara.");
             foreach (var go in hideWhileOpen) if (go != null) go.SetActive(false);
             foreach (var b in disableWhileOpen) if (b != null) b.enabled = false;
 
@@ -155,6 +154,7 @@ namespace Lumina.Alphabet
             var completed = CountPracticedLetters() == _practiced.Length;
             _current = completed ? _practiced.Length - 1 : GetNextUnpracticedIndex();
             Select(_current);
+            RefreshPracticeHint();
             if (completed)
             {
                 _practiceStatus = "¡Nivel 1 completado! Terminaste el abecedario LSC.";
@@ -239,9 +239,9 @@ namespace Lumina.Alphabet
                 _showPracticeFeedback = false;
                 _hasPracticeScore = false;
                 _practiceBadgeTone = PracticeBadgeTone.Neutral;
-                _practiceView?.SetHint("Pulsa PRACTICAR para activar la cámara.");
             }
             _current = index;
+            RefreshPracticeHint();
             if (!_seen[index])
             {
                 _seen[index] = true;
@@ -330,7 +330,6 @@ namespace Lumina.Alphabet
                 _practiceStatus = "Práctica detenida.";
                 _showPracticeFeedback = true;
                 _practiceBadgeTone = PracticeBadgeTone.Neutral;
-                _practiceView?.SetHint("Cámara pausada. Pulsa PRACTICAR para continuar.");
                 RefreshPracticeUI();
                 return;
             }
@@ -348,10 +347,20 @@ namespace Lumina.Alphabet
 
             _practiceCapture = null;
             _practiceEvaluator = null;
-            var previewHint = _practiced != null && _practiced.Length > _current && _practiced[_current]
-                ? "Cámara pausada"
-                : _open ? "Cámara pausada. Pulsa PRACTICAR." : "La vista de tu mano aparecerá aquí.";
-            _practiceView?.ClearFrame(previewHint, _open);
+            _practiceView?.ClearFrame(GetPracticeHint(), _open);
+        }
+
+        private string GetPracticeHint()
+        {
+            if (!_open) return "La vista de tu mano aparecerá aquí.";
+            if (_practiced != null && _current >= 0 && _current < _practiced.Length && _practiced[_current])
+                return "Pulsa REPETIR para volver a practicar.";
+            return "Pulsa PRACTICAR para activar la cámara.";
+        }
+
+        private void RefreshPracticeHint()
+        {
+            _practiceView?.SetHint(GetPracticeHint());
         }
 
         private void OnPracticeEvaluation(AlphabetLandmarkEvaluation evaluation)
