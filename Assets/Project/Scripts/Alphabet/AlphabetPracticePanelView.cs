@@ -27,7 +27,6 @@ namespace Lumina.Alphabet
         private RectTransform _viewportRect;
         private TMP_Text _hint;
         private GameObject _successMark;
-        private PracticeStarGraphic[] _stars;
         private Texture _configuredTexture;
         private int _configuredRotation = -1;
         private bool _configuredVerticalFlip;
@@ -124,7 +123,7 @@ namespace Lumina.Alphabet
             if (_hint != null) _hint.gameObject.SetActive(false);
         }
 
-        public void SetBadge(string message, PracticeBadgeTone tone, int stars = 0)
+        public void SetBadge(string message, PracticeBadgeTone tone)
         {
             if (_badge == null) return;
 
@@ -156,26 +155,6 @@ namespace Lumina.Alphabet
                 };
             }
 
-            if (_stars == null || _badgeBackground == null) return;
-            _badge.ForceMeshUpdate();
-            float textWidth = _badge.textInfo.lineCount > 0
-                ? _badge.textInfo.lineInfo[0].maxAdvance
-                : _badge.GetPreferredValues(_badge.text).x;
-            var pillRect = _badgeBackground.rectTransform;
-            for (int i = 0; i < _stars.Length; i++)
-            {
-                bool showStar = tone == PracticeBadgeTone.Success && i < stars;
-                _stars[i].gameObject.SetActive(showStar);
-                if (!showStar) continue;
-
-                var starRect = _stars[i].rectTransform;
-                starRect.anchorMin = Vector2.zero;
-                starRect.anchorMax = Vector2.zero;
-                starRect.pivot = new Vector2(0f, 0.5f);
-                starRect.anchoredPosition = new Vector2(
-                    badgeRect.anchoredPosition.x - pillRect.anchoredPosition.x + textWidth + 8f + i * 22f,
-                    pillRect.rect.height * 0.5f);
-            }
         }
         private void Build(TMP_Text instruction, Button practiceButton)
         {
@@ -235,7 +214,6 @@ namespace Lumina.Alphabet
                     _badgeBackground.color = _turquoiseSoft;
                     _badgeBackground.raycastTarget = false;
                     CreateSuccessMark(_badgeBackground.transform);
-                    CreateStars(_badgeBackground.transform);
                 }
             }
 
@@ -315,24 +293,6 @@ namespace Lumina.Alphabet
             _successMark.SetActive(false);
         }
 
-        private void CreateStars(Transform parent)
-        {
-            _stars = new PracticeStarGraphic[3];
-            for (int i = 0; i < _stars.Length; i++)
-            {
-                var starObject = new GameObject($"RatingStar{i + 1}", typeof(RectTransform),
-                    typeof(CanvasRenderer), typeof(PracticeStarGraphic));
-                starObject.transform.SetParent(parent, false);
-                var rect = starObject.GetComponent<RectTransform>();
-                rect.sizeDelta = new Vector2(18f, 18f);
-                var star = starObject.GetComponent<PracticeStarGraphic>();
-                star.color = new Color(1f, 0.69f, 0.19f);
-                star.raycastTarget = false;
-                _stars[i] = star;
-                starObject.SetActive(false);
-            }
-        }
-
         private static void CreateCheckStroke(Transform parent, Vector2 position, float width, float height, float angle)
         {
             var stroke = new GameObject("CheckStroke", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
@@ -385,29 +345,6 @@ namespace Lumina.Alphabet
             text.raycastTarget = false;
             text.textWrappingMode = TextWrappingModes.Normal;
             return text;
-        }
-    }
-
-    [AddComponentMenu("")]
-    internal sealed class PracticeStarGraphic : MaskableGraphic
-    {
-        protected override void OnPopulateMesh(VertexHelper vertexHelper)
-        {
-            vertexHelper.Clear();
-            Rect rect = GetPixelAdjustedRect();
-            Vector2 center = rect.center;
-            float radius = Mathf.Min(rect.width, rect.height) * 0.48f;
-            vertexHelper.AddVert(center, color, Vector2.zero);
-            for (int i = 0; i < 10; i++)
-            {
-                float angle = Mathf.PI * 0.5f - i * Mathf.PI / 5f;
-                float pointRadius = i % 2 == 0 ? radius : radius * 0.45f;
-                Vector2 point = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * pointRadius;
-                vertexHelper.AddVert(point, color, Vector2.zero);
-            }
-
-            for (int i = 0; i < 10; i++)
-                vertexHelper.AddTriangle(0, i + 1, (i + 1) % 10 + 1);
         }
     }
 

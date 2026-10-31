@@ -459,8 +459,7 @@ namespace Lumina.Alphabet
                     : PlayerPrefs.GetFloat(scoreKey, 0f);
                 _practiceView?.SetBadge(hasSavedScore
                     ? $"{entry.letter} SUPERADA · {displayedScore:P0}"
-                    : $"{entry.letter} SUPERADA", PracticeBadgeTone.Success,
-                    hasSavedScore ? GetPracticeStars(displayedScore) : 0);
+                    : $"{entry.letter} SUPERADA", PracticeBadgeTone.Success);
             }
             else if (_showPracticeFeedback && _hasPracticeScore)
                 _practiceView?.SetBadge($"Coincidencia {_practiceSimilarity:P0} · " +
@@ -494,15 +493,6 @@ namespace Lumina.Alphabet
         {
             for (var i = 0; i < _practiced.Length; i++)
                 if (!_practiced[i]) return i;
-            return 0;
-        }
-
-        private static int GetPracticeStars(float similarity)
-        {
-            int roundedPercent = Mathf.RoundToInt(Mathf.Clamp01(similarity) * 100f);
-            if (roundedPercent >= 90) return 3;
-            if (roundedPercent >= 75) return 2;
-            if (roundedPercent >= 60) return 1;
             return 0;
         }
 
