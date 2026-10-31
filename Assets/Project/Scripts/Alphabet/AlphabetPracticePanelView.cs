@@ -186,11 +186,6 @@ namespace Lumina.Alphabet
                     pillRect.anchoredPosition = new Vector2(24f, 32f);
                     pillRect.sizeDelta = new Vector2(650f, 58f);
                 }
-                if (_badgeBackground != null)
-                {
-                    var pillOutline = _badgeBackground.GetComponent<Outline>();
-                    if (pillOutline != null) Destroy(pillOutline);
-                }
                 badgeRect.SetParent(_badgeBackground != null ? _badgeBackground.transform : card, false);
                 badgeRect.anchorMin = Vector2.zero;
                 badgeRect.anchorMax = Vector2.one;
