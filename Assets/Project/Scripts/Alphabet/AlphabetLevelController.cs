@@ -404,7 +404,9 @@ namespace Lumina.Alphabet
                 var letter = alphabet.letters[_current].letter;
                 _practiced[_current] = true;
                 PlayerPrefs.SetInt(GetPracticedPreferenceKey(letter), 1);
-                PlayerPrefs.SetFloat(GetPracticedScorePreferenceKey(letter), _practiceSimilarity);
+                string scoreKey = GetPracticedScorePreferenceKey(letter);
+                _practiceSimilarity = Mathf.Max(_practiceSimilarity, PlayerPrefs.GetFloat(scoreKey, 0f));
+                PlayerPrefs.SetFloat(scoreKey, _practiceSimilarity);
                 PlayerPrefs.Save();
                 _practiceStatus = $"¡Bien hecho! {letter} superó el mínimo. Ya puedes avanzar a la siguiente letra.";
                 _practiceBadgeTone = PracticeBadgeTone.Success;
@@ -437,7 +439,16 @@ namespace Lumina.Alphabet
             instruction.text = entry.instruction;
             var levelCompleted = CountPracticedLetters() == _practiced.Length;
             bool letterPassed = _practiced[_current];
-            if (levelCompleted)
+            bool attemptRunning = _showPracticeFeedback && _practiceCapture != null;
+            if (levelCompleted && !attemptRunning)
+                _practiceView?.SetBadge("ABECEDARIO COMPLETADO", PracticeBadgeTone.Success);
+            else if (attemptRunning && _hasPracticeScore)
+                _practiceView?.SetBadge($"Coincidencia {_practiceSimilarity:P0} · " +
+                    (_practiceBadgeTone == PracticeBadgeTone.Warning ? "ajusta la seña" : "mantén la seña"),
+                    _practiceBadgeTone);
+            else if (attemptRunning)
+                _practiceView?.SetBadge(_practiceStatus, _practiceBadgeTone);
+            else if (levelCompleted)
                 _practiceView?.SetBadge("ABECEDARIO COMPLETADO", PracticeBadgeTone.Success);
             else if (letterPassed)
             {
