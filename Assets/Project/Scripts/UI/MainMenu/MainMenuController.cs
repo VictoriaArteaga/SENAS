@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Lumina.Core;
 
 namespace Lumina.UI
 {
@@ -30,13 +31,24 @@ namespace Lumina.UI
         [SerializeField] private string worldSceneName = "LuminaWorld";
 
         private Selectable _returnSelection;
+        private string _noticeTitleKey, _noticeBodyKey;
+
+        private void OnEnable() => GameSettings.LanguageChanged += RefreshNotice;
+        private void OnDisable() => GameSettings.LanguageChanged -= RefreshNotice;
+
+        private void RefreshNotice()
+        {
+            if (_noticeTitleKey == null) return;
+            noticeTitle.text = Loc.T(_noticeTitleKey);
+            noticeBody.text = Loc.T(_noticeBodyKey);
+        }
 
         private void Awake()
         {
             playButton.onClick.AddListener(OnPlayClicked);
-            practiceButton.onClick.AddListener(() => ShowComingSoon(practiceButton, "PRÁCTICA"));
-            progressButton.onClick.AddListener(() => ShowComingSoon(progressButton, "MI PROGRESO"));
-            settingsButton.onClick.AddListener(() => ShowComingSoon(settingsButton, "CONFIGURACIÓN"));
+            practiceButton.onClick.AddListener(() => ScreenFader.Load(SceneNames.Practice));
+            progressButton.onClick.AddListener(() => ScreenFader.Load(SceneNames.Profile));
+            settingsButton.onClick.AddListener(() => ScreenFader.Load(SceneNames.Settings));
             quitButton.onClick.AddListener(OnQuitClicked);
             noticeCloseButton.onClick.AddListener(CloseNotice);
             noticePanel.SetActive(false);
@@ -75,22 +87,17 @@ namespace Lumina.UI
         private void OnQuitClicked()
         {
 #if UNITY_EDITOR
-            ShowNotice(quitButton, "SALIR", "La salida solo funciona en una compilación. En el Editor, detén el modo Play.");
+            ShowNotice(quitButton, "menu.quit", "menu.quitEditor");
 #else
             Application.Quit();
 #endif
         }
 
-        private void ShowComingSoon(Selectable origin, string featureName)
-        {
-            ShowNotice(origin, featureName, "Esta función estará disponible próximamente.");
-        }
-
-        private void ShowNotice(Selectable origin, string title, string body)
+        private void ShowNotice(Selectable origin, string titleKey, string bodyKey)
         {
             _returnSelection = origin;
-            noticeTitle.text = title;
-            noticeBody.text = body;
+            _noticeTitleKey = titleKey; _noticeBodyKey = bodyKey;
+            RefreshNotice();
             noticePanel.SetActive(true);
             if (EventSystem.current != null)
                 EventSystem.current.SetSelectedGameObject(noticeCloseButton.gameObject);
