@@ -134,9 +134,6 @@ namespace Lumina.Alphabet
                 : TextAlignmentOptions.Center;
             _badge.fontSize = Mathf.Max(_badge.fontSize, 21f);
             if (_successMark != null) _successMark.SetActive(tone == PracticeBadgeTone.Success);
-            var badgeRect = _badge.rectTransform;
-            badgeRect.offsetMin = new Vector2(tone == PracticeBadgeTone.Success ? 42f : 12f, 0f);
-            badgeRect.offsetMax = new Vector2(tone == PracticeBadgeTone.Success ? -82f : -12f, 0f);
             if (_stars != null)
             {
                 for (int i = 0; i < _stars.Length; i++)
@@ -148,6 +145,14 @@ namespace Lumina.Alphabet
                         : new Color(0.58f, 0.72f, 0.68f);
                 }
             }
+            var badgeRect = _badge.rectTransform;
+            float textInsetLeft = tone == PracticeBadgeTone.Success ? 42f : 12f;
+            float textInsetRight = tone == PracticeBadgeTone.Success ? 82f : 12f;
+            badgeRect.anchorMin = Vector2.zero;
+            badgeRect.anchorMax = Vector2.zero;
+            badgeRect.pivot = Vector2.zero;
+            badgeRect.anchoredPosition = new Vector2(24f + textInsetLeft, 32f);
+            badgeRect.sizeDelta = new Vector2(650f - textInsetLeft - textInsetRight, 58f);
             if (_badgeBackground == null) return;
 
             _badgeBackground.color = tone switch
@@ -163,6 +168,13 @@ namespace Lumina.Alphabet
         {
             var card = instruction.transform.parent as RectTransform;
             if (card == null) return;
+            for (int i = card.childCount - 1; i >= 0; i--)
+            {
+                var child = card.GetChild(i);
+                if (child.name == "PracticeStatusText" || child.name == "PracticeStatusPill" ||
+                    child.name == "PracticeCameraPreview")
+                    Object.Destroy(child.gameObject);
+            }
 
             card.sizeDelta = new Vector2(card.sizeDelta.x, Mathf.Max(card.sizeDelta.y, 280f));
             var instructionRect = instruction.rectTransform;
@@ -189,7 +201,7 @@ namespace Lumina.Alphabet
                 sourceBadge.gameObject.SetActive(false);
                 var badgeObject = new GameObject("PracticeStatusText",
                     typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
-                badgeObject.transform.SetParent(_badgeBackground != null ? _badgeBackground.transform : card, false);
+                badgeObject.transform.SetParent(card, false);
                 _badge = badgeObject.GetComponent<TextMeshProUGUI>();
                 _badge.font = sourceBadge.font;
                 _badge.fontSize = Mathf.Max(sourceBadge.fontSize, 21f);
@@ -199,10 +211,10 @@ namespace Lumina.Alphabet
                 _badge.textWrappingMode = TextWrappingModes.NoWrap;
                 var badgeRect = _badge.rectTransform;
                 badgeRect.anchorMin = Vector2.zero;
-                badgeRect.anchorMax = Vector2.one;
-                badgeRect.pivot = new Vector2(0.5f, 0.5f);
-                badgeRect.offsetMin = new Vector2(12f, 0f);
-                badgeRect.offsetMax = new Vector2(-12f, 0f);
+                badgeRect.anchorMax = Vector2.zero;
+                badgeRect.pivot = Vector2.zero;
+                badgeRect.anchoredPosition = new Vector2(36f, 32f);
+                badgeRect.sizeDelta = new Vector2(626f, 58f);
                 _badge.alignment = TextAlignmentOptions.Center;
                 _badge.fontSize = Mathf.Max(_badge.fontSize, 21f);
                 if (_badgeBackground != null)
