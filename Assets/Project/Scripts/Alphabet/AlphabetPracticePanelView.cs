@@ -13,10 +13,10 @@ namespace Lumina.Alphabet
     }
 
     /// <summary>Construye y actualiza el panel compacto de webcam y retroalimentación del abecedario.</summary>
-    internal sealed class AlphabetPracticeCameraPreview
+    internal sealed class AlphabetPracticePanelView
     {
         private readonly TMP_Text _badge;
-        private readonly Image _badgeBackground;
+        private Image _badgeBackground;
         private readonly Color _cream;
         private readonly Color _ink;
         private readonly Color _turquoise;
@@ -26,6 +26,8 @@ namespace Lumina.Alphabet
         private RawImage _image;
         private RectTransform _viewportRect;
         private TMP_Text _hint;
+        private GameObject _successMark;
+        private PracticeStarGraphic[] _stars;
         private Texture _configuredTexture;
         private int _configuredRotation = -1;
         private bool _configuredVerticalFlip;
@@ -33,7 +35,7 @@ namespace Lumina.Alphabet
         private int _configuredFrameHeight;
         private Vector2 _configuredViewportSize;
 
-        private AlphabetPracticeCameraPreview(
+        private AlphabetPracticePanelView(
             TMP_Text instruction,
             TMP_Text badge,
             Button practiceButton,
@@ -43,7 +45,6 @@ namespace Lumina.Alphabet
             Color turquoiseSoft)
         {
             _badge = badge;
-            _badgeBackground = badge != null ? badge.GetComponentInParent<Image>() : null;
             _cream = cream;
             _ink = ink;
             _turquoise = turquoise;
@@ -51,7 +52,7 @@ namespace Lumina.Alphabet
             Build(instruction, practiceButton);
         }
 
-        public static AlphabetPracticeCameraPreview Create(
+        public static AlphabetPracticePanelView Create(
             TMP_Text instruction,
             TMP_Text badge,
             Button practiceButton,
@@ -63,7 +64,7 @@ namespace Lumina.Alphabet
             if (instruction == null || practiceButton == null || instruction.transform.parent == null)
                 return null;
 
-            return new AlphabetPracticeCameraPreview(
+            return new AlphabetPracticePanelView(
                 instruction, badge, practiceButton, cream, ink, turquoise, turquoiseSoft);
         }
 
@@ -122,11 +123,30 @@ namespace Lumina.Alphabet
             if (_hint != null) _hint.gameObject.SetActive(false);
         }
 
-        public void SetBadge(string message, PracticeBadgeTone tone)
+        public void SetBadge(string message, PracticeBadgeTone tone, int stars = 0)
         {
             if (_badge == null) return;
             _badge.text = message;
             _badge.color = _ink;
+            _badge.alignment = tone == PracticeBadgeTone.Success
+                ? TextAlignmentOptions.MidlineLeft
+                : TextAlignmentOptions.Center;
+            _badge.fontSize = Mathf.Max(_badge.fontSize, 21f);
+            if (_successMark != null) _successMark.SetActive(tone == PracticeBadgeTone.Success);
+            var badgeRect = _badge.rectTransform;
+            badgeRect.offsetMin = new Vector2(tone == PracticeBadgeTone.Success ? 42f : 12f, 0f);
+            badgeRect.offsetMax = new Vector2(tone == PracticeBadgeTone.Success ? -82f : -12f, 0f);
+            if (_stars != null)
+            {
+                for (int i = 0; i < _stars.Length; i++)
+                {
+                    bool showStars = tone == PracticeBadgeTone.Success && stars > 0;
+                    _stars[i].gameObject.SetActive(showStars);
+                    _stars[i].color = i < stars
+                        ? new Color(1f, 0.69f, 0.19f)
+                        : new Color(0.58f, 0.72f, 0.68f);
+                }
+            }
             if (_badgeBackground == null) return;
 
             _badgeBackground.color = tone switch
@@ -149,16 +169,44 @@ namespace Lumina.Alphabet
             instructionRect.anchorMax = new Vector2(1f, 1f);
             instructionRect.pivot = new Vector2(0f, 1f);
             instructionRect.anchoredPosition = new Vector2(24f, -22f);
-            instructionRect.sizeDelta = new Vector2(-360f, 128f);
+            instructionRect.sizeDelta = new Vector2(-270f, 128f);
 
             if (_badge != null)
             {
                 var badgeRect = _badge.rectTransform;
+                var pill = new GameObject("PracticeStatusPill",
+                    typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Outline));
+                pill.transform.SetParent(card, false);
+                var pillRect = pill.GetComponent<RectTransform>();
+                pillRect.anchorMin = Vector2.zero;
+                pillRect.anchorMax = Vector2.zero;
+                pillRect.pivot = Vector2.zero;
+                pillRect.anchoredPosition = new Vector2(24f, 15f);
+                pillRect.sizeDelta = new Vector2(650f, 58f);
+                _badgeBackground = pill.GetComponent<Image>();
+                var cardImage = card.GetComponent<Image>();
+                if (cardImage != null)
+                {
+                    _badgeBackground.sprite = cardImage.sprite;
+                    _badgeBackground.type = cardImage.type;
+                }
+                _badgeBackground.color = _turquoiseSoft;
+                _badgeBackground.raycastTarget = false;
+                var pillOutline = pill.GetComponent<Outline>();
+                pillOutline.effectColor = _turquoise;
+                pillOutline.effectDistance = new Vector2(1f, -1f);
+                pillOutline.useGraphicAlpha = true;
+
+                badgeRect.SetParent(pill.transform, false);
                 badgeRect.anchorMin = Vector2.zero;
-                badgeRect.anchorMax = Vector2.zero;
-                badgeRect.pivot = Vector2.zero;
-                badgeRect.anchoredPosition = new Vector2(24f, 18f);
-                badgeRect.sizeDelta = new Vector2(650f, 54f);
+                badgeRect.anchorMax = Vector2.one;
+                badgeRect.pivot = new Vector2(0.5f, 0.5f);
+                badgeRect.offsetMin = new Vector2(12f, 0f);
+                badgeRect.offsetMax = new Vector2(-12f, 0f);
+                badgeRect.alignment = TextAlignmentOptions.Center;
+                badgeRect.fontSize = Mathf.Max(badgeRect.fontSize, 21f);
+                CreateSuccessMark(pill.transform);
+                CreateStars(pill.transform);
             }
 
             var buttonRect = practiceButton.GetComponent<RectTransform>();
@@ -176,7 +224,7 @@ namespace Lumina.Alphabet
             rootRect.anchorMax = Vector2.one;
             rootRect.pivot = Vector2.one;
             rootRect.anchoredPosition = new Vector2(-24f, -18f);
-            rootRect.sizeDelta = new Vector2(284f, 164f);
+            rootRect.sizeDelta = new Vector2(176f, 176f);
 
             var background = _root.GetComponent<Image>();
             var cardBackground = card.GetComponent<Image>();
@@ -192,25 +240,13 @@ namespace Lumina.Alphabet
             outline.effectDistance = new Vector2(2f, -2f);
             outline.useGraphicAlpha = true;
 
-            var title = CreateText(_root.transform, "CameraPreviewTitle", instruction.font);
-            title.text = "TU MANO";
-            title.fontSize = 16f;
-            title.fontStyle = FontStyles.Bold;
-            title.color = _cream;
-            title.alignment = TextAlignmentOptions.MidlineLeft;
-            title.rectTransform.anchorMin = new Vector2(0f, 1f);
-            title.rectTransform.anchorMax = new Vector2(1f, 1f);
-            title.rectTransform.pivot = new Vector2(0.5f, 1f);
-            title.rectTransform.anchoredPosition = new Vector2(0f, -5f);
-            title.rectTransform.sizeDelta = new Vector2(-16f, 24f);
-
             var viewport = new GameObject("CameraViewport", typeof(RectTransform), typeof(RectMask2D));
             viewport.transform.SetParent(_root.transform, false);
             _viewportRect = viewport.GetComponent<RectTransform>();
             _viewportRect.anchorMin = Vector2.zero;
             _viewportRect.anchorMax = Vector2.one;
-            _viewportRect.offsetMin = new Vector2(8f, 8f);
-            _viewportRect.offsetMax = new Vector2(-8f, -30f);
+            _viewportRect.offsetMin = new Vector2(3f, 3f);
+            _viewportRect.offsetMax = new Vector2(-3f, -3f);
 
             var feed = new GameObject("CameraFeed",
                 typeof(RectTransform), typeof(CanvasRenderer), typeof(RawImage));
@@ -224,8 +260,8 @@ namespace Lumina.Alphabet
             _image.rectTransform.anchoredPosition = Vector2.zero;
 
             _hint = CreateText(viewport.transform, "CameraPreviewHint", instruction.font);
-            _hint.text = "Pulsa PRACTICAR";
-            _hint.fontSize = 13f;
+            _hint.text = "Centra tu mano";
+            _hint.fontSize = 16f;
             _hint.color = _cream;
             _hint.alignment = TextAlignmentOptions.Center;
             _hint.rectTransform.anchorMin = Vector2.zero;
@@ -237,6 +273,62 @@ namespace Lumina.Alphabet
             SetVisible(false);
         }
 
+        private void CreateSuccessMark(Transform parent)
+        {
+            _successMark = new GameObject("SuccessCheck", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            _successMark.transform.SetParent(parent, false);
+            var markRect = _successMark.GetComponent<RectTransform>();
+            markRect.anchorMin = new Vector2(0f, 0.5f);
+            markRect.anchorMax = new Vector2(0f, 0.5f);
+            markRect.pivot = new Vector2(0f, 0.5f);
+            markRect.anchoredPosition = new Vector2(10f, 0f);
+            markRect.sizeDelta = new Vector2(30f, 30f);
+            var markBackground = _successMark.GetComponent<Image>();
+            markBackground.sprite = _badgeBackground.sprite;
+            markBackground.type = _badgeBackground.type;
+            markBackground.color = _turquoise;
+            markBackground.raycastTarget = false;
+            CreateCheckStroke(_successMark.transform, new Vector2(-2f, -2f), 13f, 4f, 45f);
+            CreateCheckStroke(_successMark.transform, new Vector2(4f, 1f), 18f, 4f, -48f);
+            _successMark.SetActive(false);
+        }
+
+        private void CreateStars(Transform parent)
+        {
+            _stars = new PracticeStarGraphic[3];
+            for (int i = 0; i < _stars.Length; i++)
+            {
+                var starObject = new GameObject($"SuccessStar{i + 1}", typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(PracticeStarGraphic));
+                starObject.transform.SetParent(parent, false);
+                var rect = starObject.GetComponent<RectTransform>();
+                rect.anchorMin = new Vector2(1f, 0.5f);
+                rect.anchorMax = new Vector2(1f, 0.5f);
+                rect.pivot = new Vector2(1f, 0.5f);
+                rect.anchoredPosition = new Vector2(-12f - i * 23f, 0f);
+                rect.sizeDelta = new Vector2(20f, 20f);
+                _stars[i] = starObject.GetComponent<PracticeStarGraphic>();
+                _stars[i].color = new Color(1f, 0.69f, 0.19f);
+                starObject.SetActive(false);
+            }
+        }
+
+        private static void CreateCheckStroke(Transform parent, Vector2 position, float width, float height, float angle)
+        {
+            var stroke = new GameObject("CheckStroke", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            stroke.transform.SetParent(parent, false);
+            var rect = stroke.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = new Vector2(width, height);
+            rect.localEulerAngles = new Vector3(0f, 0f, angle);
+            var image = stroke.GetComponent<Image>();
+            image.color = Color.white;
+            image.raycastTarget = false;
+        }
+
         private void ConfigureImageSize(int frameWidth, int frameHeight, int rotation, Vector2 viewportSize)
         {
             bool quarterTurn = rotation == 90 || rotation == 270;
@@ -246,15 +338,16 @@ namespace Lumina.Alphabet
 
             float displayWidth;
             float displayHeight;
+            // Cubrir el recuadro y recortar los laterales para evitar bandas vacías.
             if (displayAspect >= viewportAspect)
-            {
-                displayWidth = viewportSize.x;
-                displayHeight = displayWidth / displayAspect;
-            }
-            else
             {
                 displayHeight = viewportSize.y;
                 displayWidth = displayHeight * displayAspect;
+            }
+            else
+            {
+                displayWidth = viewportSize.x;
+                displayHeight = displayWidth / displayAspect;
             }
 
             _image.rectTransform.sizeDelta = quarterTurn
@@ -272,6 +365,28 @@ namespace Lumina.Alphabet
             text.raycastTarget = false;
             text.enableWordWrapping = true;
             return text;
+        }
+    }
+
+    [AddComponentMenu("")]
+    internal sealed class PracticeStarGraphic : MaskableGraphic
+    {
+        protected override void OnPopulateMesh(VertexHelper vertexHelper)
+        {
+            vertexHelper.Clear();
+            var rect = GetPixelAdjustedRect();
+            var center = rect.center;
+            float radius = Mathf.Min(rect.width, rect.height) * 0.48f;
+            vertexHelper.AddVert(center, color, Vector2.zero);
+            for (int i = 0; i < 10; i++)
+            {
+                float angle = Mathf.PI * 0.5f + i * Mathf.PI / 5f;
+                float pointRadius = i % 2 == 0 ? radius : radius * 0.46f;
+                var point = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * pointRadius;
+                vertexHelper.AddVert(point, color, Vector2.zero);
+            }
+            for (int i = 0; i < 10; i++)
+                vertexHelper.AddTriangle(0, i + 1, (i + 1) % 10 + 1);
         }
     }
 }
