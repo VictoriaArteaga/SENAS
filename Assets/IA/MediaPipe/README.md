@@ -40,6 +40,7 @@ La referencia LSC validada por el equipo confirma como dinamicas **G, H, J, Ñ, 
 - Si hay una referencia temporal guardada pero todavía no se completa el gesto, el estado es `MotionPending`; `MotionTemplateNeedsSequence` indica que hace falta capturar una referencia.
 - `Similarity` sigue siendo proximidad geometrica, no probabilidad ni medida de precision. `AlphabetHouse` ofrece una practica experimental; no usar sus coincidencias como nota o dominio aprendido hasta medir falsos positivos y negativos con distintas personas y velocidades.
 - El nivel requiere al menos 60 % de similitud estimada para registrar una letra como superada y desbloquear la siguiente en orden alfabetico. El progreso se conserva localmente. El umbral y las estrellas son provisionales: no equivalen a una calificacion lingüistica validada.
+- Durante la práctica, `AlphabetHouse` muestra una vista previa temporal de la webcam en un panel compacto y mantiene la instrucción separada del estado y la retroalimentación. No almacena video ni imágenes y no cambia la cámara 3D del escenario.
 
 La lista dinamica ya fue confirmada por el equipo contra la referencia aprobada: G, H, J, Ñ, S y Z. El asset conserva las muestras estaticas como referencia de postura y actualmente incluye 22 secuencias temporales: G (7), H (1), J (2), Ñ (3), S (7) y Z (2). Captura mas variantes, en particular para H, antes de calibrar el umbral para evitar sobreajuste a una sola persona o velocidad.
 
