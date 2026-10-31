@@ -218,7 +218,7 @@ namespace Lumina.Alphabet
             buttonRect.anchorMin = Vector2.zero;
             buttonRect.anchorMax = Vector2.zero;
             buttonRect.pivot = Vector2.zero;
-            buttonRect.anchoredPosition = new Vector2(700f, 30f);
+            buttonRect.anchoredPosition = new Vector2(696f, 30f);
             buttonRect.sizeDelta = new Vector2(260f, 62f);
 
             _root = new GameObject("PracticeCameraPreview",
