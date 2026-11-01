@@ -32,6 +32,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Project/Scenes/Results.unity
     guid: 92f61a491ef0575469b2fb44be589b89
+  - enabled: 1
+    path: Assets/Project/Scenes/NumbersHouse.unity
+    guid: bb0fb1744b6aa8942a335a13df01d792
+  - enabled: 1
+    path: Assets/Project/Scenes/MonthsHouse.unity
+    guid: c9c2387d8108919468ad402e54e6802a
+  - enabled: 1
+    path: Assets/Project/Scenes/GreetingsHouse.unity
+    guid: cc2214000c67e6f4abbe2ea484bc8cf9
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

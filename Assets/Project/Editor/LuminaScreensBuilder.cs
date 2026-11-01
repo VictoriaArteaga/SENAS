@@ -123,7 +123,7 @@ namespace Lumina.EditorTools
 
         // ------------------------------------------------------------------ Escenas
 
-        private static Transform BeginScene(string title, string backLabel, out SceneHeaderUI header, out Canvas canvas, bool sena = false)
+        internal static Transform BeginScene(string title, string backLabel, out SceneHeaderUI header, out Canvas canvas, bool sena = false)
         {
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             AuthBuilder.SetupSceneBasics(new Vector3(0f, 0.72f, -5.0f), new Vector3(-5f, 0f, 0f), 36f, AuthBuilder.WorldSkyPath);
@@ -159,9 +159,9 @@ namespace Lumina.EditorTools
             return header;
         }
 
-        private static void Save(string path) => EditorSceneManager.SaveScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene(), path);
+        internal static void Save(string path) => EditorSceneManager.SaveScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene(), path);
 
-        private static GameObject PlaceSena(Transform world)
+        internal static GameObject PlaceSena(Transform world)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(AuthBuilder.SenaPrefabPath);
             var sena = new GameObject("Sena");
@@ -175,7 +175,7 @@ namespace Lumina.EditorTools
         }
 
         /// <summary>Tarjeta anclada: pivote y ancla en el mismo punto, para que el tamaño no dependa de la resolución.</summary>
-        private static RectTransform SideCard(Transform parent, string name, Vector2 size, out RectTransform outer)
+        internal static RectTransform SideCard(Transform parent, string name, Vector2 size, out RectTransform outer)
         {
             var inner = Ui.Card(parent, name, size, out outer);
             Ui.Place(outer, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-90f, -60f), size);
@@ -355,7 +355,7 @@ namespace Lumina.EditorTools
             Save(ScenePaths[1]);
         }
 
-        private static ProgressBarUI BuildBar(Transform parent, float yFromTop, float width, float height)
+        internal static ProgressBarUI BuildBar(Transform parent, float yFromTop, float width, float height)
         {
             var track = Ui.Panel(parent, "XpBar", Ui.Sand);
             Ui.TopCenter(track.rectTransform, yFromTop, width, height);
