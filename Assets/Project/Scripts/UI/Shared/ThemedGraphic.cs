@@ -56,6 +56,7 @@ namespace Lumina.UI
             var themed = graphic.GetComponent<ThemedGraphic>();
             if (themed == null) { graphic.color = lightColor; return; } // aún sin tema (p. ej. antes del enlace de escena)
             themed.original = lightColor; themed.captured = true;
+            themed._changed = true; // fuerza escribir el color aunque coincida con el original (si no, en modo claro conservaba el de la plantilla)
             themed.Apply();
         }
 
@@ -112,6 +113,7 @@ namespace Lumina.UI
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {
+            GameSettings.EnsureBound();
             SceneManager.sceneLoaded += (scene, mode) => Bind(scene);
             Bind(SceneManager.GetActiveScene());
         }

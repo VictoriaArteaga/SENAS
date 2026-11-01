@@ -172,6 +172,28 @@ namespace Lumina.Core
             ("svc.emailUsed", "Ese correo ya está en uso.", "That email is already in use."),
             ("svc.usernameTaken", "Ese nombre de usuario ya está tomado.", "That username is already taken."),
             ("svc.noEmail", "Simulación: no se envió ningún correo.", "Simulation: no email was sent."),
+
+            // ---- Niveles de aprendizaje (Números, Meses, Saludos y frases)
+            ("title.numbers", "NÚMEROS", "NUMBERS"),
+            ("title.months", "MESES", "MONTHS"),
+            ("title.greetings", "SALUDOS Y FRASES", "GREETINGS & PHRASES"),
+            ("levels.houses", "CASAS DE APRENDIZAJE", "LEARNING HOUSES"),
+            ("levels.seen", "VISTAS {0} DE {1}", "SEEN {0} OF {1}"),
+            ("levels.numberOf", "NÚMERO {0} DE {1}", "NUMBER {0} OF {1}"),
+            ("levels.monthOf", "MES {0} DE {1}", "MONTH {0} OF {1}"),
+            ("levels.phraseOf", "FRASE {0} DE {1}", "PHRASE {0} OF {1}"),
+            ("levels.learn", "VER SEÑA", "WATCH SIGN"),
+            ("levels.prev", "ANTERIOR", "PREVIOUS"),
+            ("levels.next", "SIGUIENTE", "NEXT"),
+            ("levels.senaSays", "SENA DICE", "SENA SAYS"),
+            ("levels.groupGreetings", "SALUDOS", "GREETINGS"),
+            ("levels.groupTalk", "CONVERSACIÓN", "CONVERSATION"),
+            ("levels.inspectNumber", "Ver el número {0}", "View number {0}"),
+            ("levels.inspectMonth", "Ver el mes: {0}", "View the month: {0}"),
+            ("levels.inspectPhrase", "Ver la frase: {0}", "View the phrase: {0}"),
+            ("levels.enterNumbers", "Entrar a la Casa de los Números", "Enter the Numbers House"),
+            ("levels.enterMonths", "Entrar a la Casa de los Meses", "Enter the Months House"),
+            ("levels.enterGreetings", "Entrar a la Casa de los Saludos", "Enter the Greetings House"),
         };
     }
 }
