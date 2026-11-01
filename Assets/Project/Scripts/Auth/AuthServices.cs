@@ -1,3 +1,5 @@
+using System;
+
 namespace Lumina.Auth
 {
     /// <summary>
@@ -23,6 +25,15 @@ namespace Lumina.Auth
     {
         public static bool IsSignedIn { get; private set; }
         public static string DisplayName { get; private set; }
+        /// <summary>Identificador estable de la cuenta activa (null sin sesión). Las preferencias por usuario se guardan con él.</summary>
+        public static string UserId { get; private set; }
+
+        /// <summary>Inicio de sesión confirmado (id de cuenta). Lo escucha <c>GameSettings</c> para fijar el tema del usuario.</summary>
+        public static event Action<string> SignedIn;
+        /// <summary>Cierre de sesión confirmado.</summary>
+        public static event Action SignedOut;
+
+        public static string NormalizeUserId(string raw) => string.IsNullOrWhiteSpace(raw) ? null : raw.Trim().ToLowerInvariant();
 
         /// <summary>
         /// Avatar elegido en esta ejecución (null si no se eligió ninguno). Sobrevive a «cerrar sesión»: como no hay cuentas
@@ -30,10 +41,12 @@ namespace Lumina.Auth
         /// </summary>
         public static string AvatarId { get; private set; }
 
-        public static void SignIn(string displayName, string avatarId = null)
+        public static void SignIn(string displayName, string avatarId = null, string userId = null)
         {
             IsSignedIn = true;
             DisplayName = displayName;
+            UserId = NormalizeUserId(userId);
+            SignedIn?.Invoke(UserId);
             if (!string.IsNullOrEmpty(avatarId)) AvatarId = avatarId;
         }
 
@@ -47,6 +60,8 @@ namespace Lumina.Auth
         {
             IsSignedIn = false;
             DisplayName = null;
+            UserId = null;
+            SignedOut?.Invoke();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using Lumina.Auth;
 using UnityEngine;
 
 namespace Lumina.Core
@@ -16,7 +17,7 @@ namespace Lumina.Core
         /// <summary>Nivel de calidad tras «Restaurar»: el penúltimo (o el único) de la lista del proyecto.</summary>
         public static int DefaultQualityLevel => Mathf.Max(0, QualitySettings.names.Length - 2);
         private const string MusicKey = "settings.music", SfxKey = "settings.sfx", CameraKey = "settings.camera", QualityKey = "settings.quality";
-        private const string LanguageKey = "settings.language", DarkKey = "settings.dark";
+        private const string LanguageKey = "settings.language", DarkKeyPrefix = "settings.dark.user.";
 
         public static event Action LanguageChanged;
         public static event Action ThemeChanged;
@@ -64,17 +65,74 @@ namespace Lumina.Core
             }
         }
 
-        /// <summary>Tema oscuro. Claro por defecto; cambiarlo avisa a toda la UI al instante.</summary>
+        /// <summary>Enlaza la sesión con el tema (una sola vez, sin duplicar suscripciones). Se llama sola al arrancar el juego.</summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        public static void BindSession()
+        {
+            _userId = null; _activeDark = false; // arranque (y recarga de dominio): sin sesión, tema claro
+            EnsureBound();
+        }
+
+        /// <summary>Suscribe el tema a la sesión (idempotente: nunca duplica) y, si ya hay una sesión activa, adopta su preferencia.</summary>
+        public static void EnsureBound()
+        {
+            AuthSession.SignedIn -= BeginSession; AuthSession.SignedIn += BeginSession;
+            AuthSession.SignedOut -= EndSession; AuthSession.SignedOut += EndSession;
+            if (AuthSession.IsSignedIn && _userId == null && !string.IsNullOrEmpty(AuthSession.UserId)) BeginSession(AuthSession.UserId);
+        }
+
+        [System.Diagnostics.Conditional("UNITY_EDITOR"), System.Diagnostics.Conditional("DEVELOPMENT_BUILD")]
+        private static void Trace(string message) => Debug.Log("[Tema] " + message);
+
+        private static bool _activeDark;   // tema en uso ahora mismo; no se persiste (siempre arranca en claro)
+        private static string _userId;     // cuenta con sesión iniciada; null = nadie
+
+        private static string DarkKey(string userId) => DarkKeyPrefix + userId;
+
+        /// <summary>Preferencia guardada de una cuenta (claro si nunca eligió).</summary>
+        public static bool GetThemePreference(string userId) => !string.IsNullOrEmpty(userId) && PlayerPrefs.GetInt(DarkKey(userId), 0) == 1;
+
+        /// <summary>
+        /// Tema ACTIVO. Leerlo da el tema que se está mostrando; asignarlo lo aplica al instante y, con sesión iniciada,
+        /// guarda además la preferencia de esa cuenta (sin sesión no se guarda nada).
+        /// </summary>
         public static bool DarkMode
         {
-            get => PlayerPrefs.GetInt(DarkKey, 0) == 1;
+            get => _activeDark;
             set
             {
-                if (DarkMode == value) return;
-                PlayerPrefs.SetInt(DarkKey, value ? 1 : 0);
-                Save();
-                ThemeChanged?.Invoke();
+                if (!string.IsNullOrEmpty(_userId))
+                {
+                    PlayerPrefs.SetInt(DarkKey(_userId), value ? 1 : 0);
+                    Save();
+                    Trace($"preferencia guardada: {DarkKey(_userId)} = {(value ? 1 : 0)}");
+                }
+                else Trace("tema cambiado SIN sesión: solo activo, no se guarda");
+                SetActiveTheme(value);
             }
+        }
+
+        /// <summary>Inicio de sesión confirmado: el tema activo pasa a ser la preferencia de la cuenta (claro si nunca eligió, también en cuentas nuevas: cada cuenta tiene su propia clave).</summary>
+        private static void BeginSession(string userId)
+        {
+            _userId = string.IsNullOrEmpty(userId) ? null : userId;
+            Trace($"sesión iniciada: id='{_userId}' preferencia oscuro={GetThemePreference(_userId)}");
+            SetActiveTheme(GetThemePreference(_userId));
+        }
+
+        /// <summary>Cierre de sesión confirmado: el tema activo vuelve a claro; la preferencia guardada de la cuenta no se toca.</summary>
+        private static void EndSession()
+        {
+            _userId = null;
+            Trace("sesión cerrada: tema activo -> claro");
+            SetActiveTheme(false);
+        }
+
+        private static void SetActiveTheme(bool dark)
+        {
+            if (_activeDark == dark) return;
+            _activeDark = dark;
+            ThemeChanged?.Invoke();
         }
 
         /// <summary>Reaplica la calidad guardada; llamar al abrir una pantalla que dependa de ella.</summary>
