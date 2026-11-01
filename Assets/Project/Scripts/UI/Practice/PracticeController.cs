@@ -26,6 +26,8 @@ namespace Lumina.UI
 
         [Header("Selección")]
         [SerializeField] private GameObject selectionPanel;
+        [Tooltip("Accesos a las casas de aprendizaje (Números, Meses, Saludos); solo se ven al elegir la seña.")]
+        [SerializeField] private GameObject levelShortcuts;
         [SerializeField] private RectTransform categoryContainer;
         [SerializeField] private RectTransform signContainer;
         [SerializeField] private Button categoryTemplate;
@@ -115,6 +117,15 @@ namespace Lumina.UI
         private void Start()
         {
             _category = catalog != null && catalog.categories.Length > 0 ? catalog.categories[0] : null;
+            if (PracticeSession.StartAtLearning && PracticeSession.Sign != null)
+            {
+                // Viene de una casa de aprendizaje: se abre directo en APRENDE con la seña elegida allí.
+                PracticeSession.StartAtLearning = false;
+                _sign = PracticeSession.Sign;
+                Enter(Step.Learning);
+                return;
+            }
+            PracticeSession.ReturnScene = null;
             Enter(Step.Selection);
         }
 
@@ -127,6 +138,7 @@ namespace Lumina.UI
             selectionPanel.SetActive(step == Step.Selection);
             learningPanel.SetActive(step == Step.Learning);
             demoStage.SetActive(step == Step.Selection || step == Step.Learning);
+            if (levelShortcuts != null) levelShortcuts.SetActive(step == Step.Selection);
             sessionPanel.SetActive(step == Step.Preparation || step == Step.Practice);
             if (step != Step.Preparation && step != Step.Practice) cameraFeed.Stop();
 
@@ -140,7 +152,8 @@ namespace Lumina.UI
 
                 case Step.Learning:
                     header.SetTitle("title.learn");
-                    header.SetBackHandler(() => Enter(Step.Selection));
+                    if (PracticeSession.ReturnScene != null) header.SetBackHandler(() => ScreenFader.Load(PracticeSession.ReturnScene));
+                    else header.SetBackHandler(() => Enter(Step.Selection));
                     learningSignLabel.text = _sign.displayName.ToUpperInvariant();
                     learningInstructionLabel.text = _sign.GetInstruction();
                     demoNotice.gameObject.SetActive(false);
@@ -224,7 +237,7 @@ namespace Lumina.UI
         }
 
         /// <summary>Crea un botón desde la plantilla. La pestaña elegida se marca con subrayado además del color.</summary>
-        private static Button Spawn(Button template, RectTransform parent, string text, bool selected)
+        internal static Button Spawn(Button template, RectTransform parent, string text, bool selected)
         {
             var button = Instantiate(template, parent);
             var label = button.GetComponentInChildren<TMP_Text>(true);
@@ -281,6 +294,7 @@ namespace Lumina.UI
         {
             StopCountdown();
             PracticeSession.Finish(result);
+            PracticeSession.ReturnScene = null;
             ScreenFader.Load(SceneNames.Results);
         }
 
