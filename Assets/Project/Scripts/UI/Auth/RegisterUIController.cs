@@ -175,7 +175,7 @@ namespace Lumina.UI
                     return;
                 }
 
-                AuthSession.SignIn(result.DisplayName ?? data.PlayerName, data.AvatarId);
+                AuthSession.SignIn(result.DisplayName ?? data.PlayerName, data.AvatarId, result.UserId ?? data.Email);
                 ShowWelcome(data.PlayerName);
             }
             catch (OperationCanceledException) { }
