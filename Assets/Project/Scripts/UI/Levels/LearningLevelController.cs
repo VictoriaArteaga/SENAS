@@ -129,10 +129,18 @@ namespace Lumina.UI
             switch (kind)
             {
                 case LevelKind.Numbers:
-                    bigLabel.text = (_index + 1).ToString();
+                    int number = int.Parse(item.id.Substring("numeros.".Length));
+                    bigLabel.text = number.ToString();
                     nameLabel.text = item.Name.ToUpperInvariant();
                     positionLabel.text = Loc.T("levels.numberOf", _index + 1, total);
-                    for (int i = 0; i < countDots.Length; i++) ThemedGraphic.Set(countDots[i], i <= _index ? Coral : Sand);
+                    if (countDots != null && countDots.Length > 0)
+                    {
+                        bool showCount = number <= countDots.Length;
+                        if (countDots[0] != null) countDots[0].transform.parent.gameObject.SetActive(showCount);
+                        if (showCount)
+                            for (int i = 0; i < countDots.Length; i++)
+                                if (countDots[i] != null) ThemedGraphic.Set(countDots[i], i < number ? Coral : Sand);
+                    }
                     break;
                 case LevelKind.Months:
                     bigLabel.text = (_index + 1).ToString("00");

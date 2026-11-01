@@ -33,7 +33,7 @@ namespace Lumina.Signs
         }
 
         private string Arg(LevelItem item, bool english) =>
-            kind == LevelKind.Numbers ? (Array.IndexOf(items, item) + 1).ToString() : (english ? item.en : item.es).ToLowerInvariant();
+            kind == LevelKind.Numbers ? item.id.Substring("numeros.".Length) : (english ? item.en : item.es).ToLowerInvariant();
 
         /// <summary>Descripción de la seña en el idioma activo.</summary>
         public string Hint(LevelItem item)
@@ -63,11 +63,15 @@ namespace Lumina.Signs
         public static readonly LevelDefinition Numbers = new LevelDefinition(
             LevelKind.Numbers, NumbersScene, "title.numbers",
             "Es la seña del número {0}. Fíjate en qué dedos se usan y cómo se colocan.",
-            "This is the sign for the number {0}. Notice which fingers are used and how they are placed.",
+            "This is the sign for number {0}. Notice which fingers are used and how they are placed.",
             new[]
             {
-                N("1", "Uno", "One"), N("2", "Dos", "Two"), N("3", "Tres", "Three"), N("4", "Cuatro", "Four"), N("5", "Cinco", "Five"),
-                N("6", "Seis", "Six"), N("7", "Siete", "Seven"), N("8", "Ocho", "Eight"), N("9", "Nueve", "Nine"), N("10", "Diez", "Ten"),
+                N("0", "Cero", "Zero"), N("1", "Uno", "One"), N("2", "Dos", "Two"), N("3", "Tres", "Three"), N("4", "Cuatro", "Four"),
+                N("5", "Cinco", "Five"), N("6", "Seis", "Six"), N("7", "Siete", "Seven"), N("8", "Ocho", "Eight"), N("9", "Nueve", "Nine"),
+                N("10", "Diez", "Ten"), N("11", "Once", "Eleven"), N("12", "Doce", "Twelve"), N("13", "Trece", "Thirteen"), N("14", "Catorce", "Fourteen"),
+                N("15", "Quince", "Fifteen"), N("16", "Dieciséis", "Sixteen"), N("17", "Diecisiete", "Seventeen"), N("18", "Dieciocho", "Eighteen"), N("19", "Diecinueve", "Nineteen"),
+                N("20", "Veinte", "Twenty"), N("21", "Veintiuno", "Twenty-one"), N("22", "Veintidós", "Twenty-two"), N("23", "Veintitrés", "Twenty-three"), N("24", "Veinticuatro", "Twenty-four"),
+                N("25", "Veinticinco", "Twenty-five"), N("26", "Veintiséis", "Twenty-six"), N("27", "Veintisiete", "Twenty-seven"), N("28", "Veintiocho", "Twenty-eight"), N("29", "Veintinueve", "Twenty-nine"), N("30", "Treinta", "Thirty"),
             });
 
         public static readonly LevelDefinition Months = new LevelDefinition(

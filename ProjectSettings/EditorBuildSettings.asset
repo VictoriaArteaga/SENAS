@@ -34,7 +34,7 @@ EditorBuildSettings:
     guid: 92f61a491ef0575469b2fb44be589b89
   - enabled: 1
     path: Assets/Project/Scenes/NumbersHouse.unity
-    guid: bb0fb1744b6aa8942a335a13df01d792
+    guid: f612154769b03a24ca451b24947a45d3
   - enabled: 1
     path: Assets/Project/Scenes/MonthsHouse.unity
     guid: c9c2387d8108919468ad402e54e6802a
