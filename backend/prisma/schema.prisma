@@ -1,0 +1,209 @@
+// Modelo relacional de SEÑAS: El mundo de las manos (v1, 8 entidades).
+// Convenciones: modelos en PascalCase sin tildes, tablas/columnas en snake_case (@@map/@map).
+// Porcentajes: Decimal(5,2) (exacto, evita errores de coma flotante; rango 0.00-100.00).
+// Prisma no soporta CHECK constraints: los rangos indicados como "CHECK" se agregaran
+// como SQL manual en la migracion inicial (aun NO incorporados). Reglas pendientes:
+//   Evaluacion:   precision 0-100, estrellas 0-3, xp_obtenida >= 0
+//   ProgresoSena: mejor_precision 0-100, precision_promedio 0-100, veces_practicada >= 0
+//   Perfil:       precision_promedio 0-100, total_xp >= 0, nivel_actual >= 1
+//   Nivel:        precision_minima 0-100, xp_requerida >= 0, numero > 0, orden > 0
+//   NivelSena:    orden > 0
+// Sena.tipo y Sena.dificultad no tienen default: deben indicarse explicitamente al crear una seña.
+// onUpdate: Cascade en todas las relaciones (los UUID no cambian; es el valor por defecto de Prisma).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────── Enums ─────────────
+
+enum TipoSena {
+  SENA // seña individual
+  FRASE // frase o situacion comunicativa
+
+  @@map("tipo_sena")
+}
+
+enum Dificultad {
+  FACIL
+  MEDIA
+  DIFICIL
+
+  @@map("dificultad")
+}
+
+enum ResultadoEvaluacion {
+  APROBADO // precision >= 60
+  REINTENTAR // precision < 60
+
+  @@map("resultado_evaluacion")
+}
+
+// ───────────── Modelos ─────────────
+
+/// Cuenta del jugador. Solo persistencia: el hashing lo hara la capa de autenticacion.
+model Usuario {
+  id           String   @id @default(uuid(7)) @db.Uuid
+  username     String   @unique
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  isActive     Boolean  @default(true) @map("is_active") // baja logica en lugar de borrado
+
+  perfil        Perfil?
+  progresoSenas ProgresoSena[]
+  evaluaciones  Evaluacion[]
+  sesiones      Sesion[]
+
+  @@map("usuarios")
+}
+
+/// Informacion y progreso general. 1:1 con Usuario.
+/// Las señas aprendidas NO se guardan aqui: se calculan desde ProgresoSena.
+model Perfil {
+  id                String   @id @default(uuid(7)) @db.Uuid
+  usuarioId         String   @unique @map("usuario_id") @db.Uuid
+  displayName       String   @map("display_name")
+  avatarConfig      Json?    @map("avatar_config") @db.JsonB // estructura libre (gender, hair, shirt, ...)
+  totalXp           Int      @default(0) @map("total_xp") // CHECK >= 0
+  nivelActual       Int      @default(1) @map("nivel_actual") // CHECK >= 1
+  precisionPromedio Decimal  @default(0) @map("precision_promedio") @db.Decimal(5, 2) // CHECK 0-100
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // El perfil no tiene historial propio: si se elimina el usuario, se elimina el perfil.
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("perfiles")
+}
+
+/// Etapa de progresion educativa.
+model Nivel {
+  id              String   @id @default(uuid(7)) @db.Uuid
+  numero          Int      @unique // CHECK > 0
+  nombre          String
+  descripcion     String?
+  orden           Int      @unique // CHECK > 0
+  xpRequerida     Int      @default(0) @map("xp_requerida") // CHECK >= 0
+  precisionMinima Decimal  @default(0) @map("precision_minima") @db.Decimal(5, 2) // CHECK 0-100
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  senas        NivelSena[]
+  evaluaciones Evaluacion[]
+
+  @@map("niveles")
+}
+
+/// Seña o frase aprendible. El nombre no es unico para permitir variantes.
+model Sena {
+  id               String     @id @default(uuid(7)) @db.Uuid
+  nombre           String
+  descripcion      String?
+  tipo             TipoSena
+  dificultad       Dificultad
+  animacion        String? // referencia a la animacion en Unity
+  patronReferencia Json?      @map("patron_referencia") @db.JsonB // formato MediaPipe evolutivo
+  createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  niveles       NivelSena[]
+  progresoSenas ProgresoSena[]
+  evaluaciones  Evaluacion[]
+
+  @@map("senas")
+}
+
+/// Relacion N:M entre Nivel y Sena. `orden` es la posicion de la seña dentro del nivel.
+model NivelSena {
+  id            String  @id @default(uuid(7)) @db.Uuid
+  nivelId       String  @map("nivel_id") @db.Uuid
+  senaId        String  @map("sena_id") @db.Uuid
+  orden         Int // CHECK > 0
+  esObligatoria Boolean @default(true) @map("es_obligatoria")
+
+  // Tabla de configuracion pura (sin historial): Cascade. Las evaluaciones son las que protegen el historial.
+  nivel Nivel @relation(fields: [nivelId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sena  Sena  @relation(fields: [senaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([nivelId, senaId]) // sin repetir; su indice tambien cubre consultas por nivel_id
+  @@unique([nivelId, orden]) // una sola seña por posicion dentro de un nivel
+  @@index([senaId])
+  @@map("nivel_senas")
+}
+
+/// Estado acumulado (agregado) de una seña por usuario. Un registro por (usuario, seña).
+/// Es derivable de Evaluacion; se mantiene para consultar estadisticas sin recorrer el historial.
+model ProgresoSena {
+  id                   String    @id @default(uuid(7)) @db.Uuid
+  usuarioId            String    @map("usuario_id") @db.Uuid
+  senaId               String    @map("sena_id") @db.Uuid
+  vecesPracticada      Int       @default(0) @map("veces_practicada") // CHECK >= 0
+  mejorPrecision       Decimal   @default(0) @map("mejor_precision") @db.Decimal(5, 2) // CHECK 0-100
+  precisionPromedio    Decimal   @default(0) @map("precision_promedio") @db.Decimal(5, 2) // CHECK 0-100
+  completada           Boolean   @default(false)
+  fechaPrimeraPractica DateTime? @map("fecha_primera_practica") @db.Timestamptz(6)
+  fechaUltimaPractica  DateTime? @map("fecha_ultima_practica") @db.Timestamptz(6)
+
+  // Dato derivado y reconstruible: se elimina con el usuario. La seña se protege (Restrict).
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sena    Sena    @relation(fields: [senaId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([usuarioId, senaId]) // su indice tambien cubre consultas por usuario_id
+  @@index([senaId])
+  @@map("progreso_senas")
+}
+
+/// Cada intento individual (historial inmutable). Un intento = una fila.
+/// Todas las FK son Restrict: borrar usuario, seña o nivel NO borra el historial.
+model Evaluacion {
+  id                  String              @id @default(uuid(7)) @db.Uuid
+  usuarioId           String              @map("usuario_id") @db.Uuid
+  senaId              String              @map("sena_id") @db.Uuid
+  nivelId             String              @map("nivel_id") @db.Uuid
+  precision           Decimal             @db.Decimal(5, 2) // CHECK 0-100
+  estrellas           Int // CHECK 0-3
+  xpObtenida          Int                 @default(0) @map("xp_obtenida") // CHECK >= 0
+  resultado           ResultadoEvaluacion
+  feedback            String?
+  datosReconocimiento Json?               @map("datos_reconocimiento") @db.JsonB // salida derivada de MediaPipe; sin binarios
+  createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  sena    Sena    @relation(fields: [senaId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  nivel   Nivel   @relation(fields: [nivelId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([usuarioId, createdAt]) // historial reciente de un jugador
+  @@index([usuarioId, senaId]) // intentos de un jugador en una seña
+  @@index([senaId])
+  @@index([nivelId])
+  @@map("evaluaciones")
+}
+
+/// Sesion de un dispositivo (refresh token). Un usuario puede tener varias, una por dispositivo.
+/// Solo se guarda el HASH del refresh token (nunca el token ni el access token JWT).
+/// Cerrar sesion = rellenar fechaRevocacion; una sesion revocada o vencida no puede renovar tokens.
+/// Es dato de acceso, no historial academico: se elimina junto con el usuario (Cascade).
+model Sesion {
+  id                     String    @id @default(uuid(7)) @db.Uuid
+  usuarioId              String    @map("usuario_id") @db.Uuid
+  tokenHash              String    @unique @map("token_hash") // hash (p. ej. SHA-256) del refresh token; rotable
+  fechaCreacion          DateTime  @default(now()) @map("fecha_creacion") @db.Timestamptz(6)
+  fechaExpiracion        DateTime  @map("fecha_expiracion") @db.Timestamptz(6) // CHECK > fecha_creacion
+  fechaRevocacion        DateTime? @map("fecha_revocacion") @db.Timestamptz(6)
+  ultimoUso              DateTime? @map("ultimo_uso") @db.Timestamptz(6)
+  informacionDispositivo Json?     @map("informacion_dispositivo") @db.JsonB // estructura libre; sin datos sensibles
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([usuarioId])
+  @@index([fechaExpiracion])
+  @@index([fechaRevocacion])
+  @@map("sesiones")
+}

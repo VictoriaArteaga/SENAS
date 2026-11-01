@@ -21,7 +21,7 @@ namespace Lumina.EditorTools
     /// </summary>
     public static class LuminaAuthSceneBuilder
     {
-        private const string ScenesDir = "Assets/Project/Scenes/";
+        internal const string ScenesDir = "Assets/Project/Scenes/";
         private const string LoginPath = ScenesDir + "LoginScene.unity";
         private const string RegisterPath = ScenesDir + "RegisterScene.unity";
         private const string MainMenuPath = ScenesDir + "MainMenu.unity";
@@ -32,7 +32,7 @@ namespace Lumina.EditorTools
         private const string BubblePrefabPath = PrefabDir + "SenaSpeechBubble.prefab";
         private const string LogoutPrefabPath = PrefabDir + "LogoutModal.prefab";
         private const string LogoutStagePrefabPath = PrefabDir + "LogoutSenaStage.prefab";
-        private const string SenaPrefabPath = PrefabDir + "Sena.prefab";
+        internal const string SenaPrefabPath = PrefabDir + "Sena.prefab";
         private const string AvatarBasePath = "Assets/Models/SunboxGames/Avatars/Prefabs/Avatar.prefab";
         private const string AvatarResources = "Assets/Models/SunboxGames/Avatars/Resources/";
         private const string VillageDir = "Assets/Models/OccaSoftware/Low Poly Fantasy Village/Prefabs/";
@@ -40,7 +40,7 @@ namespace Lumina.EditorTools
         private const string GroundMaterialPath = "Assets/Project/Materials/Lumina_Ground.mat";
 
         // Cielo y perfil de postproceso del menú principal (se buscan por GUID para no depender de su ruta).
-        private const string WorldSkyPath = "Assets/Models/Fantasy Skybox FREE/Panoramics/FS002/FS002_Day.mat";
+        internal const string WorldSkyPath = "Assets/Models/Fantasy Skybox FREE/Panoramics/FS002/FS002_Day.mat";
         private const string MenuVolumeGuid = "10fc4df2da32a41aaa32d77bc913491c";
 
         private struct AvatarSpec
@@ -585,7 +585,7 @@ namespace Lumina.EditorTools
 
         // ------------------------------------------------------------------ Entorno 3D compartido
 
-        private static void SetupSceneBasics(Vector3 cameraPosition, Vector3 cameraEuler, float fov, string skyPath)
+        internal static void SetupSceneBasics(Vector3 cameraPosition, Vector3 cameraEuler, float fov, string skyPath)
         {
             RenderSettings.skybox = AssetDatabase.LoadAssetAtPath<Material>(skyPath);
             RenderSettings.ambientMode = AmbientMode.Skybox;
@@ -614,7 +614,7 @@ namespace Lumina.EditorTools
             DynamicGI.UpdateEnvironment();
         }
 
-        private static void BuildGround(Transform parent, float size)
+        internal static void BuildGround(Transform parent, float size)
         {
             var material = AssetDatabase.LoadAssetAtPath<Material>(GroundMaterialPath);
             var plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
@@ -627,7 +627,7 @@ namespace Lumina.EditorTools
         }
 
         // Aldea y montañas al fondo. 'mirror' cambia la disposición para que cada escena tenga personalidad propia.
-        private static void BuildVillageBackdrop(Transform parent, bool mirror)
+        internal static void BuildVillageBackdrop(Transform parent, bool mirror)
         {
             float m = mirror ? -1f : 1f;
             var back = Child(parent, "Backdrop");
@@ -671,7 +671,7 @@ namespace Lumina.EditorTools
             }
         }
 
-        private static void BuildLanternsAndFlowers(Transform parent, Vector3 center)
+        internal static void BuildLanternsAndFlowers(Transform parent, Vector3 center)
         {
             var props = Child(parent, "Props");
             var lantern = Village("Lantern");
@@ -700,7 +700,7 @@ namespace Lumina.EditorTools
         }
 
         // Esferas pastel que flotan y giran; mismo lenguaje de puntos de colores del menú principal.
-        private static void BuildFloatingDecor(Transform parent, Vector3 center, int count, int seed)
+        internal static void BuildFloatingDecor(Transform parent, Vector3 center, int count, int seed)
         {
             var root = Child(parent, "FloatingDecor");
             var mats = new[]
@@ -730,7 +730,7 @@ namespace Lumina.EditorTools
         }
 
         // Partículas suaves que suben despacio (motas de luz).
-        private static void BuildMotes(Transform parent, Vector3 center, Vector3 area)
+        internal static void BuildMotes(Transform parent, Vector3 center, Vector3 area)
         {
             var go = new GameObject("FloatingMotes");
             go.transform.SetParent(parent, false);
@@ -768,7 +768,7 @@ namespace Lumina.EditorTools
 
         // ------------------------------------------------------------------ Utilidades
 
-        private static Canvas MakeCanvas(string name)
+        internal static Canvas MakeCanvas(string name)
         {
             var go = new GameObject(name, typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             var canvas = go.GetComponent<Canvas>();
@@ -851,7 +851,7 @@ namespace Lumina.EditorTools
             }
         }
 
-        private static Transform Child(Transform parent, string name)
+        internal static Transform Child(Transform parent, string name)
         {
             var go = new GameObject(name);
             go.transform.SetParent(parent, false);

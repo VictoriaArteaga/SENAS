@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 005e8d7a0a5e82140b97862ce675f436, type: 3}
+  m_Name: SignCatalog
+  m_EditorClassIdentifier: 
+  categories:
+  - id: saludos
+    displayName: Saludos
+    signs:
+    - id: saludos.hola
+      displayName: Hola
+      instruction: "Es la se\xF1a para saludar. Observa con calma c\xF3mo se mueve
+        la mano."
+      instructionEn: This is the sign for greeting. Watch carefully how the hand
+        moves.
+    - id: saludos.gracias
+      displayName: Gracias
+      instruction: "Es la se\xF1a para agradecer. F\xEDjate en la mano y en hacia
+        d\xF3nde se mueve."
+      instructionEn: This is the sign for saying thank you. Notice the hand and where
+        it moves.
+    - id: saludos.por_favor
+      displayName: Por favor
+      instruction: "Es la se\xF1a para pedir algo con cortes\xEDa. Observa la forma
+        y el movimiento de la mano."
+      instructionEn: This is the sign for asking politely. Watch the shape and movement
+        of the hand.
+    - id: "saludos.adi\xF3s"
+      displayName: "Adi\xF3s"
+      instruction: "Es la se\xF1a para despedirte. Observa c\xF3mo se mueve la mano."
+      instructionEn: This is the sign for saying goodbye. Watch how the hand moves.
+  - id: numeros
+    displayName: "N\xFAmeros"
+    signs:
+    - id: numeros.uno
+      displayName: Uno
+      instruction: "Es la se\xF1a del n\xFAmero 1. F\xEDjate en qu\xE9 dedos se usan
+        y c\xF3mo se colocan."
+      instructionEn: This is the sign for the number 1. Notice which fingers are
+        used and how they are placed.
+    - id: numeros.dos
+      displayName: Dos
+      instruction: "Es la se\xF1a del n\xFAmero 2. F\xEDjate en qu\xE9 dedos se usan
+        y c\xF3mo se colocan."
+      instructionEn: This is the sign for the number 2. Notice which fingers are
+        used and how they are placed.
+    - id: numeros.tres
+      displayName: Tres
+      instruction: "Es la se\xF1a del n\xFAmero 3. F\xEDjate en qu\xE9 dedos se usan
+        y c\xF3mo se colocan."
+      instructionEn: This is the sign for the number 3. Notice which fingers are
+        used and how they are placed.
+    - id: numeros.cuatro
+      displayName: Cuatro
+      instruction: "Es la se\xF1a del n\xFAmero 4. F\xEDjate en qu\xE9 dedos se usan
+        y c\xF3mo se colocan."
+      instructionEn: This is the sign for the number 4. Notice which fingers are
+        used and how they are placed.
+  - id: colores
+    displayName: Colores
+    signs:
+    - id: colores.rojo
+      displayName: Rojo
+      instruction: "Es la se\xF1a del color rojo. Observa d\xF3nde se coloca la mano
+        y c\xF3mo se mueve."
+      instructionEn: This is the sign for the color red. Notice where the hand is
+        placed and how it moves.
+    - id: colores.azul
+      displayName: Azul
+      instruction: "Es la se\xF1a del color azul. Observa d\xF3nde se coloca la mano
+        y c\xF3mo se mueve."
+      instructionEn: This is the sign for the color blue. Notice where the hand is
+        placed and how it moves.
+    - id: colores.verde
+      displayName: Verde
+      instruction: "Es la se\xF1a del color verde. Observa d\xF3nde se coloca la
+        mano y c\xF3mo se mueve."
+      instructionEn: This is the sign for the color green. Notice where the hand
+        is placed and how it moves.
+    - id: colores.amarillo
+      displayName: Amarillo
+      instruction: "Es la se\xF1a del color amarillo. Observa d\xF3nde se coloca
+        la mano y c\xF3mo se mueve."
+      instructionEn: This is the sign for the color yellow. Notice where the hand
+        is placed and how it moves.
+  - id: personas
+    displayName: Personas
+    signs:
+    - id: personas.yo
+      displayName: Yo
+      instruction: "Es la se\xF1a para hablar de ti. Observa d\xF3nde se coloca la
+        mano."
+      instructionEn: This is the sign for talking about yourself. Notice where the
+        hand is placed.
+    - id: "personas.t\xFA"
+      displayName: "T\xFA"
+      instruction: "Es la se\xF1a para referirte a otra persona. Observa d\xF3nde
+        se coloca la mano."
+      instructionEn: This is the sign for referring to another person. Notice where
+        the hand is placed.
+    - id: personas.amigo
+      displayName: Amigo
+      instruction: "Es la se\xF1a para hablar de un amigo. Observa las manos y su
+        movimiento."
+      instructionEn: This is the sign for talking about a friend. Watch both hands
+        and their movement.
+    - id: personas.familia
+      displayName: Familia
+      instruction: "Es la se\xF1a para hablar de tu familia. Observa las manos y
+        su movimiento."
+      instructionEn: This is the sign for talking about your family. Watch both hands
+        and their movement.

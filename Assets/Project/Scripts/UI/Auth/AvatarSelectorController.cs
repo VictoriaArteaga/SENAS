@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+using Lumina.Core;
+
 namespace Lumina.UI
 {
     [Serializable]
@@ -164,7 +166,7 @@ namespace Lumina.UI
         {
             bool isChosen = _chosen == _index;
             if (selectedBadge != null) selectedBadge.SetActive(isChosen);
-            if (selectLabel != null) selectLabel.text = isChosen ? "SELECCIONADO" : "SELECCIONAR";
+            if (selectLabel != null) selectLabel.text = Loc.T(isChosen ? "auth.selected" : "auth.select");
         }
 
         /// <summary>Llama la atención sobre el botón SELECCIONAR (cuando el formulario se envía sin elegir avatar).</summary>

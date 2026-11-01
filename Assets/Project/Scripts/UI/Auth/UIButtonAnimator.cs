@@ -24,6 +24,7 @@ namespace Lumina.UI
 
         private Selectable _selectable;
         private Color _baseColor;
+        private ThemedGraphic _themed;
         private Vector2 _faceBase;
         private bool _hover, _selected, _pressed;
         private float _scale = 1f, _drop, _light, _dim;
@@ -62,16 +63,27 @@ namespace Lumina.UI
             Apply();
         }
 
+        // El tema puede cambiar el color base del botón (p. ej. crema → petróleo); si no hay tema se usa el original.
+        private Color BaseColor
+        {
+            get
+            {
+                if (_themed == null && tint != null) _themed = tint.GetComponent<ThemedGraphic>();
+                return _themed != null ? _themed.Current : _baseColor;
+            }
+        }
+
         private void Apply()
         {
+            var baseColor = BaseColor;
             transform.localScale = Vector3.one * _scale;
             if (face != null) face.anchoredPosition = _faceBase + Vector2.down * (pressedDrop * _drop);
             if (tint != null)
             {
-                Color lit = Color.Lerp(_baseColor, Color.white, hoverLighten);
-                lit.a = _baseColor.a;
-                Color shown = Color.Lerp(_baseColor, lit, _light);
-                Color grey = Color.Lerp(_baseColor, new Color(0.72f, 0.72f, 0.72f, _baseColor.a), 0.55f);
+                Color lit = Color.Lerp(baseColor, Color.white, hoverLighten);
+                lit.a = baseColor.a;
+                Color shown = Color.Lerp(baseColor, lit, _light);
+                Color grey = Color.Lerp(baseColor, new Color(0.72f, 0.72f, 0.72f, baseColor.a), 0.55f);
                 tint.color = Color.Lerp(shown, grey, _dim);
             }
         }

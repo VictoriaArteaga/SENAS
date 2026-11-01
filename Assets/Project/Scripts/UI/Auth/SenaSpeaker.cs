@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using Lumina.Core;
+
 namespace Lumina.UI
 {
     /// <summary>
@@ -26,6 +28,7 @@ namespace Lumina.UI
 
         public void Say(string message)
         {
+            message = Loc.Translate(message);
             if (bubble == null || !bubble.isActiveAndEnabled) return;
             if (bubble.IsOpen) bubble.SetMessage(message, string.Empty, string.Empty);
             else bubble.Show(speakerName, message, string.Empty, string.Empty);

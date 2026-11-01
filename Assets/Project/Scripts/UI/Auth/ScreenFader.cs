@@ -12,6 +12,10 @@ namespace Lumina.UI
         public const string Register = "RegisterScene";
         public const string MainMenu = "MainMenu";
         public const string World = "LuminaWorld";
+        public const string Practice = "Practice";
+        public const string Profile = "Profile"; // Pantalla «MI PROGRESO».
+        public const string Settings = "Settings";
+        public const string Results = "Results";
     }
 
     /// <summary>
@@ -22,6 +26,7 @@ namespace Lumina.UI
         private static ScreenFader _instance;
 
         private CanvasGroup _group;
+        private UnityEngine.UI.Image _fill;
         private bool _busy;
 
         /// <summary>Carga la escena con un fundido. Devuelve false (y registra el motivo) si no puede cargarse.</summary>
@@ -60,10 +65,11 @@ namespace Lumina.UI
             rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
             rect.offsetMin = rect.offsetMax = Vector2.zero;
             var image = fill.GetComponent<Image>();
-            image.color = new Color(1f, 0.976f, 0.925f);
+            image.color = Lumina.Core.UiTheme.FadeColor;
             image.raycastTarget = true;
 
             _instance = go.AddComponent<ScreenFader>();
+            _instance._fill = image;
             _instance._group = go.AddComponent<CanvasGroup>();
             _instance._group.alpha = 0f;
             _instance._group.blocksRaycasts = false;
@@ -73,6 +79,7 @@ namespace Lumina.UI
         private IEnumerator Transition(string sceneName)
         {
             _busy = true;
+            if (_fill != null) _fill.color = Lumina.Core.UiTheme.FadeColor;
             _group.blocksRaycasts = true;
             yield return Fade(0f, 1f, 0.3f);
 

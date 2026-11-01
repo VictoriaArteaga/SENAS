@@ -1,0 +1,177 @@
+namespace Lumina.Core
+{
+    /// <summary>
+    /// Todas las cadenas traducibles de la interfaz: (id, español, inglés). El español es la referencia y el respaldo.
+    /// Los nombres propios (Lúmina, Sena, SEÑAS) y los nombres de las señas en LSC no se traducen.
+    /// </summary>
+    internal static class LocTable
+    {
+        public static readonly (string key, string es, string en)[] Rows =
+        {
+            // ---- Comunes
+            ("common.back", "VOLVER", "BACK"),
+            ("common.menu", "MENÚ", "MENU"),
+
+            // ---- Menú principal
+            ("menu.subtitle", "EL MUNDO DE LAS MANOS", "THE WORLD OF HANDS"),
+            ("menu.tagline", "Aprende Lengua de Señas Colombiana con tus manos.", "Learn Colombian Sign Language with your hands."),
+            ("menu.play", "JUGAR", "PLAY"),
+            ("menu.practice", "PRÁCTICA", "PRACTICE"),
+            ("menu.progress", "MI PROGRESO", "MY PROGRESS"),
+            ("menu.settings", "CONFIGURACIÓN", "SETTINGS"),
+            ("menu.quit", "SALIR", "QUIT"),
+            ("menu.notice", "AVISO", "NOTICE"),
+            ("menu.ok", "ENTENDIDO", "GOT IT"),
+            ("menu.quitEditor", "La salida solo funciona en una compilación. En el Editor, detén el modo Play.", "Quitting only works in a build. In the Editor, stop Play mode."),
+
+            // ---- Títulos de pantalla
+            ("title.practice", "PRÁCTICA", "PRACTICE"),
+            ("title.learn", "APRENDE", "LEARN"),
+            ("title.progress", "MI PROGRESO", "MY PROGRESS"),
+            ("title.settings", "CONFIGURACIÓN", "SETTINGS"),
+            ("title.results", "RESULTADOS", "RESULTS"),
+
+            // ---- Practice
+            ("cat.saludos", "Saludos", "Greetings"),
+            ("cat.numeros", "Números", "Numbers"),
+            ("cat.colores", "Colores", "Colors"),
+            ("cat.personas", "Personas", "People"),
+            ("practice.choose", "ELIGE UNA SEÑA", "CHOOSE A SIGN"),
+            ("practice.go", "PRACTICAR", "PRACTICE"),
+            ("practice.replay", "VER DE NUEVO", "WATCH AGAIN"),
+            ("practice.myTurn", "AHORA ES MI TURNO", "NOW IT'S MY TURN"),
+            ("practice.start", "COMENZAR", "START"),
+            ("practice.finish", "TERMINAR", "FINISH"),
+            ("practice.demoSoon", "La demostración animada llegará pronto.", "The animated demonstration is coming soon."),
+            ("practice.prepare", "Prepárate: colócate frente a la cámara con las manos a la vista.", "Get ready: stand in front of the camera with your hands in view."),
+            ("practice.doSign", "Haz la seña frente a la cámara.", "Make the sign in front of the camera."),
+            ("practice.noRecognition", "Reconocimiento aún no disponible", "Recognition not available yet"),
+            ("practice.analyzing", "ANALIZANDO...", "ANALYZING..."),
+            ("practice.noSigns", "Aún no hay señas para practicar.", "There are no signs to practice yet."),
+            ("practice.noSignsInCategory", "Esta categoría aún no tiene señas.", "This category has no signs yet."),
+            ("practice.defaultInstruction", "Observa cómo se realiza la seña.", "Watch how the sign is made."),
+
+            // ---- Cámara
+            ("camera.none", "No se encontró ninguna cámara.", "No camera found."),
+            ("camera.off", "Cámara apagada", "Camera off"),
+
+            // ---- Mi progreso
+            ("progress.level", "NIVEL {0}", "LEVEL {0}"),
+            ("progress.rank", "EXPLORADOR DE LÚMINA", "LÚMINA EXPLORER"),
+            ("progress.xp", "{0} XP", "{0} XP"),
+            ("progress.xpOf", "{0} / {1} XP", "{0} / {1} XP"),
+            ("progress.signs", "SEÑAS APRENDIDAS", "SIGNS LEARNED"),
+            ("progress.precision", "PRECISIÓN PROMEDIO", "AVERAGE ACCURACY"),
+            ("progress.stars", "ESTRELLAS", "STARS"),
+            ("progress.empty", "Aún no hay registros. ¡Practica tu primera seña!", "No records yet. Practice your first sign!"),
+            ("progress.levels", "NIVELES DE APRENDIZAJE", "LEARNING LEVELS"),
+            ("progress.level1", "Primeras señas", "First signs"),
+            ("progress.level2", "Mi mundo", "My world"),
+            ("progress.level3", "Situaciones cotidianas", "Everyday situations"),
+            ("progress.level4", "Reto universitario", "University challenge"),
+            ("progress.completed", "COMPLETADO", "COMPLETED"),
+            ("progress.inProgress", "EN PROGRESO", "IN PROGRESS"),
+            ("progress.locked", "BLOQUEADO", "LOCKED"),
+            ("progress.player", "EXPLORADOR", "EXPLORER"),
+
+            // ---- Resultados
+            ("results.notEvaluated", "SIN EVALUAR", "NOT EVALUATED"),
+            ("results.precision", "PRECISIÓN", "ACCURACY"),
+            ("results.xp", "XP", "XP"),
+            ("results.good", "¡Buen trabajo! Sigue practicando para mejorar.", "Great job! Keep practicing to improve."),
+            ("results.none", "Esta práctica todavía no se evalúa: el reconocimiento de señas llegará pronto.", "This practice isn't evaluated yet: sign recognition is coming soon."),
+            ("results.again", "SEGUIR PRACTICANDO", "KEEP PRACTICING"),
+
+            // ---- Configuración
+            ("settings.audio", "AUDIO", "AUDIO"),
+            ("settings.music", "MÚSICA", "MUSIC"),
+            ("settings.sfx", "EFECTOS DE SONIDO", "SOUND EFFECTS"),
+            ("settings.graphics", "GRÁFICOS", "GRAPHICS"),
+            ("settings.camera", "CÁMARA", "CAMERA"),
+            ("settings.test", "PROBAR", "TEST"),
+            ("settings.stop", "DETENER", "STOP"),
+            ("settings.restore", "RESTAURAR", "RESET"),
+            ("settings.preferences", "PREFERENCIAS", "PREFERENCES"),
+            ("settings.language", "IDIOMA", "LANGUAGE"),
+            ("settings.appearance", "APARIENCIA", "APPEARANCE"),
+            ("settings.light", "Claro", "Light"),
+            ("settings.dark", "Oscuro", "Dark"),
+            ("settings.accessibility", "ACCESIBILIDAD", "ACCESSIBILITY"),
+            ("settings.accessibilityNote", "Pronto habrá más opciones para adaptar el juego a ti.", "More options to adapt the game to you are coming soon."),
+
+            // ---- Inicio de sesión / registro
+            ("auth.brand", "SEÑAS · EL MUNDO DE LAS MANOS", "SEÑAS · THE WORLD OF HANDS"),
+            ("auth.login", "INICIAR SESIÓN", "LOG IN"),
+            ("auth.email", "Correo electrónico", "Email"),
+            ("auth.password", "Contraseña", "Password"),
+            ("auth.passwordPlaceholder", "Tu contraseña", "Your password"),
+            ("auth.remember", "Recordar sesión", "Remember me"),
+            ("auth.forgot", "¿Olvidé mi contraseña?", "Forgot my password?"),
+            ("auth.firstTime", "¿Es tu primera vez en Lúmina?", "First time in Lúmina?"),
+            ("auth.create", "CREAR CUENTA", "CREATE ACCOUNT"),
+            ("auth.testMode", "Modo de prueba · todavía no hay cuentas reales", "Test mode · there are no real accounts yet"),
+            ("auth.createTitle", "CREA TU CUENTA", "CREATE YOUR ACCOUNT"),
+            ("auth.adventure", "TU AVENTURA EMPIEZA AQUÍ", "YOUR ADVENTURE STARTS HERE"),
+            ("auth.playerName", "Nombre del jugador", "Player name"),
+            ("auth.playerNamePlaceholder", "Como te llamas", "What's your name"),
+            ("auth.username", "Nombre de usuario", "Username"),
+            ("auth.usernamePlaceholder", "tu_usuario", "your_username"),
+            ("auth.passwordMin", "Mínimo 6 caracteres", "At least 6 characters"),
+            ("auth.confirm", "Confirmar contraseña", "Confirm password"),
+            ("auth.confirmPlaceholder", "Repite tu contraseña", "Repeat your password"),
+            ("auth.backToLogin", "VOLVER AL INICIO DE SESIÓN", "BACK TO LOG IN"),
+            ("auth.dragHint", "Arrastra para girar a tu avatar", "Drag to rotate your avatar"),
+            ("auth.chooseAvatar", "ELIGE A TU AVATAR", "CHOOSE YOUR AVATAR"),
+            ("auth.yourAvatar", "TU AVATAR", "YOUR AVATAR"),
+            ("auth.select", "SELECCIONAR", "SELECT"),
+            ("auth.selected", "SELECCIONADO", "SELECTED"),
+            ("auth.welcome", "¡Bienvenido a Lúmina!", "Welcome to Lúmina!"),
+            ("auth.welcomeNamed", "¡Bienvenido a Lúmina, {0}!", "Welcome to Lúmina, {0}!"),
+            ("auth.welcomeBody", "Tu compañero {0} ya te espera.\nEsta es una cuenta de prueba: no se guardó ninguna información.", "Your companion {0} is waiting for you.\nThis is a test account: no information was saved."),
+            ("auth.toMenu", "IR AL MENÚ PRINCIPAL", "GO TO MAIN MENU"),
+            ("auth.show", "VER", "SHOW"),
+            ("auth.hide", "OCULTAR", "HIDE"),
+            ("auth.logout", "CERRAR SESIÓN", "LOG OUT"),
+            ("auth.logoutTitle", "¿Te vas de Lúmina?", "Leaving Lúmina?"),
+            ("auth.logoutMessage", "Sena te espera para continuar la aventura cuando regreses.", "Sena will be waiting to continue the adventure when you return."),
+            ("auth.logoutConfirm", "SÍ, CERRAR SESIÓN", "YES, LOG OUT"),
+            ("auth.logoutCancel", "CONTINUAR JUGANDO", "KEEP PLAYING"),
+            ("auth.farewell", "¡Hasta pronto! Aquí estaré.", "See you soon! I'll be here."),
+
+            // ---- Mensajes de Sena y de estado (Auth)
+            ("auth.msgWelcome", "¡Qué alegría verte de nuevo!", "So good to see you again!"),
+            ("auth.msgTyping", "¡Vamos a continuar aprendiendo!", "Let's keep learning!"),
+            ("auth.msgLoading", "Un momento, estoy preparando tu aventura.", "One moment, I'm getting your adventure ready."),
+            ("auth.msgError", "¡Ups! Revisemos tus datos.", "Oops! Let's check your details."),
+            ("auth.msgSuccess", "¡Excelente! ¡Volvamos a explorar Lúmina!", "Excellent! Let's explore Lúmina again!"),
+            ("auth.checkFields", "Revisa los campos marcados.", "Check the highlighted fields."),
+            ("auth.loginFailed", "No se pudo iniciar sesión.", "Couldn't log in."),
+            ("auth.entering", "¡Listo! Entrando a Lúmina…", "Done! Entering Lúmina…"),
+            ("auth.wentWrong", "Algo salió mal. Inténtalo otra vez.", "Something went wrong. Please try again."),
+            ("auth.forgotAskEmail", "Escribe tu correo y vuelve a pulsar «¿Olvidé mi contraseña?».", "Enter your email and press “Forgot my password?” again."),
+            ("auth.forgotSena", "Dime tu correo y te ayudo a recuperar tu cuenta.", "Tell me your email and I'll help you recover your account."),
+            ("auth.forgotTest", "Función de prueba: aún no se envía ningún correo real.", "Test feature: no real email is sent yet."),
+            ("auth.forgotSoon", "Pronto podrás recuperar tu contraseña desde aquí.", "Soon you'll be able to recover your password from here."),
+            ("auth.registerIntro", "Cuéntanos quién eres y elige a tu compañero de aventura.", "Tell us who you are and choose your adventure companion."),
+            ("auth.chooseAvatarError", "Elige un avatar con el botón SELECCIONAR.", "Choose an avatar with the SELECT button."),
+            ("auth.registerFailed", "No se pudo crear la cuenta.", "Couldn't create the account."),
+
+            // ---- Validación y servicio de Auth
+            ("val.emailRequired", "Escribe tu correo electrónico.", "Enter your email."),
+            ("val.emailAt", "El correo debe tener un @.", "The email must contain an @."),
+            ("val.emailFormat", "Revisa el formato: nombre@correo.com", "Check the format: name@email.com"),
+            ("val.passwordRequired", "Escribe tu contraseña.", "Enter your password."),
+            ("val.passwordMin", "Usa al menos {0} caracteres.", "Use at least {0} characters."),
+            ("val.nameRequired", "Escribe tu nombre.", "Enter your name."),
+            ("val.usernameRequired", "Elige un nombre de usuario.", "Choose a username."),
+            ("val.usernameMax", "Usa máximo {0} caracteres.", "Use at most {0} characters."),
+            ("val.usernameChars", "Solo letras, números, punto y guion bajo.", "Only letters, numbers, dots and underscores."),
+            ("val.confirmRequired", "Repite tu contraseña.", "Repeat your password."),
+            ("val.confirmMismatch", "Las contraseñas no coinciden.", "Passwords don't match."),
+            ("svc.invalidCredentials", "No encontramos una cuenta con esos datos.", "We couldn't find an account with those details."),
+            ("svc.emailUsed", "Ese correo ya está en uso.", "That email is already in use."),
+            ("svc.usernameTaken", "Ese nombre de usuario ya está tomado.", "That username is already taken."),
+            ("svc.noEmail", "Simulación: no se envió ningún correo.", "Simulation: no email was sent."),
+        };
+    }
+}
