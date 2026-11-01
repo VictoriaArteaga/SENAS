@@ -16,6 +16,7 @@ namespace Senas.AI.Editor
 
     [SerializeField] private AlphabetLandmarkTemplateSet _templateSet;
     [SerializeField] private string _letter = "A";
+    [SerializeField] private bool _numbersOnly;
     [SerializeField] private LandmarkHandedness _handedness = LandmarkHandedness.Any;
     [SerializeField, Min(5)] private int _framesToAverage = 15;
     [SerializeField, Min(0.001f)] private float _maximumAverageDistance = 0.2f;
@@ -27,9 +28,17 @@ namespace Senas.AI.Editor
     private string _status = "Crea o asigna un asset de plantillas y entra en Play Mode.";
 
     [MenuItem("Window/SENAS/LSC Template Capture")]
-    private static void Open()
+    private static void Open() => OpenWindow(false);
+
+    [MenuItem("Window/SENAS/LSC Number Capture")]
+    private static void OpenNumbers() => OpenWindow(true);
+
+    private static void OpenWindow(bool numbersOnly)
     {
-      GetWindow<AlphabetLandmarkTemplateCaptureWindow>("LSC Template Capture");
+      var window = GetWindow<AlphabetLandmarkTemplateCaptureWindow>(numbersOnly ? "LSC Number Capture" : "LSC Template Capture");
+      window._numbersOnly = numbersOnly;
+      window._letter = numbersOnly ? "0" : "A";
+      window._templateSet = AssetDatabase.LoadAssetAtPath<AlphabetLandmarkTemplateSet>(GetTemplateAssetPath(numbersOnly));
     }
 
     private void OnEnable()
@@ -37,7 +46,7 @@ namespace Senas.AI.Editor
       if (_templateSet == null)
       {
         _templateSet = AssetDatabase.LoadAssetAtPath<AlphabetLandmarkTemplateSet>(
-          "Assets/IA/MediaPipe/AlphabetLandmarkTemplates.asset"
+          GetTemplateAssetPath(_numbersOnly)
         );
       }
       EditorApplication.update += EditorUpdate;
@@ -54,14 +63,13 @@ namespace Senas.AI.Editor
     private void OnGUI()
     {
       if (EditorApplication.isPlaying && _capture == null) ResolveCapture();
-      EditorGUILayout.LabelField("Captura de plantillas estaticas", EditorStyles.boldLabel);
-      EditorGUILayout.HelpBox(
-        "Promedia landmarks de una mano sostenida. No guarda video ni imagenes. Las letras con movimiento necesitan otro tipo de plantilla.",
-        MessageType.Info
-      );
+      EditorGUILayout.LabelField(_numbersOnly ? "Captura estática de números LSC" : "Captura estática del alfabeto LSC", EditorStyles.boldLabel);
+      EditorGUILayout.HelpBox(_numbersOnly
+        ? "Promedia landmarks de un número sostenido. No guarda video ni imágenes. Si la seña incluye movimiento, agrega también una secuencia en LSC Number Motion Capture."
+        : "Promedia landmarks de una seña sostenida. No guarda video ni imágenes. Las letras con movimiento se capturan en LSC Motion Capture.", MessageType.Info);
 
       _templateSet = (AlphabetLandmarkTemplateSet)EditorGUILayout.ObjectField(
-        "Asset de plantillas", _templateSet, typeof(AlphabetLandmarkTemplateSet), false
+        _numbersOnly ? "Asset de números" : "Asset de plantillas", _templateSet, typeof(AlphabetLandmarkTemplateSet), false
       );
 
       if (_templateSet == null && GUILayout.Button("Crear asset de plantillas"))
@@ -71,7 +79,7 @@ namespace Senas.AI.Editor
 
       using (new EditorGUI.DisabledScope(_isCapturing))
       {
-        _letter = EditorGUILayout.TextField("Letra", _letter).Trim().ToUpperInvariant();
+        _letter = EditorGUILayout.TextField(_numbersOnly ? "Número (0–30)" : "Letra", _letter).Trim().ToUpperInvariant();
         _handedness = (LandmarkHandedness)EditorGUILayout.EnumPopup("Mano", _handedness);
         _framesToAverage = EditorGUILayout.IntSlider("Fotogramas a promediar", _framesToAverage, 5, 60);
         _maximumAverageDistance = EditorGUILayout.Slider("Umbral inicial", _maximumAverageDistance, 0.01f, 1f);
@@ -112,7 +120,7 @@ namespace Senas.AI.Editor
         EditorGUILayout.LabelField("Muestras recibidas", $"{_framesCaptured}/{_framesToAverage}");
 
       using (new EditorGUI.DisabledScope(
-        !EditorApplication.isPlaying || _capture == null || _templateSet == null || _isCapturing || _letter.Length != 1))
+        !EditorApplication.isPlaying || _capture == null || _templateSet == null || _isCapturing || !IsValidLabel()))
       {
         if (GUILayout.Button("Capturar muestra estatica")) BeginCapture();
       }
@@ -272,8 +280,7 @@ namespace Senas.AI.Editor
 
     private void CreateTemplateAsset()
     {
-      const string defaultPath = "Assets/IA/MediaPipe/AlphabetLandmarkTemplates.asset";
-      var path = AssetDatabase.GenerateUniqueAssetPath(defaultPath);
+      var path = AssetDatabase.GenerateUniqueAssetPath(GetTemplateAssetPath(_numbersOnly));
       var asset = CreateInstance<AlphabetLandmarkTemplateSet>();
       AssetDatabase.CreateAsset(asset, path);
       AssetDatabase.SaveAssets();
@@ -281,6 +288,17 @@ namespace Senas.AI.Editor
       EditorGUIUtility.PingObject(asset);
       _status = $"Asset creado: {path}";
     }
+
+    private bool IsValidLabel()
+    {
+      if (!_numbersOnly) return _letter.Length == 1;
+      return int.TryParse(_letter, out var number) && number >= 0 && number <= 30 &&
+        string.Equals(_letter, number.ToString(), StringComparison.Ordinal);
+    }
+
+    private static string GetTemplateAssetPath(bool numbersOnly) => numbersOnly
+      ? "Assets/Project/Data/NumberLandmarkTemplates.asset"
+      : "Assets/IA/MediaPipe/AlphabetLandmarkTemplates.asset";
 
     private static bool MatchesHandedness(LandmarkHandedness expected, string detected)
     {

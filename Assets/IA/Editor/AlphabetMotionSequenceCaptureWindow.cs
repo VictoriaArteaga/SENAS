@@ -9,12 +9,14 @@ namespace Senas.AI.Editor
   public sealed class AlphabetMotionSequenceCaptureWindow : EditorWindow
   {
     private static readonly string[] Letters = { "G", "H", "J", "Ñ", "S", "Z" };
+    private static readonly string[] Numbers = CreateNumberLabels();
     private const int LandmarkCount = 21;
     private const int WristIndex = 0;
     private const int MiddleFingerMcpIndex = 9;
 
     [SerializeField] private AlphabetLandmarkTemplateSet _templateSet;
     [SerializeField] private int _letterIndex;
+    [SerializeField] private bool _numbersOnly;
     [SerializeField] private LandmarkHandedness _handedness = LandmarkHandedness.Any;
     [SerializeField, Range(0.05f, 1f)] private float _distanceThreshold = 0.35f;
     private HandLandmarkerCapture _capture;
@@ -26,12 +28,23 @@ namespace Senas.AI.Editor
     private string _status = "Abre la escena de webcam, inicia Play y conecta MediaPipe.";
 
     [MenuItem("Window/SENAS/LSC Motion Capture")]
-    private static void Open() => GetWindow<AlphabetMotionSequenceCaptureWindow>("LSC Motion Capture");
+    private static void Open() => OpenWindow(false);
+
+    [MenuItem("Window/SENAS/LSC Number Motion Capture")]
+    private static void OpenNumbers() => OpenWindow(true);
+
+    private static void OpenWindow(bool numbersOnly)
+    {
+      var window = GetWindow<AlphabetMotionSequenceCaptureWindow>(numbersOnly ? "LSC Number Motion" : "LSC Motion Capture");
+      window._numbersOnly = numbersOnly;
+      window._letterIndex = 0;
+      window._templateSet = AssetDatabase.LoadAssetAtPath<AlphabetLandmarkTemplateSet>(GetTemplateAssetPath(numbersOnly));
+    }
 
     private void OnEnable()
     {
       if (_templateSet == null)
-        _templateSet = AssetDatabase.LoadAssetAtPath<AlphabetLandmarkTemplateSet>("Assets/IA/MediaPipe/AlphabetLandmarkTemplates.asset");
+        _templateSet = AssetDatabase.LoadAssetAtPath<AlphabetLandmarkTemplateSet>(GetTemplateAssetPath(_numbersOnly));
       EditorApplication.update += EditorUpdate;
       EditorApplication.playModeStateChanged += OnPlayModeChanged;
     }
@@ -45,9 +58,13 @@ namespace Senas.AI.Editor
 
     private void OnGUI()
     {
-      EditorGUILayout.HelpBox("Captura secuencias de G, H, J, Ñ, S y Z. Solo guarda landmarks normalizados; no graba video ni imagenes. Se guarda al detectar el fin del movimiento o al pulsar el boton.", MessageType.Info);
+      EditorGUILayout.HelpBox(_numbersOnly
+        ? "Captura secuencias dinámicas de números del 0 al 30. Solo guarda landmarks normalizados; no graba video ni imágenes."
+        : "Captura secuencias de G, H, J, Ñ, S y Z. Solo guarda landmarks normalizados; no graba video ni imágenes.", MessageType.Info);
       _templateSet = (AlphabetLandmarkTemplateSet)EditorGUILayout.ObjectField("Asset", _templateSet, typeof(AlphabetLandmarkTemplateSet), false);
-      _letterIndex = EditorGUILayout.Popup("Letra dinamica", _letterIndex, Letters);
+      if (_templateSet == null && GUILayout.Button("Crear asset de números")) CreateNumberTemplateAsset();
+      var labels = _numbersOnly ? Numbers : Letters;
+      _letterIndex = Mathf.Clamp(EditorGUILayout.Popup(_numbersOnly ? "Número dinámico" : "Letra dinámica", _letterIndex, labels), 0, labels.Length - 1);
       _handedness = (LandmarkHandedness)EditorGUILayout.EnumPopup("Mano", _handedness);
       _distanceThreshold = EditorGUILayout.Slider("Umbral DTW inicial", _distanceThreshold, 0.05f, 1f);
 
@@ -107,7 +124,7 @@ namespace Senas.AI.Editor
       _motionDetected = false;
       _stillFrameCount = 0;
       _recording = true;
-      _status = $"Haz el movimiento completo de {Letters[_letterIndex]}. La captura se cierra al quedar la mano quieta.";
+      _status = $"Haz el movimiento completo de {CurrentLabel()}. La captura se cierra al quedar la mano quieta.";
     }
 
     private void OnLandmarks(HandLandmarkFrame frame)
@@ -166,13 +183,37 @@ namespace Senas.AI.Editor
       foreach (var frame in _frames)
         normalized.Add(new MotionLandmarkFrame((frame.Timestamp - start) / (float)duration, frame.Wrist, frame.Points));
 
-      var letter = Letters[_letterIndex];
-      Undo.RecordObject(_templateSet, $"Capturar movimiento LSC {letter}");
-      _templateSet.AddMotionTemplate(letter, _handedness, normalized, _distanceThreshold);
+      var label = CurrentLabel();
+      Undo.RecordObject(_templateSet, $"Capturar movimiento LSC {label}");
+      _templateSet.AddMotionTemplate(label, _handedness, normalized, _distanceThreshold);
       EditorUtility.SetDirty(_templateSet);
       AssetDatabase.SaveAssets();
-      _status = $"Secuencia {letter} guardada: {_frames.Count} fotogramas en {duration / 1000f:F2} s.";
+      _status = $"Secuencia {label} guardada: {_frames.Count} fotogramas en {duration / 1000f:F2} s.";
       _frames.Clear();
+    }
+
+    private string CurrentLabel() => _numbersOnly ? Numbers[_letterIndex] : Letters[_letterIndex];
+
+    private void CreateNumberTemplateAsset()
+    {
+      var path = AssetDatabase.GenerateUniqueAssetPath(GetTemplateAssetPath(true));
+      var asset = CreateInstance<AlphabetLandmarkTemplateSet>();
+      AssetDatabase.CreateAsset(asset, path);
+      AssetDatabase.SaveAssets();
+      _templateSet = asset;
+      EditorGUIUtility.PingObject(asset);
+      _status = $"Asset creado: {path}";
+    }
+
+    private static string GetTemplateAssetPath(bool numbersOnly) => numbersOnly
+      ? "Assets/Project/Data/NumberLandmarkTemplates.asset"
+      : "Assets/IA/MediaPipe/AlphabetLandmarkTemplates.asset";
+
+    private static string[] CreateNumberLabels()
+    {
+      var labels = new string[31];
+      for (var number = 0; number <= 30; number++) labels[number] = number.ToString();
+      return labels;
     }
 
     private void CancelRecording(string reason)

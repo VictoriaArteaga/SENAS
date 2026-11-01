@@ -44,6 +44,14 @@ La referencia LSC validada por el equipo confirma como dinamicas **G, H, J, Ñ, 
 
 La lista dinamica ya fue confirmada por el equipo contra la referencia aprobada: G, H, J, Ñ, S y Z. El asset conserva las muestras estaticas como referencia de postura y actualmente incluye 22 secuencias temporales: G (7), H (1), J (2), Ñ (3), S (7) y Z (2). Captura mas variantes, en particular para H, antes de calibrar el umbral para evitar sobreajuste a una sola persona o velocidad.
 
+## Nivel 2: números LSC del 0 al 30
+
+- `Assets/Project/Data/NumberLandmarkTemplates.asset` mantiene separado el conjunto numérico: los números 0–5 usan muestras estáticas y del 6 al 30 secuencias temporales, según la clasificación acordada por el equipo.
+- En Play Mode, `Window > SENAS > LSC Number Capture` agrega muestras estáticas; `Window > SENAS > LSC Number Motion Capture` registra el movimiento completo. Ambas ventanas guardan landmarks normalizados, no imágenes ni video.
+- `Lumina > Niveles > Construir solo Casa de Números (0–30)` regenera la casa con 31 objetos interactivos y el tablero actualizado.
+- Al practicar un número desde `NumbersHouse`, `PracticeController` conecta `MediaPipeNumberSignRecognizer` con el asset numérico. El reconocedor comparte la textura ya abierta por la vista de cámara para no iniciar una segunda webcam y limita la búsqueda al número elegido.
+- La puntuación geométrica y las estrellas son una evaluación inicial, no una certificación lingüística. La precisión debe validarse con distintas personas, velocidades e iluminación antes de presentarla como fiable.
+
 ## Capturar referencias estaticas
 
 1. Abre la escena `Assets/IA/Test_Webcam_MediaPipe.unity` y entra en Play Mode.

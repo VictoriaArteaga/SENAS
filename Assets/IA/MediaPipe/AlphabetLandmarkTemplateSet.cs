@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 namespace Senas.AI.MediaPipe
@@ -28,7 +29,8 @@ namespace Senas.AI.MediaPipe
     public void AddMotionTemplate(string letter, LandmarkHandedness handedness, IReadOnlyList<MotionLandmarkFrame> frames, float maximumAverageDistance)
     {
       if (string.IsNullOrWhiteSpace(letter)) throw new ArgumentException("La letra no puede estar vacia.", nameof(letter));
-      if (!IsMotionLetter(letter)) throw new ArgumentException("La letra no pertenece a la lista dinamica LSC validada.", nameof(letter));
+      letter = letter.Trim();
+      if (!IsSupportedMotionLabel(letter)) throw new ArgumentException("La etiqueta debe ser una letra dinamica configurada o un numero entre 0 y 30.", nameof(letter));
       if (frames == null || frames.Count < 6) throw new ArgumentException("La secuencia debe tener al menos 6 fotogramas.", nameof(frames));
       if (_motionTemplates == null) _motionTemplates = new List<AlphabetMotionTemplate>();
 
@@ -39,6 +41,10 @@ namespace Senas.AI.MediaPipe
           throw new ArgumentException("Cada fotograma debe contener exactamente 21 landmarks.", nameof(frames));
         copy.Add(new MotionLandmarkFrame(frame.Time, frame.WristPosition, frame.NormalizedLandmarks));
       }
+      foreach (var template in _templates)
+        if (template != null && string.Equals(template.Letter, letter, StringComparison.OrdinalIgnoreCase))
+          template.SetRequiresMotion(true);
+
       _motionTemplates.Add(new AlphabetMotionTemplate(letter, handedness, maximumAverageDistance, copy));
     }
 
@@ -47,6 +53,14 @@ namespace Senas.AI.MediaPipe
       foreach (var motionLetter in MotionLetters)
         if (string.Equals(letter.Trim(), motionLetter, StringComparison.OrdinalIgnoreCase)) return true;
       return false;
+    }
+
+    private static bool IsSupportedMotionLabel(string label)
+    {
+      if (IsMotionLetter(label)) return true;
+      return int.TryParse(label, NumberStyles.None, CultureInfo.InvariantCulture, out var number) &&
+        number >= 0 && number <= 30 &&
+        string.Equals(number.ToString(CultureInfo.InvariantCulture), label, StringComparison.Ordinal);
     }
   }
 
@@ -68,6 +82,8 @@ namespace Senas.AI.MediaPipe
     public IReadOnlyList<Vector3> NormalizedLandmarks => _normalizedLandmarks;
 
     public AlphabetLandmarkTemplate() { }
+
+    internal void SetRequiresMotion(bool requiresMotion) => _requiresMotion = requiresMotion;
 
     public AlphabetLandmarkTemplate(string letter, LandmarkHandedness handedness, float maximumAverageDistance, List<Vector3> normalizedLandmarks, bool requiresMotion = false)
     {
