@@ -370,7 +370,7 @@ namespace Lumina.EditorTools
             var register = LuminaUiKit.MakeButton(inner, "RegisterButton", "CREAR CUENTA", LuminaUiKit.Turquoise, LuminaUiKit.TurquoiseDark, LuminaUiKit.Ink, new Vector2(620f, 80f), 30f, 8f, 4f);
             LuminaUiKit.TopCenter((RectTransform)register.transform, 756f, 620f, 80f);
 
-            var footer = LuminaUiKit.Label(inner, "Footer", "Modo de prueba · todavía no hay cuentas reales", 20f, LuminaUiKit.Ink, FontStyles.Normal, TextAlignmentOptions.Center);
+            var footer = LuminaUiKit.Label(inner, "Footer", "Modo de prueba · todavía no hay cuentas reales", 24f, LuminaUiKit.Ink, FontStyles.Normal, TextAlignmentOptions.Center);
             LuminaUiKit.TopCenter(footer.rectTransform, 850f, 620f, 30f);
             footer.color = new Color(LuminaUiKit.Ink.r, LuminaUiKit.Ink.g, LuminaUiKit.Ink.b, 0.55f);
 
@@ -469,9 +469,12 @@ namespace Lumina.EditorTools
             // Selector de avatar (zona izquierda).
             var left = LuminaUiKit.Rect("AvatarSelectorUI", canvas.transform);
             LuminaUiKit.Stretch(left);
-            var hintLabel = LuminaUiKit.Label(left, "Hint", "Arrastra para girar a tu avatar", 26f, LuminaUiKit.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 1f);
-            LuminaUiKit.Place(hintLabel.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 1f), new Vector2(470f, -52f), new Vector2(760f, 40f));
-            var chooseTitle = LuminaUiKit.Label(left, "ChooseTitle", "ELIGE A TU AVATAR", 54f, LuminaUiKit.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
+            // Sobre el cielo claro el crema no se lee: va en una píldora tinta semitransparente (el color del texto sigue siendo crema).
+            LuminaUiKit.PlateLabel(left, "Hint", "Arrastra para girar a tu avatar", 30f, LuminaUiKit.Cream,
+                new Color(LuminaUiKit.Ink.r, LuminaUiKit.Ink.g, LuminaUiKit.Ink.b, 0.6f), out var hintPlate, 1f);
+            LuminaUiKit.Place(hintPlate.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 1f), new Vector2(470f, -40f), new Vector2(640f, 56f));
+            var chooseTitle = LuminaUiKit.Label(left, "ChooseTitle", "ELIGE A TU AVATAR", 54f, LuminaUiKit.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 4f,
+                LuminaUiKit.TextEdge.Outline(LuminaUiKit.Ink, 0.14f));
             var chooseShadow = LuminaUiKit.Label(left, "ChooseTitleShadow", "ELIGE A TU AVATAR", 54f, LuminaUiKit.CoralDark, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
             LuminaUiKit.Place(chooseShadow.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 1f), new Vector2(474f, -104f), new Vector2(800f, 70f));
             LuminaUiKit.Place(chooseTitle.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 1f), new Vector2(470f, -98f), new Vector2(800f, 70f));

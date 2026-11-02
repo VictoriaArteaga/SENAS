@@ -754,7 +754,7 @@ namespace Lumina.EditorTools
         // ------------------------------------------------------------------ Accesos en Practice
 
         /// <summary>Añade a Practice la fila «CASAS DE APRENDIZAJE». Es idempotente y no reconstruye la escena.</summary>
-        private static void AddShortcutsToPractice()
+        internal static void AddShortcutsToPractice()
         {
             string path = AuthBuilder.ScenesDir + "Practice.unity";
             var scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
@@ -766,10 +766,10 @@ namespace Lumina.EditorTools
             if (old != null) Object.DestroyImmediate(old.gameObject);
 
             var root = Ui.Rect("LevelShortcuts", canvas);
-            Ui.Place(root, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(48f, 34f), new Vector2(780f, 130f));
+            Ui.Place(root, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(48f, 34f), new Vector2(780f, 134f));
             var plate = Ui.Panel(root, "HeadingPlate", Ui.Ink);
-            Ui.Place(plate.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, new Vector2(470f, 40f));
-            var label = Ui.Label(plate.transform, "Heading", "CASAS DE APRENDIZAJE", 24f, Ui.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
+            Ui.Place(plate.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, new Vector2(500f, 44f));
+            var label = Ui.Label(plate.transform, "Heading", "CASAS DE APRENDIZAJE", 26f, Ui.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
             Ui.Stretch(label.rectTransform, 10f, 0f, 10f, 0f);
 
             var row = Ui.Rect("Row", root);
