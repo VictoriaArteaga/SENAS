@@ -29,7 +29,7 @@ namespace Lumina.UI
             if (result.HasValue && result.Value.evaluated)
             {
                 var r = result.Value;
-                precisionCard.Set(Mathf.RoundToInt(r.precision) + "%", Loc.T("results.precision"));
+                precisionCard.Set(Mathf.RoundToInt(r.precision) + "%", Loc.T("results.similarity"));
                 starsCard.gameObject.SetActive(r.stars >= 0);
                 xpCard.gameObject.SetActive(r.xp >= 0);
                 if (r.stars >= 0) starsCard.Set(r.stars.ToString(), Loc.T("progress.stars"));
