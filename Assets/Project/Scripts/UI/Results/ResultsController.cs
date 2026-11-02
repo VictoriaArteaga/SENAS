@@ -1,14 +1,22 @@
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Lumina.Api;
 using Lumina.Core;
 
 namespace Lumina.UI
 {
-    /// <summary>Resumen al terminar una práctica. Muestra solo lo que haya en <see cref="PracticeSession"/>; sin evaluación no inventa nota.</summary>
+    /// <summary>
+    /// Resumen al terminar una práctica. Muestra lo que RESPONDIÓ EL BACKEND al envío del resultado (precisión, estrellas, XP
+    /// otorgada, XP total y desbloqueos), no lo que reportó la IA. Mientras espera muestra un estado de carga y bloquea el
+    /// botón para evitar dobles envíos; si el envío falla lo dice claramente y no se suma nada. Sin evaluación no inventa nota.
+    /// </summary>
     public class ResultsController : MonoBehaviour
     {
+        private const int MaxSends = 4; // igual que EvaluationService
+
         [SerializeField] private SceneHeaderUI header;
         [SerializeField] private TMP_Text signLabel;
         [SerializeField] private StatCardUI precisionCard;
@@ -16,6 +24,8 @@ namespace Lumina.UI
         [SerializeField] private StatCardUI xpCard;
         [SerializeField] private TMP_Text messageLabel;
         [SerializeField] private Button practiceAgainButton;
+
+        private EvaluationSubmission _submission;
 
         private void Start()
         {
@@ -26,26 +36,84 @@ namespace Lumina.UI
             signLabel.text = sign != null ? sign.displayName.ToUpperInvariant() : Loc.T("title.practice");
 
             var result = PracticeSession.Result;
-            if (result.HasValue && result.Value.evaluated)
+            _submission = PracticeSession.Submission;
+
+            if (_submission != null)
             {
-                var r = result.Value;
-                precisionCard.Set(Mathf.RoundToInt(r.precision) + "%", Loc.T("results.precision"));
-                starsCard.gameObject.SetActive(r.stars >= 0);
-                xpCard.gameObject.SetActive(r.xp >= 0);
-                if (r.stars >= 0) starsCard.Set(r.stars.ToString(), Loc.T("progress.stars"));
-                if (r.xp >= 0) xpCard.Set("+" + r.xp, Loc.T("results.xp"));
-                messageLabel.text = string.IsNullOrWhiteSpace(r.feedback) ? Loc.T("results.good") : r.feedback;
+                ShowPending();
+                _submission.Finished += OnFinished;
+                if (!_submission.IsPending) OnFinished();
+            }
+            else if (result.HasValue && result.Value.evaluated)
+            {
+                // Hubo evaluación pero no se pudo enviar (por ejemplo, la IA no entregó estrellas o XP): no se muestra nada inventado.
+                ShowNothing(Loc.T("results.notSaved"));
             }
             else
             {
-                // TODO(evaluación): mostrar la precisión real cuando el reconocimiento entregue un SignAttemptResult.
-                precisionCard.Set("—", Loc.T("results.notEvaluated"));
-                starsCard.gameObject.SetActive(false);
-                xpCard.gameObject.SetActive(false);
-                messageLabel.text = Loc.T("results.none");
+                ShowNothing(Loc.T("results.none"));
             }
 
             if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(practiceAgainButton.gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            if (_submission != null) _submission.Finished -= OnFinished;
+        }
+
+        private void Update()
+        {
+            // Los reintentos de red usan el mismo attemptId; se le dice al jugador que se está reintentando.
+            if (_submission != null && _submission.IsPending && _submission.Attempt > 1)
+                messageLabel.text = Loc.T("results.retrying", _submission.Attempt, MaxSends);
+        }
+
+        private void ShowPending()
+        {
+            precisionCard.Set("…", Loc.T("results.precision"));
+            starsCard.gameObject.SetActive(false);
+            xpCard.gameObject.SetActive(false);
+            messageLabel.text = Loc.T("results.saving");
+            practiceAgainButton.interactable = false; // evita el doble envío y salir antes de tener la respuesta
+        }
+
+        private void ShowNothing(string message)
+        {
+            precisionCard.Set("—", Loc.T("results.notEvaluated"));
+            starsCard.gameObject.SetActive(false);
+            xpCard.gameObject.SetActive(false);
+            messageLabel.text = message;
+        }
+
+        private void OnFinished()
+        {
+            if (this == null) return;
+            practiceAgainButton.interactable = true;
+
+            if (_submission.State == EvaluationSubmission.SubmissionState.Failed)
+            {
+                ShowNothing(ApiMessages.For(_submission.Error) + "\n" + Loc.T("results.notSaved"));
+                return;
+            }
+
+            var r = _submission.Response;
+            precisionCard.Set(Mathf.RoundToInt(r.precision) + "%", Loc.T("results.precision"));
+            starsCard.gameObject.SetActive(true);
+            starsCard.Set(r.stars.ToString(), Loc.T("progress.stars"));
+            xpCard.gameObject.SetActive(true);
+            xpCard.Set("+" + r.awardedXp, Loc.T("results.xp"));
+
+            var message = new StringBuilder();
+            message.Append(r.passed ? Loc.T("results.good") : Loc.T("results.notPassed"));
+            if (r.passed && r.awardedXp == 0) message.Append('\n').Append(Loc.T("results.noXp"));
+            message.Append('\n').Append(Loc.T("results.totalXp", r.totalXp.ToString("N0")));
+            if (!string.IsNullOrEmpty(r.unlockedSign))
+                message.Append('\n').Append(Loc.T("results.unlockedSign", SignCodes.DisplayName(r.unlockedSign)));
+            if (r.unlockedLevels != null)
+                foreach (var level in r.unlockedLevels)
+                    message.Append('\n').Append(Loc.T("results.unlockedLevel", Loc.Translate(SignCodes.SpanishLevelName(level))));
+            messageLabel.text = message.ToString();
         }
     }
 }

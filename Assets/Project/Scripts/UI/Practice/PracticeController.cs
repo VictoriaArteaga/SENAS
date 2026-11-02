@@ -119,6 +119,7 @@ namespace Lumina.UI
                 case Step.Learning: learningInstructionLabel.text = _sign.GetInstruction(); break;
                 case Step.Preparation: sessionInstructionLabel.text = Loc.T("practice.prepare"); break;
                 case Step.Practice:
+                    PracticeSession.MarkAttemptStarted();
                     sessionInstructionLabel.text = Loc.T("practice.doSign");
                     statusLabel.text = Loc.T(_recognizer != null ? "practice.analyzing" : "practice.noRecognition");
                     break;
