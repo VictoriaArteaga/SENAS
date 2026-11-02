@@ -35,6 +35,9 @@ namespace Lumina.EditorTools
         internal const string SenaPrefabPath = PrefabDir + "Sena.prefab";
         private const string AvatarBasePath = "Assets/Models/SunboxGames/Avatars/Prefabs/Avatar.prefab";
         private const string AvatarResources = "Assets/Models/SunboxGames/Avatars/Resources/";
+        private const string TshirtBaseMaterialPath = "Assets/Models/SunboxGames/Avatars/Materials/Tshirt/Tshirt_White.mat";
+        private const string AvatarMaterialDir = "Assets/Project/Materials/Avatars/";
+        private const string AvatarDataDir = "Assets/Project/Data/Avatars/";
         private const string VillageDir = "Assets/Models/OccaSoftware/Low Poly Fantasy Village/Prefabs/";
         private const string MaterialDir = "Assets/Project/Materials/Auth/";
         private const string GroundMaterialPath = "Assets/Project/Materials/Lumina_Ground.mat";
@@ -48,13 +51,15 @@ namespace Lumina.EditorTools
             public string Id, Name; public AvatarCustomization.AvatarGender Gender;
             public int Skin, Hair, HairMaterial, FacialHair, FacialHairMaterial, BottomVariation;
             public string Top, Bottom, Shoes, Glasses; public int TopVariation;
+            // Si se indica, la prenda superior usa un material propio (copia tintada de la variación blanca) en lugar de las del paquete.
+            public Color? TopTint;
         }
 
         private static readonly AvatarSpec[] Avatars =
         {
             new AvatarSpec { Id = "luna", Name = "Luna", Gender = AvatarCustomization.AvatarGender.Female, Skin = 1, Hair = 6, HairMaterial = 1, TopVariation = 2,
                 Top = "Tops/ClothingItem_Dress_02", Bottom = "Empty/ClothingItem_Bottom_Empty", Shoes = "Shoes/ClothingItem_Flats", Glasses = "Empty/ClothingItem_Glasses_Empty" },
-            new AvatarSpec { Id = "nube", Name = "Nube", Gender = AvatarCustomization.AvatarGender.Female, Skin = 2, Hair = 5, HairMaterial = 2, TopVariation = 2, BottomVariation = 1,
+            new AvatarSpec { Id = "nube", Name = "Nube", Gender = AvatarCustomization.AvatarGender.Female, Skin = 2, Hair = 5, HairMaterial = 2, TopVariation = 0, BottomVariation = 1, TopTint = LuminaUiKit.Turquoise,
                 Top = "Tops/ClothingItem_TShirt", Bottom = "Bottoms/ClothingItem_Pants_Jeans", Shoes = "Shoes/ClothingItem_Basketball_Shoes", Glasses = "Empty/ClothingItem_Glasses_Empty" },
             new AvatarSpec { Id = "rio", Name = "Río", Gender = AvatarCustomization.AvatarGender.Male, Skin = 0, Hair = 1, HairMaterial = 0, FacialHair = 0, BottomVariation = 1,
                 Top = "Tops/ClothingItem_Shirt", Bottom = "Bottoms/ClothingItem_Pants_Jeans", Shoes = "Shoes/ClothingItem_Suit_Shoes", Glasses = "Empty/ClothingItem_Glasses_Empty" },
@@ -108,7 +113,7 @@ namespace Lumina.EditorTools
 
         private static void EnsureFolders()
         {
-            foreach (var dir in new[] { AvatarPrefabDir, MaterialDir })
+            foreach (var dir in new[] { AvatarPrefabDir, MaterialDir, AvatarMaterialDir, AvatarDataDir })
                 Directory.CreateDirectory(Path.GetFullPath(dir.TrimEnd('/')));
             AssetDatabase.Refresh();
         }
@@ -175,7 +180,7 @@ namespace Lumina.EditorTools
                 so.FindProperty("HairMaterialIndex").intValue = spec.HairMaterial;
                 so.FindProperty("FacialHairStyleIndex").intValue = spec.FacialHair;
                 so.FindProperty("FacialHairMaterialIndex").intValue = 0;
-                so.FindProperty("ClothingItemTop").objectReferenceValue = LoadClothing(spec.Top);
+                so.FindProperty("ClothingItemTop").objectReferenceValue = ResolveTop(spec);
                 so.FindProperty("ClothingItemTopVariationIndex").intValue = spec.TopVariation;
                 so.FindProperty("ClothingItemBottom").objectReferenceValue = LoadClothing(spec.Bottom);
                 so.FindProperty("ClothingItemBottomVariationIndex").intValue = spec.BottomVariation;
@@ -199,6 +204,90 @@ namespace Lumina.EditorTools
                 Object.DestroyImmediate(temp);
             }
             return result;
+        }
+
+        /// <summary>Prenda superior de un avatar: la del paquete, o su copia con material propio si la spec define un tinte.</summary>
+        private static ClothingItem ResolveTop(AvatarSpec spec)
+        {
+            var source = LoadClothing(spec.Top);
+            return spec.TopTint.HasValue && source != null ? EnsureTintedTop(spec, source) : source;
+        }
+
+        // Las variaciones de TShirt del paquete son solo negra y blanca: pedir un índice fuera de rango deja la camiseta sin
+        // material (magenta). En vez de tocar el asset del paquete, se crea una copia de la prenda (mismas mallas) cuya única
+        // variación es un material propio: la blanca del paquete multiplicada por el tinte de la spec.
+        private static ClothingItem EnsureTintedTop(AvatarSpec spec, ClothingItem source)
+        {
+            var baseMaterial = AssetDatabase.LoadAssetAtPath<Material>(TshirtBaseMaterialPath);
+            if (baseMaterial == null)
+            {
+                Debug.LogError("[Lumina] No se encontró el material base de la camiseta: " + TshirtBaseMaterialPath);
+                return source;
+            }
+
+            string materialPath = AvatarMaterialDir + "Lumina_" + spec.Name + "_Tshirt.mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+            if (material == null)
+            {
+                material = new Material(baseMaterial) { name = "Lumina_" + spec.Name + "_Tshirt" };
+                AssetDatabase.CreateAsset(material, materialPath);
+            }
+            material.SetColor("_BaseColor", spec.TopTint.Value);
+            EditorUtility.SetDirty(material);
+
+            string itemPath = AvatarDataDir + "ClothingItem_TShirt_" + spec.Name + ".asset";
+            var item = AssetDatabase.LoadAssetAtPath<ClothingItem>(itemPath);
+            if (item == null)
+            {
+                item = Object.Instantiate(source);
+                item.name = "ClothingItem_TShirt_" + spec.Name;
+                AssetDatabase.CreateAsset(item, itemPath);
+            }
+            item.Variations = new[] { material };
+            EditorUtility.SetDirty(item);
+            AssetDatabase.SaveAssets();
+            return item;
+        }
+
+        /// <summary>
+        /// Corrige solo la camiseta de Nube dentro de su prefab existente (no regenera los otros avatares ni las escenas,
+        /// y conserva los identificadores del prefab que usan AvatarCatalog y RegisterScene).
+        /// </summary>
+        [MenuItem("Lumina/Autenticación/Corregir camiseta de Nube")]
+        public static void FixNubeTop()
+        {
+            var spec = System.Array.Find(Avatars, a => a.Id == "nube");
+            EnsureFolders();
+            var top = ResolveTop(spec);
+            if (top == null || !spec.TopTint.HasValue) throw new System.InvalidOperationException("No se pudo preparar la camiseta de Nube.");
+
+            string path = AvatarPrefabDir + "Avatar_" + spec.Id + ".prefab";
+            var contents = PrefabUtility.LoadPrefabContents(path);
+            try
+            {
+                var so = new SerializedObject(contents.GetComponent<AvatarCustomization>());
+                so.FindProperty("ClothingItemTop").objectReferenceValue = top;
+                so.FindProperty("ClothingItemTopVariationIndex").intValue = spec.TopVariation;
+                so.ApplyModifiedPropertiesWithoutUndo();
+
+                int patched = 0;
+                foreach (var worn in contents.GetComponentsInChildren<UClothingItem>(true))
+                {
+                    if (worn.ClothingItem == null || worn.ClothingItem.SlotType != SlotType.Top) continue;
+                    worn.ClothingItem = top;
+                    if (!worn.SetVariation(spec.TopVariation)) throw new System.InvalidOperationException("Índice de variación fuera de rango para " + top.name);
+                    EditorUtility.SetDirty(worn);
+                    patched++;
+                }
+                if (patched != 1) throw new System.InvalidOperationException("Se esperaba una sola prenda superior en " + path + " y hay " + patched + ".");
+                PrefabUtility.SaveAsPrefabAsset(contents, path);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(contents);
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Lumina] Camiseta de Nube corregida: " + top.name);
         }
 
         private static ClothingItem LoadClothing(string relativePath)
