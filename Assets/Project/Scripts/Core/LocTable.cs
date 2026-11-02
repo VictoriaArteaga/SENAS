@@ -81,7 +81,6 @@ namespace Lumina.Core
             ("results.xp", "XP", "XP"),
             ("results.good", "¡Buen trabajo! Sigue practicando para mejorar.", "Great job! Keep practicing to improve."),
             ("results.none", "Esta práctica todavía no se evalúa: el reconocimiento de señas llegará pronto.", "This practice isn't evaluated yet: sign recognition is coming soon."),
-            ("results.localOnly", "Prueba local: no se guardan XP ni progreso en el backend.", "Local test: XP and progress are not saved to the backend."),
             ("results.again", "SEGUIR PRACTICANDO", "KEEP PRACTICING"),
 
             // ---- Configuración
@@ -197,7 +196,6 @@ namespace Lumina.Core
             ("levels.enterMonths", "Entrar a la Casa de los Meses", "Enter the Months House"),
             ("levels.enterGreetings", "Entrar a la Casa de los Saludos", "Enter the Greetings House"),
             ("levels.comingSoon", "PRÓXIMAMENTE", "COMING SOON"),
-            ("levels.localPractice", "PROBAR LOCAL", "LOCAL TEST"),
             ("levels.signLocked", "BLOQUEADA", "LOCKED"),
             ("levels.levelLocked", "Este nivel está bloqueado. Sigue ganando XP (te faltan {0}).", "This level is locked. Keep earning XP ({0} to go)."),
             ("levels.loadFailed", "No se pudo cargar tu progreso.", "Couldn't load your progress."),

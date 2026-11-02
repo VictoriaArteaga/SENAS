@@ -12,8 +12,6 @@ namespace Lumina.Core
     {
         public static SignEntry Sign { get; private set; }
         public static SignAttemptResult? Result { get; private set; }
-        /// <summary>True for an Editor-only greeting test; those results must never be sent or counted by the backend.</summary>
-        public static bool LocalPracticeOnly { get; private set; }
         /// <summary>Envío del último resultado al backend; null si la práctica no produjo un resultado enviable.</summary>
         public static EvaluationSubmission Submission { get; private set; }
 
@@ -26,30 +24,20 @@ namespace Lumina.Core
 
         public static void Begin(SignEntry sign)
         {
-            Sign = sign; Result = null; Submission = null; LocalPracticeOnly = false; _attemptStartedAt = -1f;
+            Sign = sign; Result = null; Submission = null; _attemptStartedAt = -1f;
         }
 
         /// <summary>Marca el comienzo del intento (cuando empieza el reconocimiento) para medir durationMs.</summary>
         public static void MarkAttemptStarted() => _attemptStartedAt = Time.realtimeSinceStartup;
 
         /// <summary>Practica una seña elegida en una casa de aprendizaje.</summary>
-        public static void BeginFromLevel(SignEntry sign, string levelScene, bool localPracticeOnly = false)
-        {
-            Begin(sign); StartAtLearning = true; ReturnScene = levelScene; LocalPracticeOnly = localPracticeOnly;
-        }
-
-        public static bool ConsumeLocalPracticeOnly()
-        {
-            bool local = LocalPracticeOnly;
-            LocalPracticeOnly = false;
-            return local;
-        }
+        public static void BeginFromLevel(SignEntry sign, string levelScene) { Begin(sign); StartAtLearning = true; ReturnScene = levelScene; }
 
         public static void Finish(SignAttemptResult? result)
         {
             Result = result;
             Submission = null;
-            if (LocalPracticeOnly || !result.HasValue || !result.Value.evaluated) return;
+            if (!result.HasValue || !result.Value.evaluated) return;
 
             var r = result.Value;
             // Precisión 0–100, estrellas y XP tal como los entrega la IA. Sin estrellas/XP (-1) o con un id que no es del

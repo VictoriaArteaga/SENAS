@@ -60,13 +60,13 @@ La lista dinamica ya fue confirmada por el equipo contra la referencia aprobada:
 - En Play Mode, `Window > SENAS > LSC Greeting Holistic Capture` captura el gesto completo de los demás saludos con los requisitos de manos/cabeza correspondientes. En `Gracias` se verifica además que una mano alcance la cabeza durante la secuencia.
 - Requisitos acordados: Hola = una mano + referencia de cabeza; Buenos días/tardes/noches = dos manos + cabeza; Adiós, Sí y No = una mano; ¿Cómo estás?, Bien y De nada = dos manos; Gracias = dos manos + contacto de una con la cabeza.
 - Al practicar desde `GreetingsHouse`, `Sí`, `No` y `Adiós` usan `AlphabetLandmarkEvaluator` y `HandLandmarkerCapture`, el mismo detector de manos utilizado por letras y números. Los demás saludos usan `MediaPipeGreetingSignRecognizer` con Holistic. Ambos flujos reutilizan la webcam ya abierta.
-- Las capturas mano-only se serializan como secuencias de 21 landmarks 3D en `GreetingLandmarkTemplates.asset`; no guardan fotos ni video y la captura de una mano no guarda cara. La prueba local en el Editor puede mostrar coincidencias menores al mínimo oficial (60 %) para calibración, pero nunca envía resultados ni añade XP.
+- Las capturas mano-only se serializan como secuencias de 21 landmarks 3D en `GreetingLandmarkTemplates.asset`; no guardan fotos ni video y la captura de una mano no guarda cara.
 
 ## Meses LSC
 
 - Los meses usan la misma captura temporal Holistic y el mismo reconocedor DTW. A diferencia del alfabeto/números, cada plantilla guarda si la referencia validada requiere una o dos manos; la práctica obtiene ese requisito de la plantilla.
 - En Play Mode, abre `Window > SENAS > LSC Month Holistic Capture`, elige el mes y marca si necesita dos manos según la referencia LSC. Inicia la captura, realiza el movimiento y pulsa `Finalizar y guardar`. Se guardan secuencias de landmarks en `GreetingLandmarkTemplates.asset`, nunca fotos ni video.
-- `MonthsHouse` permite `PROBAR LOCAL` solo en el Editor: muestra similitud/estrellas sin enviar evaluaciones ni otorgar XP. El nivel del build sigue pendiente de validación y desbloqueo oficial.
+- `MonthsHouse` consulta la disponibilidad de cada seña al backend y envía las evaluaciones con el código canónico `MONTH_*`; el backend determina la precisión aprobatoria, las estrellas, la XP y los desbloqueos.
 - La casa tiene once entradas de saludo/conversación. Antes de presentarlas como referencias lingüísticas validadas, confirmar la lista y la fuente con el equipo; probar cada gesto con más de una persona.
 
 ## Capturar referencias estaticas
