@@ -31,6 +31,14 @@ namespace Lumina.Animation.Landmarks
         /// <summary>Dirección del hueso hijo (Thumb2..Thumb4) en el marco local de cada articulación del pulgar.</summary>
         public Vector3[] ThumbChildDirection;
 
+        public const int FingerJointCount = 3;
+        /// <summary>Rotación mundial del padre de la primera falange de cada dedo en reposo (J_Right_Hand).</summary>
+        public Quaternion[] FingerParentRotation;
+        /// <summary>Rotación local de reposo de cada articulación (dedo, 0 = MCP, 1 = PIP, 2 = DIP).</summary>
+        public Quaternion[,] FingerRestLocal;
+        /// <summary>Dirección del hueso hijo en el marco local de cada articulación.</summary>
+        public Vector3[,] FingerChildDirection;
+
         public Quaternion FrameRotation => Frame.ToRotation();
 
         public static bool TryCapture(Transform handRoot, HandPoseDriver driver, out RigRest rest, FlexionMeasure mode = FlexionMeasure.FlexionPlane)
@@ -66,6 +74,21 @@ namespace Lumina.Animation.Landmarks
             {
                 r.ThumbRestLocal[j] = r.Chain[0, j].localRotation;
                 r.ThumbChildDirection[j] = r.Chain[0, j + 1].localPosition.normalized;
+            }
+
+            // Dedos largos (modo Directional): rotación mundial del padre de la primera falange y, por articulación (MCP, PIP, DIP),
+            // la rotación local de reposo y la dirección del hueso hijo en su marco local. Igual que lo medido para el pulgar.
+            r.FingerParentRotation = new Quaternion[FingerCount];
+            r.FingerRestLocal = new Quaternion[FingerCount, FingerJointCount];
+            r.FingerChildDirection = new Vector3[FingerCount, FingerJointCount];
+            for (int f = 0; f < FingerCount; f++)
+            {
+                r.FingerParentRotation[f] = r.Chain[f, 0].parent != null ? r.Chain[f, 0].parent.rotation : r.HandRotation;
+                for (int j = 0; j < FingerJointCount; j++)
+                {
+                    r.FingerRestLocal[f, j] = r.Chain[f, j].localRotation;
+                    r.FingerChildDirection[f, j] = r.Chain[f, j + 1].localPosition.normalized;
+                }
             }
 
             r.Fingers = r.MeasureCurrent();
@@ -185,6 +208,42 @@ namespace Lumina.Animation.Landmarks
         public bool ClampedToRange;
         /// <summary>Mayor valor absoluto de ángulo en la pose final (dedos largos y pulgar), en grados.</summary>
         public float MaxAbsAngle;
+
+        /// <summary>Modo con el que se resolvieron los dedos largos.</summary>
+        public SolveMode Mode;
+        /// <summary>
+        /// Por dedo largo (índice…meñique): ángulo, en grados, entre la dirección real de la primera falange en el rig (pose final aplicada) y la objetivo
+        /// (la de los landmarks llevada al rig). Se calcula en los dos modos.
+        /// </summary>
+        public float[] FirstPhalanxError;
+        /// <summary>Modo Directional: error de reconstrucción (grados) de la falange media y la distal por dedo largo [dedo, 0 = media, 1 = distal]; null en Calibrated.</summary>
+        public float[,] MiddleDistalReconstruction;
+        /// <summary>Clase de reproducibilidad (criterios de <see cref="LandmarkToHandPoseConverter.ReproducibleDirectionDegrees"/> y <see cref="LandmarkToHandPoseConverter.ReproducibleTip"/>).</summary>
+        public ReproducibilityClass Reproducibility;
+    }
+
+    /// <summary>Cómo se resuelven los cuatro dedos largos.</summary>
+    public enum SolveMode
+    {
+        /// <summary>Calibración iterativa de ángulos proyectados contra el rig (comportamiento por defecto, sin cambios).</summary>
+        Calibrated,
+        /// <summary>
+        /// Primera falange resuelta analíticamente por su dirección con los dos ejes del driver, Rz(spread)·Rx(curl), como el pulgar;
+        /// media y distal en el plano de flexión (Rx), siguiendo la cadena ya resuelta.
+        /// </summary>
+        Directional,
+    }
+
+    /// <summary>Reproducibilidad de un fotograma: error de dirección de la primera falange ≤ 15° y error de punta ≤ 0,36 en los cuatro dedos largos.</summary>
+    public enum ReproducibilityClass
+    {
+        /// <summary>Cumple los dos criterios en los cuatro dedos sin regularizar ninguna separación.</summary>
+        Reproducible,
+        /// <summary>Hubo que regularizar la separación de algún dedo (ver <see cref="ConversionResult.SpreadRegularized"/>).</summary>
+        SpreadUndeterminable,
+        /// <summary>Sin separación regularizada, pero algún dedo incumple algún criterio.</summary>
+        NotReproducible,
+        NotEvaluated,
     }
 
     /// <summary>Clasificación de un fotograma con la definición de convergencia nueva.</summary>
@@ -238,7 +297,8 @@ namespace Lumina.Animation.Landmarks
         /// el llamador debe aplicar después la pose final.
         /// </summary>
         public static bool TryConvert(IReadOnlyList<Vector3> landmarks, RigRest rest, HandPoseDriver driver,
-            SeparationMethod method, bool solveThumb, float toleranceDegrees, out ConversionResult result, SpreadMemory memory = null)
+            SeparationMethod method, bool solveThumb, float toleranceDegrees, out ConversionResult result, SpreadMemory memory = null,
+            SolveMode mode = SolveMode.Calibrated, bool regularizeSingularSpread = true)
         {
             result = null;
             if (landmarks == null || landmarks.Count != LandmarkCount || rest == null || driver == null) return false;
@@ -281,7 +341,8 @@ namespace Lumina.Animation.Landmarks
             var cls = ConvergenceClass.NotEvaluated;
             float maxFlex = 0f;
             var tipError = new float[RigRest.FingerCount];
-            if (method == SeparationMethod.RigCalibrated)
+            float[,] midDistal = null;
+            if (method == SeparationMethod.RigCalibrated && mode == SolveMode.Calibrated)
             {
                 // Etapa 1: calibración estándar (la de siempre, con ángulos envueltos y acotados al rango alcanzable).
                 // Se guarda la mejor pose medida: con algunos landmarks (p. ej. índice en hiperextensión) la corrección
@@ -372,6 +433,64 @@ namespace Lumina.Animation.Landmarks
                 }
             }
 
+            if (method == SeparationMethod.RigCalibrated && mode == SolveMode.Directional)
+            {
+                // Modo Directional: cada dedo largo se resuelve por la dirección de sus falanges, en el marco local de cada articulación del rig.
+                var toRig = rest.FrameRotation * Quaternion.Inverse(dataFrame.ToRotation());
+                var guesses = new[] { preCalibration[1], preCalibration[2], preCalibration[3], preCalibration[4] };
+                midDistal = new float[4, 2];
+                var solved = new FingerPose[4];
+                for (int f = 0; f < 4; f++)
+                    solved[f] = SolveFingerDirectional(f + 1, landmarks, rest, toRig, guesses[f], null, out midDistal[f, 0], out midDistal[f, 1], ref clamped);
+                pose.index = solved[0]; pose.middle = solved[1]; pose.ring = solved[2]; pose.pinky = solved[3];
+
+                // Cerca de la singularidad (proyección < 0,3 o ganancia del rig < 0,5) el spread no es determinable: se regulariza
+                // (último valor observable de la secuencia o neutro) y se vuelve a resolver la flexión con ese spread.
+                MeasureSpreadObservability(landmarks, rest, driver, pose, observable, projection, gain, false);
+                observable[1] = true; // el medio es la referencia del spread (su ganancia medida es 0 por definicion): no se regulariza
+                if (regularizeSingularSpread)
+                {
+                    for (int f = 0; f < 4; f++)
+                    {
+                        if (observable[f]) continue;
+                        regularized[f] = true;
+                        float fixedSpread = memory != null && float.IsFinite(memory.Last[f]) ? memory.Last[f] : 0f;
+                        solved[f] = SolveFingerDirectional(f + 1, landmarks, rest, toRig, guesses[f], fixedSpread, out midDistal[f, 0], out midDistal[f, 1], ref clamped);
+                    }
+                    pose.index = solved[0]; pose.middle = solved[1]; pose.ring = solved[2]; pose.pinky = solved[3];
+                }
+                driver.SetPose(pose);
+                var applied = rest.MeasureCurrent();
+                maxFlex = MaxFlexionError(target, applied);
+                TipErrors(landmarks, rest, dataFrame, tipError);
+                if (memory != null)
+                {
+                    var spreads = new[] { pose.index.spread, pose.middle.spread, pose.ring.spread, pose.pinky.spread };
+                    for (int f = 0; f < 4; f++)
+                        if (observable[f] && !regularized[f] && float.IsFinite(spreads[f])) memory.Last[f] = spreads[f];
+                }
+            }
+
+            // Reproducibilidad (los dos modos): error de dirección de la primera falange y error de punta, con la pose final aplicada en el rig.
+            var firstPhalanx = new float[4];
+            var reproducibility = ReproducibilityClass.NotEvaluated;
+            if (method == SeparationMethod.RigCalibrated)
+            {
+                // El rig ya tiene aplicada la pose final (ambos modos la aplican y miden el error de punta antes).
+                var toRigFrame = rest.FrameRotation * Quaternion.Inverse(dataFrame.ToRotation());
+                bool allOk = true;
+                for (int f = 0; f < 4; f++)
+                {
+                    var targetDir = (toRigFrame * (landmarks[Chains[f + 1, 1]] - landmarks[Chains[f + 1, 0]])).normalized;
+                    var rigDir = (rest.Chain[f + 1, 1].position - rest.Chain[f + 1, 0].position).normalized;
+                    firstPhalanx[f] = Vector3.Angle(targetDir, rigDir);
+                    allOk &= float.IsFinite(firstPhalanx[f]) && firstPhalanx[f] <= ReproducibleDirectionDegrees
+                          && float.IsFinite(tipError[f + 1]) && tipError[f + 1] <= ReproducibleTip;
+                }
+                bool anyReg = regularized[0] || regularized[2] || regularized[3]; // el medio (referencia del spread) no cuenta
+                reproducibility = anyReg ? ReproducibilityClass.SpreadUndeterminable : (allOk ? ReproducibilityClass.Reproducible : ReproducibilityClass.NotReproducible);
+            }
+
             var thumb = new ThumbJointResult[0];
             var thumbTargets = new Vector3[0];
             if (solveThumb)
@@ -399,6 +518,10 @@ namespace Lumina.Animation.Landmarks
                 SpreadGain = gain,
                 SpreadRegularized = regularized,
                 ClampedToRange = clamped,
+                Mode = mode,
+                FirstPhalanxError = firstPhalanx,
+                MiddleDistalReconstruction = midDistal,
+                Reproducibility = reproducibility,
             };
             float maxAbs = 0f;
             foreach (var fp in new[] { pose.thumb, pose.index, pose.middle, pose.ring, pose.pinky })
@@ -406,6 +529,81 @@ namespace Lumina.Animation.Landmarks
             result.MaxAbsAngle = maxAbs;
             return IsFinite(pose);
         }
+
+        // Criterios de reproducibilidad (fijados de antemano): error de dirección de la primera falange y error de punta (p95 de las estáticas 0–5).
+        public const float ReproducibleDirectionDegrees = 15f;
+        public const float ReproducibleTip = 0.36f;
+
+        // Resuelve un dedo largo (1 = índice … 4 = meñique) por dirección. MCP: Rz(spread)·Rx(curl) con los dos ejes del driver (analítico);
+        // PIP y DIP: Rx(curl) en el plano de flexión, con el error de reconstrucción de cada una. Sigue la cadena ya resuelta.
+        private static FingerPose SolveFingerDirectional(int f, IReadOnlyList<Vector3> lm, RigRest rest, Quaternion toRig, FingerPose guess,
+            float? fixedSpread, out float recMiddle, out float recDistal, ref bool clamped)
+        {
+            Vector3 Target(int j) => (toRig * (lm[Chains[f, j + 1]] - lm[Chains[f, j]])).normalized;
+            var p = new FingerPose();
+
+            var frame = rest.FingerParentRotation[f] * rest.FingerRestLocal[f, 0];
+            var local = (Quaternion.Inverse(frame) * Target(0)).normalized;
+            SolveBase(rest.FingerChildDirection[f, 0], local, guess.spread, guess.proximal, fixedSpread, out float spread, out float curl, ref clamped);
+            p.spread = spread; p.proximal = curl;
+            var applied = Quaternion.AngleAxis(spread, Vector3.forward) * Quaternion.AngleAxis(curl, Vector3.right);
+
+            frame = frame * applied * rest.FingerRestLocal[f, 1];
+            local = (Quaternion.Inverse(frame) * Target(1)).normalized;
+            p.middle = SolvePlanar(rest.FingerChildDirection[f, 1], local, MiddleMin, MiddleMax, out recMiddle, ref clamped);
+            applied = Quaternion.AngleAxis(p.middle, Vector3.right);
+
+            frame = frame * applied * rest.FingerRestLocal[f, 2];
+            local = (Quaternion.Inverse(frame) * Target(2)).normalized;
+            p.distal = SolvePlanar(rest.FingerChildDirection[f, 2], local, DistalMin, DistalMax, out recDistal, ref clamped);
+            return p;
+        }
+
+        // Busca (s, c) con Rz(s)·Rx(c)·d = t. Rz conserva la componente z: t.z = d.y·sin c + d.z·cos c da c (dos raíces) y luego s sale del giro
+        // en el plano XY. Con la separación fija, c es el que mejor alinea (máximo producto escalar, forma cerrada). Todo acotado al rango alcanzable.
+        private static void SolveBase(Vector3 d, Vector3 t, float spreadGuess, float curlGuess, float? fixedSpread, out float spreadDeg, out float curlDeg, ref bool clamped)
+        {
+            d = d.normalized; t = t.normalized;
+            if (fixedSpread.HasValue)
+            {
+                spreadDeg = ClampTo(fixedSpread.Value, SpreadMin, SpreadMax, ref clamped);
+                var u = Quaternion.AngleAxis(-spreadDeg, Vector3.forward) * t;
+                float c = Mathf.Atan2(u.z * d.y - u.y * d.z, u.y * d.y + u.z * d.z) * Mathf.Rad2Deg;
+                curlDeg = ClampTo(Wrap180(c), ProximalMin, ProximalMax, ref clamped);
+                return;
+            }
+
+            float m = Mathf.Sqrt(d.y * d.y + d.z * d.z);
+            float bestCost = float.MaxValue;
+            spreadDeg = 0f; curlDeg = 0f;
+            float phi = Mathf.Atan2(d.y, d.z);
+            float da = Mathf.Acos(Mathf.Clamp(m > 1e-6f ? t.z / m : 0f, -1f, 1f));
+            for (int k = 0; k < 2; k++)
+            {
+                float c = Wrap180((phi + (k == 0 ? da : -da)) * Mathf.Rad2Deg);
+                var r = Quaternion.AngleAxis(c, Vector3.right) * d;
+                float s = Wrap180((Mathf.Atan2(t.y, t.x) - Mathf.Atan2(r.y, r.x)) * Mathf.Rad2Deg);
+                float violation = Mathf.Max(0f, SpreadMin - s) + Mathf.Max(0f, s - SpreadMax) + Mathf.Max(0f, ProximalMin - c) + Mathf.Max(0f, c - ProximalMax);
+                float sc = ClampOnly(s, SpreadMin, SpreadMax), cc = ClampOnly(c, ProximalMin, ProximalMax);
+                var recon = Quaternion.AngleAxis(sc, Vector3.forward) * Quaternion.AngleAxis(cc, Vector3.right) * d;
+                float cost = Vector3.Angle(recon, t) * 4f + violation + Mathf.Abs(Wrap180(c - curlGuess)) * 0.5f + Mathf.Abs(Wrap180(s - spreadGuess)) * 0.05f;
+                if (cost < bestCost) { bestCost = cost; spreadDeg = s; curlDeg = c; }
+            }
+            spreadDeg = ClampTo(spreadDeg, SpreadMin, SpreadMax, ref clamped);
+            curlDeg = ClampTo(curlDeg, ProximalMin, ProximalMax, ref clamped);
+        }
+
+        // Rx(c)·d ≈ t: c es el giro en el plano YZ; la componente X (lateral) no se puede reproducir con un solo eje y queda como error de reconstrucción.
+        private static float SolvePlanar(Vector3 d, Vector3 t, float min, float max, out float reconstructionError, ref bool clamped)
+        {
+            d = d.normalized; t = t.normalized;
+            float c = Wrap180((Mathf.Atan2(t.z, t.y) - Mathf.Atan2(d.z, d.y)) * Mathf.Rad2Deg);
+            c = ClampTo(c, min, max, ref clamped);
+            reconstructionError = Vector3.Angle(Quaternion.AngleAxis(c, Vector3.right) * d, t);
+            return c;
+        }
+
+        private static float ClampOnly(float v, float min, float max) => Mathf.Clamp(v, min, max);
 
         private const int MaxCalibrationIterations = 30;
         private const float CalibrationToleranceDegrees = 0.25f;
@@ -512,8 +710,10 @@ namespace Lumina.Animation.Landmarks
 
         // Proyección de la falange proximal sobre el plano de la palma (datos) y ganancia del rig (separación medida por grado comandado).
         // Deja el rig en la pose de prueba: el llamador vuelve a aplicar la pose final.
+        // probeMiddle = true es el comportamiento original (modo Calibrated): tambien se perturba el spread del medio, que es la referencia del
+        // spread de los demas dedos, asi que la ganancia sale casi siempre cercana a 0. El modo Directional lo hace con probeMiddle = false (corregido).
         private static void MeasureSpreadObservability(IReadOnlyList<Vector3> lm, RigRest rest, HandPoseDriver driver, HandPose pose,
-            bool[] observable, float[] projection, float[] gain)
+            bool[] observable, float[] projection, float[] gain, bool probeMiddle = true)
         {
             LandmarkHandFrame.TryCreate(lm[0], lm[9], lm[5], lm[17], out var frame);
             for (int f = 0; f < 4; f++)
@@ -525,7 +725,7 @@ namespace Lumina.Animation.Landmarks
 
             var plus = pose; var minus = pose;
             plus.index.spread += GainProbeDegrees; minus.index.spread -= GainProbeDegrees;
-            plus.middle.spread += GainProbeDegrees; minus.middle.spread -= GainProbeDegrees;
+            if (probeMiddle) { plus.middle.spread += GainProbeDegrees; minus.middle.spread -= GainProbeDegrees; }
             plus.ring.spread += GainProbeDegrees; minus.ring.spread -= GainProbeDegrees;
             plus.pinky.spread += GainProbeDegrees; minus.pinky.spread -= GainProbeDegrees;
             driver.SetPose(plus);
