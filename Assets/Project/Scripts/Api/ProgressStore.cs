@@ -102,8 +102,9 @@ namespace Lumina.Api
         {
             var detail = GetLevel(SignCodes.LevelFor(signCode));
             if (detail?.signs == null) return null;
+            var backendCode = SignCodes.BackendCodeFor(signCode);
             foreach (var sign in detail.signs)
-                if (string.Equals(sign.code, signCode, StringComparison.OrdinalIgnoreCase)) return sign.status;
+                if (string.Equals(sign.code, backendCode, StringComparison.OrdinalIgnoreCase)) return sign.status;
             return null;
         }
 

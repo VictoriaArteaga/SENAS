@@ -18,8 +18,8 @@ namespace Lumina.UI
     /// moverse entre elementos o PRACTICAR (abre Practice con esa seña). No reconoce señas: el reconocimiento vive en
     /// Practice (<see cref="ISignRecognizer"/>) y la demostración del avatar entra por <see cref="DemonstrationRequested"/>.
     /// "Visto" no significa "aprendido": la barra cuenta lo visto en esta visita, no evalúa nada.
-    /// El estado de cada seña (bloqueada, disponible, superada) lo dice el backend (<see cref="ProgressStore"/>). Solo los
-    /// Números tienen reconocimiento en Unity; Meses y Saludos y frases muestran PRÓXIMAMENTE en lugar de PRACTICAR.
+    /// El estado de cada seña lo dice el backend, salvo el modo local de prueba de Saludos y Meses disponible en el Editor.
+    /// Números y Saludos tienen reconocimiento en Unity; Meses se prueban localmente hasta validar sus referencias.
     /// </summary>
     public class LearningLevelController : MonoBehaviour
     {
@@ -192,7 +192,12 @@ namespace Lumina.UI
             string text = Loc.T("practice.go");
             bool enabled = true;
 
-            if (!SignCodes.IsImplementedInUnity(_levelCode))
+            if (IsLocalLearningTestMode)
+            {
+                text = Loc.T("levels.localPractice");
+                enabled = true;
+            }
+            else if (!SignCodes.IsImplementedInUnity(_levelCode))
             {
                 text = Loc.T("levels.comingSoon");
                 enabled = false;
@@ -216,8 +221,20 @@ namespace Lumina.UI
 
         private void OnPractice()
         {
-            PracticeSession.BeginFromLevel(_level.ToSignEntry(_level.items[_index]), _level.sceneName);
+            PracticeSession.BeginFromLevel(_level.ToSignEntry(_level.items[_index]), _level.sceneName, IsLocalLearningTestMode);
             ScreenFader.Load(SceneNames.Practice);
+        }
+
+        private bool IsLocalLearningTestMode
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return kind == LevelKind.Greetings || kind == LevelKind.Months;
+#else
+                return false;
+#endif
+            }
         }
     }
 }

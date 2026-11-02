@@ -24,6 +24,11 @@ namespace Lumina.Api
         /// </summary>
         public static bool IsBlocked(string sceneName)
         {
+#if UNITY_EDITOR
+            // Permite probar capturas/evaluación de saludos y meses antes de desbloquear esos niveles. Las pruebas locales
+            // no se envían al backend ni otorgan XP; los builds conservan el bloqueo oficial.
+            if (sceneName == SceneNames.Greetings || sceneName == SceneNames.Months) return false;
+#endif
             string code = LevelOf(sceneName);
             if (code == null) return false;
             var level = ProgressStore.FindLevel(code);
