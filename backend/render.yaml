@@ -1,0 +1,67 @@
+# Render Blueprint. Secrets (sync: false) are requested when the service is
+# created and stored in Render; they never go in this file or in git.
+services:
+  - type: web
+    name: senas-backend
+    runtime: node
+    region: virginia # us-east: close to Supabase (aws-0-us-east-1)
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start:prod
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+      - key: API_PREFIX
+        value: api/v1
+      - key: SWAGGER_ENABLED
+        value: 'false'
+      - key: CORS_ORIGINS
+        value: ''
+      # Database (Supabase, session pooler)
+      - key: DB_URL
+        sync: false # postgresql://aws-0-us-east-1.pooler.supabase.com:5432/postgres
+      - key: DB_USER
+        sync: false # postgres.<project-ref>
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSL
+        value: 'true'
+      - key: DB_POOL_MAX
+        value: 5
+      # With synchronize the tables are created/updated on startup.
+      # Before deploying changes that rename or remove entity properties,
+      # read the "Deployment" section of the README.
+      - key: DB_SYNCHRONIZE
+        value: 'true'
+      - key: DB_SEED_ON_START
+        value: 'true'
+      # Auth
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_ACCESS_TTL
+        value: 15m
+      - key: REFRESH_TOKEN_TTL_DAYS
+        value: 30
+      # Game rules
+      - key: SCORE_PASS_THRESHOLD
+        value: '60'
+      - key: SCORE_TWO_STARS_THRESHOLD
+        value: '74'
+      - key: SCORE_THREE_STARS_THRESHOLD
+        value: '88'
+      - key: XP_PER_STAR
+        value: 10
+      - key: AVATAR_IDS
+        value: luna,nube,rio,sol
+      # Throttling
+      - key: THROTTLE_TTL_MS
+        value: 60000
+      - key: THROTTLE_LIMIT
+        value: 100
+      - key: THROTTLE_AUTH_LIMIT
+        value: 5
