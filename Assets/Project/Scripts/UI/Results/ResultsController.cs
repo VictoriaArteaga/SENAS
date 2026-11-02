@@ -26,6 +26,7 @@ namespace Lumina.UI
         [SerializeField] private Button practiceAgainButton;
 
         private EvaluationSubmission _submission;
+        private string _feedback; // texto de la IA (SignAttemptResult.feedback); la XP y las estrellas salen del backend
 
         private void Start()
         {
@@ -37,6 +38,7 @@ namespace Lumina.UI
 
             var result = PracticeSession.Result;
             _submission = PracticeSession.Submission;
+            _feedback = result.HasValue ? result.Value.feedback : null;
 
             if (_submission != null)
             {
@@ -71,7 +73,7 @@ namespace Lumina.UI
 
         private void ShowPending()
         {
-            precisionCard.Set("…", Loc.T("results.precision"));
+            precisionCard.Set("…", Loc.T("results.similarity"));
             starsCard.gameObject.SetActive(false);
             xpCard.gameObject.SetActive(false);
             messageLabel.text = Loc.T("results.saving");
@@ -98,14 +100,15 @@ namespace Lumina.UI
             }
 
             var r = _submission.Response;
-            precisionCard.Set(Mathf.RoundToInt(r.precision) + "%", Loc.T("results.precision"));
-            starsCard.gameObject.SetActive(true);
-            starsCard.Set(r.stars.ToString(), Loc.T("progress.stars"));
+            precisionCard.Set(Mathf.RoundToInt(r.precision) + "%", Loc.T("results.similarity"));
+            starsCard.gameObject.SetActive(r.stars >= 0); // como en su versión: oculta si no hay estrellas
+            if (r.stars >= 0) starsCard.Set(r.stars.ToString(), Loc.T("progress.stars"));
             xpCard.gameObject.SetActive(true);
-            xpCard.Set("+" + r.awardedXp, Loc.T("results.xp"));
+            xpCard.Set("+" + r.awardedXp, Loc.T("results.xp")); // XP otorgada por el backend, nunca la que reportó la IA
 
             var message = new StringBuilder();
-            message.Append(r.passed ? Loc.T("results.good") : Loc.T("results.notPassed"));
+            message.Append(!r.passed ? Loc.T("results.notPassed")
+                : string.IsNullOrWhiteSpace(_feedback) ? Loc.T("results.good") : _feedback);
             if (r.passed && r.awardedXp == 0) message.Append('\n').Append(Loc.T("results.noXp"));
             message.Append('\n').Append(Loc.T("results.totalXp", r.totalXp.ToString("N0")));
             if (!string.IsNullOrEmpty(r.unlockedSign))
