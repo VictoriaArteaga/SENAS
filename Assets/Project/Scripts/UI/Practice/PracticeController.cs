@@ -6,13 +6,14 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using Lumina.Core;
 using Lumina.Signs;
+using Senas.AI.MediaPipe;
 
 namespace Lumina.UI
 {
     /// <summary>
     /// Flujo de PRÁCTICA: selección → aprendizaje → preparación → práctica → Results.
-    /// No reconoce señas: el reconocimiento entra por <see cref="SetRecognizer"/> y la demostración del avatar por
-    /// <see cref="DemonstrationRequested"/>.
+    /// El reconocimiento entra por <see cref="SetRecognizer"/>; el Nivel 2 configura MediaPipe al volver desde la casa
+    /// de números. La demostración del avatar entra por <see cref="DemonstrationRequested"/>.
     /// </summary>
     public class PracticeController : MonoBehaviour
     {
@@ -20,6 +21,7 @@ namespace Lumina.UI
 
         [Header("Datos")]
         [SerializeField] private SignCatalog catalog;
+        [SerializeField] private AlphabetLandmarkTemplateSet numberTemplates;
 
         [Header("Cabecera")]
         [SerializeField] private SceneHeaderUI header;
@@ -70,12 +72,21 @@ namespace Lumina.UI
         private ISignRecognizer _recognizer;
         private Coroutine _countdown;
 
-        /// <summary>TODO(MediaPipe): llamar con la implementación real del reconocimiento.</summary>
+        /// <summary>Conecta o sustituye el reconocedor activo de esta sesión.</summary>
         public void SetRecognizer(ISignRecognizer recognizer)
         {
             if (_recognizer != null) _recognizer.Completed -= OnAttemptCompleted;
+            if (_recognizer is MediaPipeNumberSignRecognizer previous)
+                previous.StatusUpdated -= OnRecognizerStatusUpdated;
             _recognizer = recognizer;
             if (_recognizer != null) _recognizer.Completed += OnAttemptCompleted;
+            if (_recognizer is MediaPipeNumberSignRecognizer current)
+                current.StatusUpdated += OnRecognizerStatusUpdated;
+        }
+
+        private void OnRecognizerStatusUpdated(string message)
+        {
+            if (_step == Step.Practice && statusLabel != null) statusLabel.text = message;
         }
 
         private void Awake()
@@ -116,6 +127,13 @@ namespace Lumina.UI
 
         private void Start()
         {
+            if (PracticeSession.ReturnScene == LearningLevels.NumbersScene && numberTemplates != null)
+            {
+                var numberRecognizer = gameObject.AddComponent<MediaPipeNumberSignRecognizer>();
+                numberRecognizer.Configure(numberTemplates, cameraFeed);
+                SetRecognizer(numberRecognizer);
+            }
+
             _category = catalog != null && catalog.categories.Length > 0 ? catalog.categories[0] : null;
             if (PracticeSession.StartAtLearning && PracticeSession.Sign != null)
             {

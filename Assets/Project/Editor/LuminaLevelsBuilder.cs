@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEditor;
 using UnityEditor.Events;
@@ -49,6 +50,16 @@ namespace Lumina.EditorTools
             Debug.Log("[Lumina] Casas de aprendizaje construidas, puertas añadidas a LuminaWorld y accesos a Practice.");
         }
 
+        [MenuItem("Lumina/Niveles/Construir solo Casa de Números (0–30)")]
+        public static void BuildNumbersHouseOnly()
+        {
+            BuildHouse(LevelKind.Numbers, ScenePaths[0]);
+            RegisterInBuildSettings();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("[Lumina] Casa de Números reconstruida con el rango 0–30.");
+        }
+
         private static void RegisterInBuildSettings()
         {
             var list = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
@@ -65,8 +76,16 @@ namespace Lumina.EditorTools
         private static void BuildHouse(LevelKind kind, string path)
         {
             // La copia conserva las referencias internas de AlphabetHouse (Sena ↔ burbuja ↔ indicador, jugador, puerta).
+            var metaPath = path + ".meta";
+            var existingMeta = File.Exists(metaPath) ? File.ReadAllText(metaPath) : null;
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(path) != null) AssetDatabase.DeleteAsset(path);
             if (!AssetDatabase.CopyAsset(SourceScene, path)) throw new System.InvalidOperationException("No se pudo copiar " + SourceScene);
+            // Mantiene referencias externas a la escena cuando se vuelve a generar una casa existente.
+            if (!string.IsNullOrEmpty(existingMeta))
+            {
+                File.WriteAllText(metaPath, existingMeta);
+                AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
+            }
             var scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
 
             var root = GameObject.Find(RootName).transform;
@@ -153,7 +172,7 @@ namespace Lumina.EditorTools
             PlaceSena(sena, new Vector3(2.0f, 0f, 5.6f), new[]
             {
                 "¡Bienvenido a la Casa de los Números!",
-                "Aquí contamos con las manos, del uno al diez.",
+                "Aquí contamos con las manos, del cero al treinta.",
                 "Acércate a un bloque de la estantería y pulsa E para ver su seña."
             });
             // Las luces de las ventanas oeste quedaban pegadas a la estantería y quemaban los bloques.
@@ -169,36 +188,43 @@ namespace Lumina.EditorTools
             Box(board, "Superficie", new Vector3(0f, 1.9f, 7.87f), new Vector3(6.6f, 2.2f, 0.04f), M("Ink"));
             Box(board, "Repisa", new Vector3(0f, 0.72f, 7.78f), new Vector3(6.9f, 0.06f, 0.22f), M("WoodLight"));
             for (int i = 0; i < 4; i++) Box(board, "Tiza", new Vector3(-1.4f + i * 0.32f, 0.77f, 7.78f), new Vector3(0.2f, 0.04f, 0.04f), M(i % 2 == 0 ? "Cream" : "CoralSoft"));
-            for (int n = 1; n <= 10; n++)
+            for (int row = 0; row < 3; row++)
             {
-                float x = -2.9f + (n - 1) * 0.644f;
-                Text(board, "Numero" + n, n.ToString(), new Vector3(x, 2.55f, 7.84f), 0.55f, Ui.Cream, 0f, 0.8f);
-                for (int d = 0; d < n; d++)
-                    Ball(board, "Punto", new Vector3(x - 0.12f + (d % 2) * 0.24f, 2.12f - (d / 2) * 0.17f, 7.84f), 0.1f, M(d % 2 == 0 ? "CoralSoft" : "TurquoiseSoft"));
+                for (int column = 0; column < 11; column++)
+                {
+                    int number = row * 11 + column;
+                    if (number > 30) continue;
+                    float x = -3.0f + column * 0.6f;
+                    float y = 2.55f - row * 0.68f;
+                    Text(board, "Numero" + number, number.ToString(), new Vector3(x, y, 7.84f), 0.29f,
+                        number % 2 == 0 ? Ui.Cream : Ui.Coral, 0f, 0.42f);
+                }
             }
-            Text(board, "Titulo", "1 + 1 = 2", new Vector3(0f, 0.95f, 7.84f), 0.4f, new Color(1f, 0.953f, 0.863f, 0.8f), 0f, 3f);
+            Text(board, "Titulo", "DEL 0 AL 30", new Vector3(0f, 0.83f, 7.84f), 0.26f,
+                new Color(1f, 0.953f, 0.863f, 0.8f), 0f, 3f);
 
-            // Estantería de números: 10 bloques, 5 por balda. Son los objetos interactivos.
+            // Estantería de números: 31 bloques interactivos repartidos en cuatro baldas.
             var shelf = Group(decor, "EstanteriaNumeros");
             Box(shelf, "Fondo", new Vector3(-4.46f, 1.4f, 4.0f), new Vector3(0.06f, 2.5f, 5.8f), M("TurquoiseSoft"), true);
             Box(shelf, "Techo", new Vector3(-4.2f, 2.58f, 4.0f), new Vector3(0.6f, 0.08f, 5.8f), M("WoodMid"));
             foreach (float z in new[] { 1.05f, 6.95f }) Box(shelf, "Lateral", new Vector3(-4.2f, 1.3f, z), new Vector3(0.6f, 2.5f, 0.08f), M("WoodMid"), true);
             string[] blockMaterials = { "Coral", "TurquoiseDeep", "Coral", "TurquoiseDeep", "Coral" };
-            for (int tier = 0; tier < 2; tier++)
+            for (int tier = 0; tier < 4; tier++)
             {
-                float plankY = 0.82f + tier * 0.82f;
+                float plankY = 0.38f + tier * 0.53f;
                 Box(shelf, "Balda" + tier, new Vector3(-4.2f, plankY, 4.0f), new Vector3(0.6f, 0.07f, 5.8f), M("WoodMid"), true);
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 8; i++)
                 {
-                    int n = tier * 5 + i + 1;
-                    float z = 1.95f + i * 1.0f;
+                    int n = tier * 8 + i;
+                    if (n > 30) continue;
+                    float z = 1.55f + i * 0.7f;
                     var block = Group(decor, "Numero_" + n);
-                    block.position = new Vector3(-4.16f, plankY + 0.035f + 0.3f, z);
-                    Box(block, "Bloque", Vector3.zero, new Vector3(0.5f, 0.6f, 0.6f), M(blockMaterials[i]), true, localSpace: true);
+                    block.position = new Vector3(-4.16f, plankY + 0.035f + 0.25f, z);
+                    Box(block, "Bloque", Vector3.zero, new Vector3(0.44f, 0.5f, 0.5f), M(blockMaterials[i % blockMaterials.Length]), true, localSpace: true);
                     Ball(block, "Sello", new Vector3(0.2f, 0.28f, 0f), 0.09f, M("CreamDeep"), localSpace: true);
-                    var digit = Text(block, "Digito", n.ToString(), new Vector3(0.255f, 0f, 0f), 0.4f, Ui.Cream, -90f, 0.6f, localSpace: true);
-                    var small = Text(block, "Palabra", "", new Vector3(0.255f, -0.22f, 0f), 0.09f, Ui.Cream, -90f, 0.6f, localSpace: true);
-                    MakeTarget(block, LevelKind.Numbers, n - 1, (digit, ItemLabelFormat.Digit), (small, ItemLabelFormat.Word));
+                    var digit = Text(block, "Digito", n.ToString(), new Vector3(0.225f, 0f, 0f), 0.32f, Ui.Cream, -90f, 0.52f, localSpace: true);
+                    var small = Text(block, "Palabra", "", new Vector3(0.225f, -0.18f, 0f), 0.065f, Ui.Cream, -90f, 0.5f, localSpace: true);
+                    MakeTarget(block, LevelKind.Numbers, n, (digit, ItemLabelFormat.Digit), (small, ItemLabelFormat.Word));
                 }
             }
 
@@ -500,7 +526,7 @@ namespace Lumina.EditorTools
             t.color = color;
             t.fontStyle = FontStyles.Bold;
             t.alignment = TextAlignmentOptions.Center;
-            t.enableWordWrapping = false;
+            t.textWrappingMode = TextWrappingModes.NoWrap;
             t.overflowMode = TextOverflowModes.Overflow;
             t.rectTransform.sizeDelta = new Vector2(width, em * 1.4f);
             return t;

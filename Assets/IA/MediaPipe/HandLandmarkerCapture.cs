@@ -24,6 +24,8 @@ namespace Senas.AI.MediaPipe
     [SerializeField, Min(16)] private int _cameraWidth = 640;
     [SerializeField, Min(16)] private int _cameraHeight = 480;
     [SerializeField, Min(1)] private int _cameraFrameRate = 30;
+    private WebCamTexture _sharedWebCamTexture;
+    private bool _ownsWebCamTexture;
 
     /// <summary>
     /// Invoked on the Unity main thread with the latest completed result.
@@ -36,6 +38,14 @@ namespace Senas.AI.MediaPipe
     /// </summary>
     public WebCamTexture CameraTexture => _webCamTexture;
 
+    /// <summary>Usa la textura que ya muestra la interfaz para evitar abrir la webcam dos veces.</summary>
+    public void UseSharedCameraTexture(WebCamTexture texture)
+    {
+      if (isActiveAndEnabled && _webCamTexture != null)
+        throw new InvalidOperationException("La fuente de cámara debe configurarse antes de iniciar la captura.");
+      _sharedWebCamTexture = texture;
+    }
+
     private WebCamTexture _webCamTexture;
     private HandLandmarker _handLandmarker;
     private TextureFramePool _textureFramePool;
@@ -46,7 +56,7 @@ namespace Senas.AI.MediaPipe
     private IEnumerator Start()
     {
       var devices = WebCamTexture.devices;
-      if (devices == null || devices.Length == 0)
+      if (_sharedWebCamTexture == null && (devices == null || devices.Length == 0))
       {
         Debug.LogError("MediaPipe hand capture: no webcam is available.", this);
         yield break;
@@ -75,8 +85,16 @@ namespace Senas.AI.MediaPipe
         yield break;
       }
 
-      _webCamTexture = new WebCamTexture(devices[0].name, _cameraWidth, _cameraHeight, _cameraFrameRate);
-      _webCamTexture.Play();
+      if (_sharedWebCamTexture != null)
+      {
+        _webCamTexture = _sharedWebCamTexture;
+      }
+      else
+      {
+        _webCamTexture = new WebCamTexture(devices[0].name, _cameraWidth, _cameraHeight, _cameraFrameRate);
+        _ownsWebCamTexture = true;
+        _webCamTexture.Play();
+      }
 
       var timeoutFrames = 2000;
       while (_webCamTexture != null && _webCamTexture.width <= 16 && timeoutFrames-- > 0)
@@ -257,12 +275,13 @@ namespace Senas.AI.MediaPipe
 
     private void StopWebcam()
     {
-      if (_webCamTexture != null)
+      if (_webCamTexture != null && _ownsWebCamTexture)
       {
         _webCamTexture.Stop();
         Destroy(_webCamTexture);
-        _webCamTexture = null;
       }
+      _webCamTexture = null;
+      _ownsWebCamTexture = false;
     }
   }
 

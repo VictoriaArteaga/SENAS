@@ -50,7 +50,7 @@ namespace Lumina.UI
         {
             switch (kind)
             {
-                case LevelKind.Numbers: return Loc.T("levels.inspectNumber", index + 1);
+                case LevelKind.Numbers: return Loc.T("levels.inspectNumber", int.Parse(Item.id.Substring("numeros.".Length)));
                 case LevelKind.Months: return Loc.T("levels.inspectMonth", Item.Name);
                 default: return Loc.T("levels.inspectPhrase", Item.Name);
             }
@@ -64,7 +64,11 @@ namespace Lumina.UI
                 if (entry.label == null) continue;
                 switch (entry.format)
                 {
-                    case ItemLabelFormat.Digit: entry.label.text = (index + 1).ToString(); break;
+                    case ItemLabelFormat.Digit:
+                        entry.label.text = kind == LevelKind.Numbers
+                            ? Item.id.Substring("numeros.".Length)
+                            : (index + 1).ToString();
+                        break;
                     case ItemLabelFormat.Word: entry.label.text = item.Name.ToUpperInvariant(); break;
                     case ItemLabelFormat.MonthAbbreviation: entry.label.text = item.Name.Substring(0, Mathf.Min(3, item.Name.Length)).ToUpperInvariant(); break;
                     case ItemLabelFormat.MonthNumber: entry.label.text = (index + 1).ToString("00"); break;

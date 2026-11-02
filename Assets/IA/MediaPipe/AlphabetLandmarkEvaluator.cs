@@ -23,7 +23,7 @@ namespace Senas.AI.MediaPipe
     }
   }
 
-  /// <summary>Evalua posturas estaticas y secuencias de movimiento del alfabeto LSC.</summary>
+  /// <summary>Evalúa posturas estáticas y secuencias de señas LSC a partir de landmarks.</summary>
   [DefaultExecutionOrder(1000)]
   [DisallowMultipleComponent]
   [RequireComponent(typeof(HandLandmarkerCapture))]
