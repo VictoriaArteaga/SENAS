@@ -7,12 +7,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Lumina.Auth;
+using Lumina.Core;
 
 namespace Lumina.UI
 {
     /// <summary>
     /// Pantalla de inicio de sesión. Solo coordina la interfaz: valida los campos, pide el resultado a
-    /// <see cref="AuthServices.Current"/> (hoy una simulación local) y navega. No conoce al proveedor de autenticación.
+    /// <see cref="AuthServices.Current"/> (el backend, o la simulación si ApiConfig la pide) y navega. No conoce al proveedor.
     /// </summary>
     public class LoginUIController : MonoBehaviour
     {
@@ -66,8 +67,19 @@ namespace Lumina.UI
             if (loading != null) loading.gameObject.SetActive(false);
         }
 
+        /// <summary>Con cuentas reales no tiene sentido «Recordar sesión» (los tokens solo viven en memoria) ni el aviso de modo de prueba.</summary>
+        private void HideMockOnlyElements()
+        {
+            if (AuthServices.Current is AuthenticationMockService) return;
+            if (rememberToggle != null) rememberToggle.gameObject.SetActive(false);
+            string testMode = Loc.T("auth.testMode");
+            foreach (var label in transform.root.GetComponentsInChildren<TMP_Text>(true))
+                if (label.text == testMode) label.gameObject.SetActive(false);
+        }
+
         private void Start()
         {
+            HideMockOnlyElements();
             panelGroup.alpha = 0f;
             StartCoroutine(Intro());
             sena?.Say(MsgWelcome);
@@ -109,7 +121,7 @@ namespace Lumina.UI
         private bool Validate()
         {
             string emailError = AuthValidation.Email(emailField.Text);
-            string passwordError = AuthValidation.Password(passwordField.Text);
+            string passwordError = AuthValidation.LoginPassword(passwordField.Text);
             if (emailError != null) emailField.SetError(emailError); else emailField.ClearError();
             if (passwordError != null) passwordField.SetError(passwordError); else passwordField.ClearError();
             return emailError == null && passwordError == null;
@@ -146,7 +158,7 @@ namespace Lumina.UI
                 status.Success("¡Listo! Entrando a Lúmina…");
                 sena?.Say(MsgSuccess);
                 sena?.Clap();
-                AuthSession.SignIn(result.DisplayName, null, result.UserId ?? emailField.Text);
+                AuthSession.SignIn(result.DisplayName, result.AvatarId, result.UserId ?? emailField.Text);
                 await Task.Delay(1500, _cts.Token);
                 if (this == null) return;
                 ScreenFader.Load(SceneNames.MainMenu);
@@ -188,10 +200,19 @@ namespace Lumina.UI
             SetBusy(true);
             try
             {
-                await AuthServices.Current.RequestPasswordResetAsync(emailField.Text.Trim(), _cts.Token);
+                var reset = await AuthServices.Current.RequestPasswordResetAsync(emailField.Text.Trim(), _cts.Token);
                 if (this == null) return;
-                status.Info("Función de prueba: aún no se envía ningún correo real.");
-                sena?.Say("Pronto podrás recuperar tu contraseña desde aquí.");
+                if (reset.Succeeded)
+                {
+                    status.Info("Función de prueba: aún no se envía ningún correo real.");
+                    sena?.Say("Pronto podrás recuperar tu contraseña desde aquí.");
+                }
+                else
+                {
+                    // El backend todavía no ofrece recuperación de contraseña: se dice la verdad.
+                    status.Info(reset.Message ?? Loc.T("auth.resetUnavailable"));
+                    sena?.Say("Pronto podrás recuperar tu contraseña desde aquí.");
+                }
             }
             catch (OperationCanceledException) { }
             finally

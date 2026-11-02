@@ -362,7 +362,7 @@ namespace Lumina.EditorTools
             var nameField = LuminaUiKit.MakeField(form, "NameField", "Nombre del jugador", "Como te llamas", false, 0f, w, 24f, 56f, 24f, false, 26f, true);
             var userField = LuminaUiKit.MakeField(form, "UsernameField", "Nombre de usuario", "tu_usuario", false, 0f, w, 24f, 56f, 24f, false, 26f, true);
             var emailField = LuminaUiKit.MakeField(form, "EmailField", "Correo electrónico", "nombre@correo.com", false, 0f, w, 24f, 56f, 24f, false, 26f, true);
-            var passField = LuminaUiKit.MakeField(form, "PasswordField", "Contraseña", "Mínimo 6 caracteres", true, 0f, w, 24f, 56f, 24f, true, 26f, true);
+            var passField = LuminaUiKit.MakeField(form, "PasswordField", "Contraseña", "Mínimo 8 caracteres, con letras y números", true, 0f, w, 24f, 56f, 24f, true, 26f, true);
             var confirmField = LuminaUiKit.MakeField(form, "ConfirmField", "Confirmar contraseña", "Repite tu contraseña", true, 0f, w, 24f, 56f, 24f, false, 26f, true);
 
             var statusLabel = LuminaUiKit.Label(form, "StatusLabel", string.Empty, 22f, LuminaUiKit.Ink, FontStyles.Bold, TextAlignmentOptions.Center);
