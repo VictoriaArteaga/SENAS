@@ -65,6 +65,10 @@ namespace Lumina.EditorTools
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
+
+            // Los prefabs de la aldea salen blancos (falta su paleta): se aplican la paleta de las casas y los colores de cada
+            // categoría, de modo que reconstruir LuminaWorld nunca deja las casas monocromas.
+            LuminaMaterialTint.Apply();
             Debug.Log("[Lumina] Escena LuminaWorld construida y guardada.");
         }
 

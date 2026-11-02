@@ -890,16 +890,10 @@ namespace Lumina.EditorTools
             return go;
         }
 
-        // El paquete de aldea referencia una textura de paleta inexistente y sus modelos salen blancos; LuminaWorld los tiñe
-        // con copias de Color.mat (Lumina_Village_*). Aquí se reutilizan esas mismas copias para que las escenas coincidan.
+        // El paquete de aldea referencia una textura de paleta inexistente y sus modelos salen blancos. Los materiales que los
+        // sustituyen (paleta de las casas y copias tintadas Lumina_Village_*) los decide LuminaMaterialTint.Resolve, el mismo
+        // código que usa LuminaWorld, para que las escenas coincidan.
         private const string VillageParentMaterial = "Assets/Models/OccaSoftware/Low Poly Fantasy Village/Materials/Color.mat";
-        private static readonly Dictionary<string, Color> VillagePalette = new Dictionary<string, Color>
-        {
-            { "House", new Color(0.93f, 0.85f, 0.70f) }, { "Tree", new Color(0.36f, 0.62f, 0.30f) }, { "Pine", new Color(0.17f, 0.44f, 0.28f) },
-            { "Path", new Color(0.74f, 0.71f, 0.64f) }, { "Wood", new Color(0.55f, 0.38f, 0.22f) }, { "Metal", new Color(0.26f, 0.26f, 0.30f) },
-            { "Rock", new Color(0.52f, 0.52f, 0.54f) }, { "Flower", new Color(0.93f, 0.48f, 0.60f) }, { "Terracotta", new Color(0.76f, 0.42f, 0.30f) },
-            { "Mountain", new Color(0.42f, 0.62f, 0.66f) }
-        };
 
         private static string TintCategory(string prefabName)
         {
@@ -919,14 +913,7 @@ namespace Lumina.EditorTools
         private static void Tint(GameObject instance, string category)
         {
             var parent = AssetDatabase.LoadAssetAtPath<Material>(VillageParentMaterial);
-            string path = "Assets/Project/Materials/Lumina_Village_" + category + ".mat";
-            var variant = AssetDatabase.LoadAssetAtPath<Material>(path);
-            if (variant == null)
-            {
-                variant = new Material(parent) { name = "Lumina_Village_" + category };
-                variant.SetColor("_BaseColor", VillagePalette[category]);
-                AssetDatabase.CreateAsset(variant, path);
-            }
+            var variant = LuminaMaterialTint.Resolve(new Dictionary<string, Material>(), parent, category);
 
             foreach (var renderer in instance.GetComponentsInChildren<MeshRenderer>())
             {

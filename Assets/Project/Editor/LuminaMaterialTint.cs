@@ -11,6 +11,8 @@ namespace Lumina.EditorTools
     /// los modelos salen blancos. Se crean variantes de ese material (el original no se modifica) con un
     /// color base por categoría y se asignan como override en las instancias de la escena.
     /// Si se restaura la textura original, usar "Quitar colores provisionales" (restaura Color.mat).
+    /// Las casas ("House") ya no reciben un color plano: usan el material de paleta de Lúmina (LuminaHousePalette), que
+    /// colorea cada parte (techo, paredes, puerta, ventanas...) a través de los UV originales.
     /// </summary>
     public static class LuminaMaterialTint
     {
@@ -30,6 +32,7 @@ namespace Lumina.EditorTools
             { "Rock",    new Color(0.52f, 0.52f, 0.54f) },
             { "Flower",  new Color(0.93f, 0.48f, 0.60f) },
             { "Terracotta", new Color(0.76f, 0.42f, 0.30f) },
+            { "Mountain", new Color(0.42f, 0.62f, 0.66f) }, // la usa el fondo de las pantallas (LuminaAuthSceneBuilder)
         };
 
         private static string Category(string prefabName)
@@ -73,16 +76,18 @@ namespace Lumina.EditorTools
                 bool dirty = false;
                 for (int i = 0; i < mats.Length; i++)
                 {
-                    // Solo se reemplaza el material de paleta; "Light" (luz del farol) se conserva.
+                    // Solo se reemplaza el material de paleta; "Light" (luz del farol) se conserva. Las casas que ya tenían el color plano
+                    // anterior (Lumina_Village_House) también se actualizan a la paleta.
                     if (apply)
                     {
-                        if (mats[i] != parent) continue;
-                        mats[i] = GetVariant(variants, parent, category);
+                        bool replaceable = mats[i] == parent || (category == "House" && mats[i] != null && mats[i].name == MaterialPrefix + "House");
+                        if (!replaceable) continue;
+                        mats[i] = Resolve(variants, parent, category);
                         dirty = true;
                     }
                     else
                     {
-                        if (mats[i] == null || !mats[i].name.StartsWith(MaterialPrefix)) continue;
+                        if (mats[i] == null || !(mats[i].name.StartsWith(MaterialPrefix) || mats[i].name == "Lumina_HousePalette")) continue;
                         mats[i] = parent;
                         dirty = true;
                     }
@@ -99,6 +104,13 @@ namespace Lumina.EditorTools
             AssetDatabase.SaveAssets();
             Debug.Log($"[Lumina] Colores provisionales {(apply ? "aplicados" : "quitados")} en {changed} renderers.");
         }
+
+        /// <summary>
+        /// Material que sustituye a Color.mat en una categoría: la paleta de Lúmina para las casas y una copia tintada para el
+        /// resto. Es el único sitio donde se decide, y lo usan tanto este menú como el fondo de las pantallas.
+        /// </summary>
+        internal static Material Resolve(Dictionary<string, Material> cache, Material parent, string category)
+            => category == "House" ? LuminaHousePalette.Load() : GetVariant(cache, parent, category);
 
         private static Material GetVariant(Dictionary<string, Material> cache, Material parent, string category)
         {
