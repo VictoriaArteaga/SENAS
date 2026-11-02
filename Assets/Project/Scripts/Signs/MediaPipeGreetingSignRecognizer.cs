@@ -226,7 +226,9 @@ namespace Lumina.Signs
       var stars = similarity >= 0.88f ? 3 : similarity >= 0.74f ? 2 : 1;
       SetStatus($"¡Seña reconocida! Precisión: {similarity:P0}.");
       Completed?.Invoke(new SignAttemptResult(_sign.id, true, similarity * 100f, stars, stars * 10,
-        "¡Muy bien! El movimiento del saludo coincide con la referencia."));
+        IsMonth(_sign.id)
+          ? "¡Muy bien! El movimiento del mes coincide con la referencia."
+          : "¡Muy bien! El movimiento del saludo coincide con la referencia."));
     }
 
     private static float DynamicTimeWarping(IReadOnlyList<GreetingMotionFrame> live, IReadOnlyList<GreetingMotionFrame> reference, GreetingMotionRequirement requirement)
