@@ -30,3 +30,16 @@
 /Assets/dbeaver-ce-26.2.2-windows-x86_64.exe
 /Assets/dbeaver-ce-26.2.2-windows-x86_64.exe.meta
 /Assets/Roger+FBX/Roger.Fbx
+# Variables de entorno (secretos)
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Backend (NestJS)
+backend/node_modules/
+backend/dist/
+backend/coverage/
+backend/*.tsbuildinfo
