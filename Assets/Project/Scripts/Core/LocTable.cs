@@ -77,6 +77,7 @@ namespace Lumina.Core
             // ---- Resultados
             ("results.notEvaluated", "SIN EVALUAR", "NOT EVALUATED"),
             ("results.precision", "PRECISIÓN", "ACCURACY"),
+            ("results.similarity", "SIMILITUD", "SIMILARITY"),
             ("results.xp", "XP", "XP"),
             ("results.good", "¡Buen trabajo! Sigue practicando para mejorar.", "Great job! Keep practicing to improve."),
             ("results.none", "Esta práctica todavía no se evalúa: el reconocimiento de señas llegará pronto.", "This practice isn't evaluated yet: sign recognition is coming soon."),
