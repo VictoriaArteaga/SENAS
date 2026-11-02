@@ -146,7 +146,7 @@ namespace Lumina.UI
                 status.Success("¡Listo! Entrando a Lúmina…");
                 sena?.Say(MsgSuccess);
                 sena?.Clap();
-                AuthSession.SignIn(result.DisplayName);
+                AuthSession.SignIn(result.DisplayName, null, result.UserId ?? emailField.Text);
                 await Task.Delay(1500, _cts.Token);
                 if (this == null) return;
                 ScreenFader.Load(SceneNames.MainMenu);

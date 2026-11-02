@@ -18,17 +18,20 @@ namespace Lumina.Auth
         public readonly AuthStatus Status;
         public readonly string Message;
         public readonly string DisplayName;
+        /// <summary>Identificador estable de la cuenta (uid del proveedor; en la simulación, el correo normalizado).</summary>
+        public readonly string UserId;
 
         public bool Succeeded => Status == AuthStatus.Success;
 
-        public AuthResult(AuthStatus status, string message = null, string displayName = null)
+        public AuthResult(AuthStatus status, string message = null, string displayName = null, string userId = null)
         {
             Status = status;
             Message = message;
             DisplayName = displayName;
+            UserId = userId;
         }
 
-        public static AuthResult Ok(string displayName = null, string message = null) => new AuthResult(AuthStatus.Success, message, displayName);
+        public static AuthResult Ok(string displayName = null, string message = null, string userId = null) => new AuthResult(AuthStatus.Success, message, displayName, userId);
         public static AuthResult Fail(AuthStatus status, string message) => new AuthResult(status, message);
     }
 

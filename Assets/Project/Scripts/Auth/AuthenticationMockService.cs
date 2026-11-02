@@ -31,7 +31,7 @@ namespace Lumina.Auth
             if (string.Equals(email?.Trim(), ReservedErrorEmail, StringComparison.OrdinalIgnoreCase))
                 return AuthResult.Fail(AuthStatus.InvalidCredentials, "No encontramos una cuenta con esos datos.");
 
-            return AuthResult.Ok(DisplayNameFromEmail(email));
+            return AuthResult.Ok(DisplayNameFromEmail(email), userId: AuthSession.NormalizeUserId(email));
         }
 
         public async Task<AuthResult> RegisterAsync(RegistrationData data, CancellationToken cancellationToken = default)
@@ -43,7 +43,7 @@ namespace Lumina.Auth
             if (string.Equals(data.Username?.Trim(), ReservedTakenUsername, StringComparison.OrdinalIgnoreCase))
                 return AuthResult.Fail(AuthStatus.UsernameTaken, "Ese nombre de usuario ya está tomado.");
 
-            return AuthResult.Ok(data.PlayerName?.Trim());
+            return AuthResult.Ok(data.PlayerName?.Trim(), userId: AuthSession.NormalizeUserId(data.Email));
         }
 
         public async Task<AuthResult> RequestPasswordResetAsync(string email, CancellationToken cancellationToken = default)

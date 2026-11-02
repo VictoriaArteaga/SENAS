@@ -1121,7 +1121,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282661391
+    rgba: 4294967295
   m_fontColor: {r: 0.059, g: 0.227, b: 0.267, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -1134,7 +1134,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1388,7 +1388,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -2315,7 +2315,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282661391
+    rgba: 4294967295
   m_fontColor: {r: 0.059, g: 0.227, b: 0.267, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -2328,7 +2328,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -3057,7 +3057,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -3594,7 +3594,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -4502,7 +4502,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -4786,7 +4786,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -5471,7 +5471,6 @@ GameObject:
   m_Component:
   - component: {fileID: 327326361}
   - component: {fileID: 327326362}
-  - component: {fileID: 327326363}
   m_Layer: 0
   m_Name: LuzCalida
   m_TagString: Untagged
@@ -5559,29 +5558,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &327326363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327326360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
 --- !u!1 &327350222
 GameObject:
   m_ObjectHideFlags: 0
@@ -5592,7 +5568,6 @@ GameObject:
   m_Component:
   - component: {fileID: 327350223}
   - component: {fileID: 327350224}
-  - component: {fileID: 327350225}
   m_Layer: 0
   m_Name: LuzVentana
   m_TagString: Untagged
@@ -5680,29 +5655,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &327350225
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327350222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
 --- !u!1 &332991572
 GameObject:
   m_ObjectHideFlags: 0
@@ -5820,7 +5772,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -7479,7 +7431,6 @@ GameObject:
   m_Component:
   - component: {fileID: 496726005}
   - component: {fileID: 496726006}
-  - component: {fileID: 496726007}
   m_Layer: 0
   m_Name: LuzVentana
   m_TagString: Untagged
@@ -7567,29 +7518,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &496726007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 496726004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
 --- !u!1 &498327357
 GameObject:
   m_ObjectHideFlags: 0
@@ -8128,7 +8056,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 1000
@@ -8955,7 +8883,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282661391
+    rgba: 4294967295
   m_fontColor: {r: 0.05882353, g: 0.22745098, b: 0.26666668, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -8968,7 +8896,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -9112,7 +9040,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -9466,7 +9394,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 1000
@@ -9668,7 +9596,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -9917,7 +9845,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4292670463
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 0.9529412, b: 0.8627451, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -9930,7 +9858,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -10258,7 +10186,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -10707,7 +10635,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -12106,7 +12034,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -12818,7 +12746,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282661391
+    rgba: 4294967295
   m_fontColor: {r: 0.05882353, g: 0.22745098, b: 0.26666668, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -12831,7 +12759,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -13250,7 +13178,6 @@ MonoBehaviour:
   prompt: {fileID: 1705182999}
   promptLabel: {fileID: 597329516}
   maxDistance: 4.5
-  _current: {fileID: 0}
 --- !u!114 &790408763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13283,11 +13210,6 @@ MonoBehaviour:
   DemonstrationRequested:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
-  <DemonstrationAvailable>k__BackingField: 0
-  <IsOpen>k__BackingField: 0
-  _targets: []
-  _index: 0
 --- !u!4 &790408764
 Transform:
   m_ObjectHideFlags: 0
@@ -13453,7 +13375,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4286547735
+    rgba: 4294967295
   m_fontColor: {r: 0.09, g: 0.529, b: 0.498, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -13466,7 +13388,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -13574,7 +13496,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 1000
@@ -13665,7 +13587,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282661391
+    rgba: 4294967295
   m_fontColor: {r: 0.05882353, g: 0.22745098, b: 0.26666668, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -13678,7 +13600,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -14182,10 +14104,9 @@ MonoBehaviour:
   kind: 2
   index: 8
   labels:
-  - {label: {fileID: 177784609}, format: 4}
+  - label: {fileID: 177784609}
+    format: 4
   highlightScale: 1.12
-  _baseScale: {x: 0, y: 0, z: 0}
-  _highlighted: 0
 --- !u!1 &828250304
 GameObject:
   m_ObjectHideFlags: 0
@@ -15016,10 +14937,9 @@ MonoBehaviour:
   kind: 2
   index: 10
   labels:
-  - {label: {fileID: 669581777}, format: 4}
+  - label: {fileID: 669581777}
+    format: 4
   highlightScale: 1.12
-  _baseScale: {x: 0, y: 0, z: 0}
-  _highlighted: 0
 --- !u!1 &862725402
 GameObject:
   m_ObjectHideFlags: 0
@@ -15324,7 +15244,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -16039,7 +15959,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -16356,7 +16276,6 @@ GameObject:
   m_Component:
   - component: {fileID: 911103961}
   - component: {fileID: 911103962}
-  - component: {fileID: 911103963}
   m_Layer: 0
   m_Name: LuzCalida
   m_TagString: Untagged
@@ -16444,29 +16363,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &911103963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 911103960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
 --- !u!1 &924916215
 GameObject:
   m_ObjectHideFlags: 0
@@ -16546,7 +16442,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -18819,10 +18715,9 @@ MonoBehaviour:
   kind: 2
   index: 7
   labels:
-  - {label: {fileID: 2109940427}, format: 4}
+  - label: {fileID: 2109940427}
+    format: 4
   highlightScale: 1.12
-  _baseScale: {x: 0, y: 0, z: 0}
-  _highlighted: 0
 --- !u!1 &1062005056
 GameObject:
   m_ObjectHideFlags: 0
@@ -19417,7 +19312,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -21432,7 +21327,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4293720575
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 0.976, b: 0.925, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -21445,7 +21340,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -21654,7 +21549,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282661391
+    rgba: 4294967295
   m_fontColor: {r: 0.059, g: 0.227, b: 0.267, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -21667,7 +21562,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -22590,10 +22485,9 @@ MonoBehaviour:
   kind: 2
   index: 2
   labels:
-  - {label: {fileID: 1378944398}, format: 4}
+  - label: {fileID: 1378944398}
+    format: 4
   highlightScale: 1.12
-  _baseScale: {x: 0, y: 0, z: 0}
-  _highlighted: 0
 --- !u!1 &1319493675
 GameObject:
   m_ObjectHideFlags: 0
@@ -22644,10 +22538,9 @@ MonoBehaviour:
   kind: 2
   index: 1
   labels:
-  - {label: {fileID: 347813253}, format: 4}
+  - label: {fileID: 347813253}
+    format: 4
   highlightScale: 1.12
-  _baseScale: {x: 0, y: 0, z: 0}
-  _highlighted: 0
 --- !u!1 &1329608762
 GameObject:
   m_ObjectHideFlags: 0
@@ -22988,7 +22881,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -23722,10 +23615,9 @@ MonoBehaviour:
   kind: 2
   index: 0
   labels:
-  - {label: {fileID: 58708819}, format: 4}
+  - label: {fileID: 58708819}
+    format: 4
   highlightScale: 1.12
-  _baseScale: {x: 0, y: 0, z: 0}
-  _highlighted: 0
 --- !u!1 &1439602144
 GameObject:
   m_ObjectHideFlags: 0
@@ -23963,7 +23855,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1456736861}
   - component: {fileID: 1456736862}
-  - component: {fileID: 1456736863}
   m_Layer: 0
   m_Name: LuzVentana
   m_TagString: Untagged
@@ -24051,29 +23942,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &1456736863
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1456736860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
 --- !u!1 &1459349400
 GameObject:
   m_ObjectHideFlags: 0
@@ -24261,7 +24129,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4292670463
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 0.9529412, b: 0.8627451, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -24274,7 +24142,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -24852,7 +24720,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -25296,7 +25164,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -26881,7 +26749,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -27769,10 +27637,9 @@ MonoBehaviour:
   kind: 2
   index: 9
   labels:
-  - {label: {fileID: 1549187907}, format: 4}
+  - label: {fileID: 1549187907}
+    format: 4
   highlightScale: 1.12
-  _baseScale: {x: 0, y: 0, z: 0}
-  _highlighted: 0
 --- !u!1 &1695571813
 GameObject:
   m_ObjectHideFlags: 0
@@ -28739,10 +28606,9 @@ MonoBehaviour:
   kind: 2
   index: 4
   labels:
-  - {label: {fileID: 284803362}, format: 4}
+  - label: {fileID: 284803362}
+    format: 4
   highlightScale: 1.12
-  _baseScale: {x: 0, y: 0, z: 0}
-  _highlighted: 0
 --- !u!1 &1764101112
 GameObject:
   m_ObjectHideFlags: 0
@@ -29100,7 +28966,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1775844313}
   - component: {fileID: 1775844314}
-  - component: {fileID: 1775844315}
   m_Layer: 0
   m_Name: LuzVentana
   m_TagString: Untagged
@@ -29188,29 +29053,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &1775844315
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1775844312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
 --- !u!1 &1779064859
 GameObject:
   m_ObjectHideFlags: 0
@@ -29751,7 +29593,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282661391
+    rgba: 4294967295
   m_fontColor: {r: 0.059, g: 0.227, b: 0.267, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -29764,7 +29606,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -29947,10 +29789,9 @@ MonoBehaviour:
   kind: 2
   index: 3
   labels:
-  - {label: {fileID: 924916217}, format: 4}
+  - label: {fileID: 924916217}
+    format: 4
   highlightScale: 1.12
-  _baseScale: {x: 0, y: 0, z: 0}
-  _highlighted: 0
 --- !u!1 &1840169108
 GameObject:
   m_ObjectHideFlags: 0
@@ -30338,10 +30179,9 @@ MonoBehaviour:
   kind: 2
   index: 6
   labels:
-  - {label: {fileID: 1527919790}, format: 4}
+  - label: {fileID: 1527919790}
+    format: 4
   highlightScale: 1.12
-  _baseScale: {x: 0, y: 0, z: 0}
-  _highlighted: 0
 --- !u!114 &1876588645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34009,7 +33849,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -34116,7 +33956,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2111988461}
   - component: {fileID: 2111988462}
-  - component: {fileID: 2111988463}
   m_Layer: 0
   m_Name: LuzCalida
   m_TagString: Untagged
@@ -34204,29 +34043,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &2111988463
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2111988460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
 --- !u!1 &2115065646
 GameObject:
   m_ObjectHideFlags: 0
@@ -34293,7 +34109,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4292670463
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 0.9529412, b: 0.8627451, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -34306,7 +34122,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 0
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -34585,10 +34401,9 @@ MonoBehaviour:
   kind: 2
   index: 5
   labels:
-  - {label: {fileID: 625161715}, format: 4}
+  - label: {fileID: 625161715}
+    format: 4
   highlightScale: 1.12
-  _baseScale: {x: 0, y: 0, z: 0}
-  _highlighted: 0
 --- !u!1 &2132878438
 GameObject:
   m_ObjectHideFlags: 0

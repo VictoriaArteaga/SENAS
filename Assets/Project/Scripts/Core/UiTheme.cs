@@ -42,8 +42,8 @@ namespace Lumina.Core
         /// <summary>Color de fondo del fundido entre escenas.</summary>
         public static Color FadeColor => Dark ? NightCream : new Color(1f, 0.976f, 0.925f);
 
-        /// <summary>Velo que oscurece el mundo 3D detrás de la interfaz en modo oscuro.</summary>
-        public static readonly Color Dim = new Color(0.02f, 0.09f, 0.12f, 0.42f);
+        /// <summary>Velo ligero sobre el mundo 3D detrás de la interfaz en modo oscuro (el cielo nocturno ya aporta la oscuridad).</summary>
+        public static readonly Color Dim = new Color(0.02f, 0.09f, 0.12f, 0.2f);
 
         private static Role Identify(Color c)
         {

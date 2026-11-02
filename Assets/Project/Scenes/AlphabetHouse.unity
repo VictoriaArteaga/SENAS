@@ -20232,6 +20232,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alphabet: {fileID: 11400000, guid: 8e9ca817d7fc3c945b2b5177013a9dd0, type: 2}
   hand: {fileID: 214678930}
+  landmarkTemplates: {fileID: 11400000, guid: c1374298d21b4a13b6475f2138c9a401, type: 2}
+  minimumPracticeSimilarity: 0.6
   uiRoot: {fileID: 1978351792}
   letterButtons:
   - {fileID: 1465645624}

@@ -69,7 +69,8 @@ namespace Lumina.Alphabet
         /// <summary>Localiza los huesos del rig y prepara la mano. Es seguro llamarlo varias veces.</summary>
         public void Initialize()
         {
-            if (_ready) return;
+            if (_ready && RigIsReady()) return;
+            _ready = false;
 
             // Ver "Animator" en el comentario de la clase.
             foreach (var animator in GetComponentsInChildren<Animator>(true))
@@ -201,6 +202,9 @@ namespace Lumina.Alphabet
 
         private void Update()
         {
+            // Unity puede recargar scripts durante Play Mode. En ese caso un rig que estaba listo puede
+            // conservar el indicador _ready y perder sus referencias nativas a los huesos.
+            if (!_ready || !RigIsReady()) Initialize();
             if (!_ready || _entry == null) return;
 
             float dt = Time.unscaledDeltaTime;
@@ -219,6 +223,18 @@ namespace Lumina.Alphabet
                 _current = EvaluateMotion(_entry.motion, _motionTime);
                 Apply(_current);
             }
+        }
+
+        private bool RigIsReady()
+        {
+            if (_bones == null || _rest == null || _wrist == null || _bones.GetLength(0) != 5 || _bones.GetLength(1) != 3)
+                return false;
+
+            for (int f = 0; f < 5; f++)
+                for (int j = 0; j < 3; j++)
+                    if (_bones[f, j] == null) return false;
+
+            return true;
         }
 
         private HandPose EvaluateMotion(PoseKey[] keys, float time)
