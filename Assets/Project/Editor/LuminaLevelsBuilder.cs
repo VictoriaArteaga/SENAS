@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using Lumina.Core;
 using Lumina.Interaction;
 using Lumina.Signs;
 using Lumina.UI;
@@ -104,7 +105,18 @@ namespace Lumina.EditorTools
 
             // El cielo se ve por el tema: ThemeSkybox cambia día/noche y la luz ambiente igual que en el resto del juego.
             RenderSettings.skybox = AssetDatabase.LoadAssetAtPath<Material>(AuthBuilder.WorldSkyPath);
-            RenderSettings.ambientMode = AmbientMode.Skybox;
+            // Si la plantilla trae ThemeAmbient (ambiente en gradiente por tema), se guarda su aspecto de día en lugar de forzar
+            // Skybox: así la escena generada conserva Trilight y coincide con lo que ThemeAmbient aplica al jugar.
+            var ambient = root.GetComponent<ThemeAmbient>();
+
+            if (ambient != null)
+            {
+                ambient.ApplyTheme(false);
+            }
+            else
+            {
+                RenderSettings.ambientMode = AmbientMode.Skybox;
+            }
             RenderSettings.ambientIntensity = 0.6f;
 
             // Las macetas de la pared norte taparían pizarras y calendario.
