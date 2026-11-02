@@ -38,11 +38,35 @@ namespace Lumina.Auth.Tests
         public void Email_FormatoValidoSeAcepta(string value) => Assert.IsNull(AuthValidation.Email(value));
 
         [Test]
-        public void Password_RespetaLongitudMinima()
+        public void Password_RespetaLasReglasDelBackend()
         {
+            // 8 a 72 caracteres, con al menos una letra y un número (POST /auth/register).
             Assert.IsNotNull(AuthValidation.Password(""));
-            Assert.IsNotNull(AuthValidation.Password(new string('a', AuthValidation.MinPasswordLength - 1)));
-            Assert.IsNull(AuthValidation.Password(new string('a', AuthValidation.MinPasswordLength)));
+            Assert.IsNotNull(AuthValidation.Password("abc1234"));                                   // 7: corta
+            Assert.IsNull(AuthValidation.Password("abcd1234"));                                     // 8: válida
+            Assert.IsNull(AuthValidation.Password("Lumina2026"));
+            Assert.IsNull(AuthValidation.Password(new string('a', AuthValidation.MaxPasswordLength - 1) + "1")); // 72: válida
+            Assert.IsNotNull(AuthValidation.Password(new string('a', AuthValidation.MaxPasswordLength) + "1")); // 73: larga
+            Assert.IsNotNull(AuthValidation.Password("12345678"));                                  // sin letra
+            Assert.IsNotNull(AuthValidation.Password("soloLetras"));                                // sin número
+        }
+
+        [Test]
+        public void LoginPassword_SoloExigeQueExista()
+        {
+            Assert.IsNotNull(AuthValidation.LoginPassword(""));
+            Assert.IsNull(AuthValidation.LoginPassword("x"));
+            Assert.IsNotNull(AuthValidation.LoginPassword(new string('a', AuthValidation.MaxPasswordLength + 1)));
+        }
+
+        [Test]
+        public void DisplayName_Entre2Y40Caracteres()
+        {
+            Assert.IsNotNull(AuthValidation.DisplayName("  "));
+            Assert.IsNotNull(AuthValidation.DisplayName("A"));
+            Assert.IsNull(AuthValidation.DisplayName("Ana"));
+            Assert.IsNull(AuthValidation.DisplayName(new string('a', AuthValidation.MaxDisplayNameLength)));
+            Assert.IsNotNull(AuthValidation.DisplayName(new string('a', AuthValidation.MaxDisplayNameLength + 1)));
         }
 
         [Test]
@@ -138,7 +162,7 @@ namespace Lumina.Auth.Tests
         }
 
         [Test]
-        public void ElAvatarElegidoSobreviveAlCierreDeSesion()
+        public void ElAvatarElegidoSeConservaAlIniciarSesionPeroSeBorraAlCerrarla()
         {
             AuthSession.Clear();
             AuthSession.SelectAvatar("nube");
@@ -146,7 +170,7 @@ namespace Lumina.Auth.Tests
             AuthSession.SignIn("Ana");
             Assert.AreEqual("nube", AuthSession.AvatarId, "iniciar sesión sin avatar no debe borrar la elección");
             AuthSession.Clear();
-            Assert.AreEqual("nube", AuthSession.AvatarId, "cerrar sesión conserva la elección en memoria");
+            Assert.IsNull(AuthSession.AvatarId, "cerrar sesión borra el avatar: el de la cuenta siguiente sale de su perfil");
             AuthSession.SelectAvatar("sol");
             Assert.AreEqual("sol", AuthSession.AvatarId);
             AuthSession.SelectAvatar(null);

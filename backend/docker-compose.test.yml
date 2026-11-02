@@ -1,0 +1,19 @@
+# PostgreSQL for e2e tests ONLY. The real database is Supabase.
+# Usage: npm run db:test:up && npm run test:e2e && npm run db:test:down
+services:
+  postgres-test:
+    image: postgres:16
+    container_name: senas-postgres-test
+    environment:
+      POSTGRES_USER: senas
+      POSTGRES_PASSWORD: senas_test
+      POSTGRES_DB: senas_test
+    ports:
+      - '54329:5432'
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U senas -d senas_test']
+      interval: 2s
+      timeout: 3s
+      retries: 30

@@ -1,94 +1,111 @@
 using Lumina.Auth;
 using Lumina.Core;
 using NUnit.Framework;
-using UnityEngine;
 
 namespace Lumina.Core.Tests
 {
-    /// <summary>El tema es preferencia de cada cuenta; el tema activo vuelve a claro al cerrar sesión.</summary>
+    /// <summary>
+    /// Idioma y tema son preferencias del perfil del backend: aquí solo viven en memoria. Antes del login y tras cerrar sesión
+    /// valen los valores por defecto (español, claro); lo que el jugador cambia lo avisa <see cref="GameSettings.PreferencesEdited"/>
+    /// (que es lo que dispara el guardado en el perfil) y lo que viene del perfil se aplica sin avisar.
+    /// </summary>
     public class ThemePerUserTests
     {
-        private const string A = "ana@correo.com", B = "beto@correo.com";
+        private const string A = "11111111-1111-1111-1111-111111111111", B = "22222222-2222-2222-2222-222222222222";
 
-        [SetUp] public void Clean() { GameSettings.BindSession(); AuthSession.Clear(); PlayerPrefs.DeleteKey("settings.dark.user." + A); PlayerPrefs.DeleteKey("settings.dark.user." + B); }
+        [SetUp] public void Clean() { GameSettings.BindSession(); AuthSession.Clear(); }
         [TearDown] public void Restore() => Clean();
 
         [Test]
-        public void FlujoDeDosUsuarios()
+        public void ArrancaEnClaroYEspanol()
         {
-            int events = 0; System.Action count = () => events++;
-            GameSettings.ThemeChanged += count;
+            Assert.IsFalse(GameSettings.DarkMode);
+            Assert.AreEqual(GameLanguage.Spanish, GameSettings.Language);
+        }
+
+        [Test]
+        public void ApplyPreferencesAplicaSinMarcarloComoCambioDelJugador()
+        {
+            int edits = 0, themeEvents = 0, languageEvents = 0;
+            System.Action onEdit = () => edits++, onTheme = () => themeEvents++, onLanguage = () => languageEvents++;
+            GameSettings.PreferencesEdited += onEdit; GameSettings.ThemeChanged += onTheme; GameSettings.LanguageChanged += onLanguage;
             try
             {
-                AuthSession.SignIn("Ana", null, A);
-                Assert.IsFalse(GameSettings.DarkMode, "cuenta sin preferencia empieza en claro");
-                GameSettings.DarkMode = true;                                   // P1
-                AuthSession.Clear();
-                Assert.IsFalse(GameSettings.DarkMode, "al cerrar sesión vuelve a claro");
-                Assert.IsTrue(GameSettings.GetThemePreference(A), "la preferencia de A se conserva");
-
-                AuthSession.SignIn("Ana", null, "  ANA@correo.com ");             // P2 (id normalizado)
+                GameSettings.ApplyPreferences(GameLanguage.English, true);
                 Assert.IsTrue(GameSettings.DarkMode);
-                AuthSession.Clear();
+                Assert.AreEqual(GameLanguage.English, GameSettings.Language);
+                Assert.AreEqual(0, edits, "lo que viene del perfil no es una edición del jugador");
+                Assert.AreEqual(1, themeEvents);
+                Assert.AreEqual(1, languageEvents);
 
-                AuthSession.SignIn("Beto", null, B);                            // P3
-                Assert.IsFalse(GameSettings.DarkMode, "B no hereda el oscuro de A");
-                GameSettings.DarkMode = true; GameSettings.DarkMode = false;    // P4
-                AuthSession.Clear();
-                AuthSession.SignIn("Beto", null, B);
-                Assert.IsFalse(GameSettings.DarkMode);
-                AuthSession.Clear();
-
-                AuthSession.SignIn("Ana", null, A);                             // P5
-                Assert.IsTrue(GameSettings.DarkMode);
-
-                ResetIsolated();                                                // P7
-                Assert.IsFalse(GameSettings.DarkMode);
-                Assert.IsFalse(GameSettings.GetThemePreference(A));
-                Assert.IsFalse(GameSettings.GetThemePreference(B), "B seguía en claro");
-                AuthSession.Clear();
-                GameSettings.DarkMode = true;                                   // sin sesión: no se guarda
-                Assert.IsFalse(GameSettings.GetThemePreference(A));
-                AuthSession.Clear();
-                Assert.IsTrue(events > 0);
+                GameSettings.ApplyPreferences(GameLanguage.English, true); // sin cambios: sin eventos
+                Assert.AreEqual(1, themeEvents);
+                Assert.AreEqual(1, languageEvents);
             }
-            finally { GameSettings.ThemeChanged -= count; }
+            finally { GameSettings.PreferencesEdited -= onEdit; GameSettings.ThemeChanged -= onTheme; GameSettings.LanguageChanged -= onLanguage; }
         }
 
         [Test]
-        public void RestaurarSoloAfectaALaCuentaActual()
+        public void CambiarTemaOIdiomaEsUnaEdicionDelJugador()
         {
-            AuthSession.SignIn("Ana", null, A); GameSettings.DarkMode = true; AuthSession.Clear();
-            AuthSession.SignIn("Beto", null, B); GameSettings.DarkMode = true;
-            ResetIsolated();
-            Assert.IsFalse(GameSettings.GetThemePreference(B));
-            Assert.IsTrue(GameSettings.GetThemePreference(A), "la preferencia de A no se toca");
-        }
-
-        // ResetToDefaults también toca volumen, cámara, calidad e idioma: se guardan y restauran para no alterar el editor.
-        private static void ResetIsolated()
-        {
-            float music = GameSettings.MusicVolume, sfx = GameSettings.SfxVolume;
-            string cam = GameSettings.CameraDevice; var lang = GameSettings.Language;
-            int quality = QualitySettings.GetQualityLevel(); bool hadQuality = PlayerPrefs.HasKey("settings.quality");
-            try { GameSettings.ResetToDefaults(); }
-            finally
+            int edits = 0;
+            System.Action onEdit = () => edits++;
+            GameSettings.PreferencesEdited += onEdit;
+            try
             {
-                GameSettings.MusicVolume = music; GameSettings.SfxVolume = sfx; GameSettings.CameraDevice = cam; GameSettings.Language = lang;
-                QualitySettings.SetQualityLevel(quality, true);
-                if (hadQuality) PlayerPrefs.SetInt("settings.quality", quality); else PlayerPrefs.DeleteKey("settings.quality");
-                GameSettings.Save();
+                GameSettings.DarkMode = true;
+                GameSettings.Language = GameLanguage.English;
+                Assert.AreEqual(2, edits);
+
+                GameSettings.DarkMode = true;                    // mismo valor: no es un cambio
+                GameSettings.Language = GameLanguage.English;
+                Assert.AreEqual(2, edits);
             }
+            finally { GameSettings.PreferencesEdited -= onEdit; }
         }
 
         [Test]
-        public void CuentaNuevaNoHeredaYEmpiezaEnClaro()
+        public void CerrarSesionVuelveALosValoresPorDefecto()
         {
-            AuthSession.SignIn("Ana", null, A); GameSettings.DarkMode = true; AuthSession.Clear();
-            AuthSession.SignIn("Beto", null, B);
+            AuthSession.SignIn("Ana", null, A);
+            GameSettings.ApplyPreferences(GameLanguage.English, true);
+            AuthSession.Clear();
+            Assert.IsFalse(GameSettings.DarkMode, "al cerrar sesión vuelve a claro");
+            Assert.AreEqual(GameLanguage.Spanish, GameSettings.Language, "y a español");
+        }
+
+        [Test]
+        public void LaSiguienteCuentaNoHeredaLasPreferenciasDeLaAnterior()
+        {
+            AuthSession.SignIn("Ana", null, A);
+            GameSettings.ApplyPreferences(GameLanguage.English, true);
+            AuthSession.Clear();
+
+            AuthSession.SignIn("Beto", null, B); // su perfil trae sus propias preferencias; sin aplicarlas, valen los por defecto
             Assert.IsFalse(GameSettings.DarkMode);
-            Assert.IsFalse(GameSettings.GetThemePreference(B));
-            Assert.IsTrue(GameSettings.GetThemePreference(A));
+            Assert.AreEqual(GameLanguage.Spanish, GameSettings.Language);
+        }
+
+        [Test]
+        public void IdiomaYTemaNoSeGuardanEnDisco()
+        {
+            // Se borran las claves que pudo dejar la versión anterior en este equipo: ahora el código no debe volver a escribirlas.
+            UnityEngine.PlayerPrefs.DeleteKey("settings.language");
+            UnityEngine.PlayerPrefs.DeleteKey("settings.dark.user." + A);
+            GameSettings.ApplyPreferences(GameLanguage.English, true);
+            GameSettings.DarkMode = false; GameSettings.Language = GameLanguage.Spanish;
+            GameSettings.Save();
+            Assert.IsFalse(UnityEngine.PlayerPrefs.HasKey("settings.language"));
+            Assert.IsFalse(UnityEngine.PlayerPrefs.HasKey("settings.dark.user." + A));
+        }
+
+        [Test]
+        public void ElAvatarSeBorraAlCerrarSesion()
+        {
+            AuthSession.SignIn("Ana", "luna", A);
+            Assert.AreEqual("luna", AuthSession.AvatarId);
+            AuthSession.Clear();
+            Assert.IsNull(AuthSession.AvatarId);
         }
     }
 }

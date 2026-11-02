@@ -1,9 +1,15 @@
+using System;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Lumina.Api;
+using Lumina.Core;
 using Lumina.Player;
+using Lumina.Signs;
+using Lumina.UI;
 using Senas.AI.MediaPipe;
 
 namespace Lumina.Alphabet
@@ -12,13 +18,12 @@ namespace Lumina.Alphabet
     /// Nivel 1: abecedario LSC. Abre la pantalla de aprendizaje (cámara dedicada a la mano 3D + interfaz),
     /// muestra la letra elegida en la mano riggeada, recuerda letras vistas y permite practicar con evaluación
     /// geométrica inicial mediante webcam. Una coincidencia no equivale a validación lingüística.
+    /// El estado de cada letra (bloqueada, disponible, superada) y la mejor precisión salen del BACKEND, y cada práctica
+    /// reconocida se envía como POST /evaluations; aquí no se guarda ni se calcula progreso. Lo único local es qué letras se
+    /// han visto en esta visita.
     /// </summary>
     public class AlphabetLevelController : MonoBehaviour
     {
-        private const string SeenLetterPreferencePrefix = "Lumina.Alphabet.Seen.";
-        private const string PracticedLetterPreferencePrefix = "Lumina.Alphabet.Practiced.Qualified.v1.";
-        private const string PracticedScorePreferencePrefix = "Lumina.Alphabet.Practiced.Score.v1.";
-
         [Header("Datos y mano")]
         [SerializeField] private LscAlphabet alphabet;
         [SerializeField] private HandPoseDriver hand;
@@ -69,7 +74,14 @@ namespace Lumina.Alphabet
         private Vector3 _viewPivot;
         private int _view;
         private bool[] _seen;
-        private bool[] _practiced;
+        private bool[] _practiced;          // true = el backend dice que la letra está PASSED
+        private string[] _statuses;         // LOCKED / AVAILABLE / PASSED por letra, según el backend
+        private float[] _bestPrecision;     // 0–100, mejor precisión guardada en el backend
+        private bool _statesLoaded;
+        private bool _loadingStates;
+        private bool _submitting;
+        private float _practiceStartedAt;
+        private CancellationTokenSource _cts;
         private int _current;
         private bool _open;
         private HandLandmarkerCapture _practiceCapture;
@@ -96,7 +108,9 @@ namespace Lumina.Alphabet
 
             _seen = new bool[alphabet.letters.Length];
             _practiced = new bool[alphabet.letters.Length];
-            LoadSeenLetters();
+            _statuses = new string[alphabet.letters.Length];
+            _bestPrecision = new float[alphabet.letters.Length];
+            _cts = new CancellationTokenSource();
 
             for (int i = 0; i < letterButtons.Length; i++)
             {
@@ -151,8 +165,23 @@ namespace Lumina.Alphabet
             _practiceSimilarity = 0f;
             _showPracticeFeedback = false;
             _hasPracticeScore = false;
-            var completed = CountPracticedLetters() == _practiced.Length;
-            _current = completed ? _practiced.Length - 1 : GetNextUnpracticedIndex();
+            // Con lo que haya en la caché (si ya se cargó) se muestra algo enseguida; después se pide el estado al backend.
+            ApplyStates(ProgressStore.GetLevel(SignCodes.AlphabetLevel));
+            SelectInitialLetter();
+            if (!_statesLoaded)
+            {
+                _practiceStatus = Loc.T("alphabet.loading");
+                _showPracticeFeedback = true;
+                _practiceBadgeTone = PracticeBadgeTone.Info;
+                RefreshPracticeUI();
+            }
+            LoadStates();
+        }
+
+        private void SelectInitialLetter()
+        {
+            var completed = _statesLoaded && CountPracticedLetters() == _practiced.Length;
+            _current = completed ? _practiced.Length - 1 : _statesLoaded ? GetNextUnpracticedIndex() : 0;
             Select(_current);
             RefreshPracticeHint();
             if (completed)
@@ -161,6 +190,66 @@ namespace Lumina.Alphabet
                 _showPracticeFeedback = true;
                 RefreshPracticeUI();
             }
+        }
+
+        /// <summary>Pide al backend el estado de las 27 letras (GET /levels/ALPHABET) y repinta con él.</summary>
+        private async void LoadStates()
+        {
+            if (_loadingStates) return;
+            _loadingStates = true;
+            try
+            {
+                var detail = await ProgressStore.LoadLevelAsync(SignCodes.AlphabetLevel, _cts.Token);
+                if (this == null) return;
+                bool first = !_statesLoaded;
+                ApplyStates(detail);
+                if (first && _open) SelectInitialLetter();
+                else if (_open) { RefreshButtons(); RefreshPracticeUI(); }
+            }
+            catch (OperationCanceledException) { }
+            catch (ApiException e)
+            {
+                if (this == null) return;
+                _practiceStatus = _statesLoaded ? ApiMessages.For(e) : Loc.T("alphabet.loadFailed") + " " + ApiMessages.For(e);
+                _practiceBadgeTone = PracticeBadgeTone.Warning;
+                _showPracticeFeedback = true;
+                if (_open) { RefreshButtons(); RefreshPracticeUI(); }
+                Toast.Show(ApiMessages.For(e));
+            }
+            finally
+            {
+                if (this != null) _loadingStates = false;
+            }
+        }
+
+        /// <summary>Copia el estado del backend a los arreglos de la pantalla. Con null (sin datos) se marca como no cargado.</summary>
+        private void ApplyStates(LevelDetailDto detail)
+        {
+            if (detail?.signs == null) { _statesLoaded = false; return; }
+
+            for (int i = 0; i < alphabet.letters.Length; i++)
+            {
+                string code = SignCodes.ForLetter(alphabet.letters[i].letter);
+                string status = SignStatusNames.Locked;
+                float best = 0f;
+                foreach (var sign in detail.signs)
+                {
+                    if (!string.Equals(sign.code, code, StringComparison.OrdinalIgnoreCase)) continue;
+                    status = sign.status;
+                    best = sign.bestPrecision;
+                    break;
+                }
+                _statuses[i] = status;
+                _bestPrecision[i] = best;
+                _practiced[i] = status == SignStatusNames.Passed;
+            }
+            _statesLoaded = true;
+        }
+
+        private void OnDestroy()
+        {
+            _cts?.Cancel();
+            _cts?.Dispose();
         }
 
         /// <summary>Cambia a la siguiente vista (frente, perfil, dorso). La letra y la pose no cambian.</summary>
@@ -221,7 +310,9 @@ namespace Lumina.Alphabet
         {
             if (!IsUnlocked(index))
             {
-                _practiceStatus = $"Completa {alphabet.letters[index - 1].letter} para desbloquear {alphabet.letters[index].letter}.";
+                _practiceStatus = _statesLoaded && index > 0
+                    ? Loc.T("alphabet.completeToUnlock", alphabet.letters[index - 1].letter, alphabet.letters[index].letter)
+                    : Loc.T(_loadingStates ? "alphabet.loading" : "alphabet.loadFailed");
                 _practiceSimilarity = 0f;
                 _hasPracticeScore = false;
                 _showPracticeFeedback = true;
@@ -242,12 +333,7 @@ namespace Lumina.Alphabet
             }
             _current = index;
             RefreshPracticeHint();
-            if (!_seen[index])
-            {
-                _seen[index] = true;
-                PlayerPrefs.SetInt(GetSeenPreferenceKey(alphabet.letters[index].letter), 1);
-                PlayerPrefs.Save();
-            }
+            _seen[index] = true; // solo para esta visita: no se guarda en disco
             var entry = alphabet.letters[index];
 
             hand.ShowLetter(entry);
@@ -270,33 +356,18 @@ namespace Lumina.Alphabet
                 EventSystem.current.SetSelectedGameObject(selected);
         }
 
-        private void LoadSeenLetters()
-        {
-            for (var i = 0; i < alphabet.letters.Length; i++)
-            {
-                var entry = alphabet.letters[i];
-                _seen[i] = entry != null && PlayerPrefs.GetInt(GetSeenPreferenceKey(entry.letter), 0) == 1;
-                _practiced[i] = entry != null && PlayerPrefs.GetInt(GetPracticedPreferenceKey(entry.letter), 0) == 1;
-            }
-        }
-
-        private static string GetSeenPreferenceKey(string letter)
-        {
-            return SeenLetterPreferencePrefix + letter;
-        }
-
-        private static string GetPracticedPreferenceKey(string letter)
-        {
-            return PracticedLetterPreferencePrefix + letter;
-        }
-
-        private static string GetPracticedScorePreferenceKey(string letter)
-        {
-            return PracticedScorePreferencePrefix + letter;
-        }
-
         private void StartPractice()
         {
+            if (_submitting) return;
+            if (!_statesLoaded)
+            {
+                _practiceStatus = Loc.T(_loadingStates ? "alphabet.loading" : "alphabet.loadFailed");
+                _practiceBadgeTone = PracticeBadgeTone.Warning;
+                _showPracticeFeedback = true;
+                RefreshPracticeUI();
+                LoadStates();
+                return;
+            }
             if (landmarkTemplates == null)
             {
                 _practiceStatus = "Falta asignar AlphabetLandmarkTemplates en la escena.";
@@ -312,6 +383,7 @@ namespace Lumina.Alphabet
             _practiceEvaluator = captureObject.AddComponent<AlphabetLandmarkEvaluator>();
             _practiceEvaluator.Configure(landmarkTemplates, false, alphabet.letters[_current].letter);
             _practiceEvaluator.EvaluationUpdated += OnPracticeEvaluation;
+            _practiceStartedAt = Time.realtimeSinceStartup;
             _practiceSimilarity = 0f;
             _hasPracticeScore = false;
             _practiceStatus = "Activando cámara… centra la mano en el recuadro.";
@@ -324,6 +396,7 @@ namespace Lumina.Alphabet
 
         private void TogglePractice()
         {
+            if (_submitting) return;
             if (_practiceCapture != null)
             {
                 StopPractice();
@@ -410,19 +483,12 @@ namespace Lumina.Alphabet
                     return;
                 }
 
-                var letter = alphabet.letters[_current].letter;
-                _practiced[_current] = true;
-                PlayerPrefs.SetInt(GetPracticedPreferenceKey(letter), 1);
-                string scoreKey = GetPracticedScorePreferenceKey(letter);
-                _practiceSimilarity = Mathf.Max(_practiceSimilarity, PlayerPrefs.GetFloat(scoreKey, 0f));
-                PlayerPrefs.SetFloat(scoreKey, _practiceSimilarity);
-                PlayerPrefs.Save();
-                _practiceStatus = $"¡Bien hecho! {letter} superó el mínimo. Ya puedes avanzar a la siguiente letra.";
-                _practiceBadgeTone = PracticeBadgeTone.Success;
-                RefreshButtons();
+                // Reconocida: precisión, estrellas y XP según la misma tabla que el reconocedor de números
+                // (ScoreAdapter, solución temporal) y envío al backend, que decide si aprueba y qué desbloquea.
+                var letterIndex = _current;
+                var score = ScoreAdapter.FromSimilarity(evaluation.Similarity);
                 StopPractice();
-                _showPracticeFeedback = true;
-                RefreshPracticeUI();
+                SubmitPractice(letterIndex, score);
                 return;
             }
 
@@ -436,6 +502,72 @@ namespace Lumina.Alphabet
                 _practiceStatus = "Vas bien. Mantén la seña quieta un momento para completar la evaluación.";
                 _practiceBadgeTone = PracticeBadgeTone.Info;
             }
+            RefreshPracticeUI();
+        }
+
+        /// <summary>Envía el resultado de la letra al backend y muestra lo que él responde (XP otorgada, desbloqueos).</summary>
+        private async void SubmitPractice(int letterIndex, ScoreAdapter.Score score)
+        {
+            if (_submitting) return;
+            _submitting = true;
+            string letter = alphabet.letters[letterIndex].letter;
+            _practiceStatus = Loc.T("alphabet.saving");
+            _practiceBadgeTone = PracticeBadgeTone.Info;
+            _showPracticeFeedback = true;
+            RefreshPracticeUI();
+
+            int durationMs = Mathf.RoundToInt((Time.realtimeSinceStartup - _practiceStartedAt) * 1000f);
+            var submission = EvaluationService.Submit(SignCodes.ForLetter(letter), score.Precision, score.Stars, score.Xp, durationMs);
+            try
+            {
+                await submission.Completion;
+                if (this == null) return;
+
+                if (submission.State == EvaluationSubmission.SubmissionState.Succeeded)
+                {
+                    await submission.ProgressRefreshed;
+                    if (this == null) return;
+                    var response = submission.Response;
+                    ApplyStates(ProgressStore.GetLevel(SignCodes.AlphabetLevel));
+                    if (!_statesLoaded) _statesLoaded = true;
+                    // Si la recarga del progreso no llegó, se refleja al menos lo que el backend acaba de responder.
+                    if (response.passed && _statuses[letterIndex] != SignStatusNames.Passed)
+                    {
+                        _statuses[letterIndex] = SignStatusNames.Passed;
+                        _practiced[letterIndex] = true;
+                        _bestPrecision[letterIndex] = Mathf.Max(_bestPrecision[letterIndex], response.bestPrecision);
+                        int next = letterIndex + 1;
+                        if (!string.IsNullOrEmpty(response.unlockedSign) && next < _statuses.Length && _statuses[next] == SignStatusNames.Locked)
+                            _statuses[next] = SignStatusNames.Available;
+                    }
+
+                    _practiceSimilarity = response.precision / 100f;
+                    _hasPracticeScore = true;
+                    _practiceStatus = response.awardedXp > 0
+                        ? Loc.T("alphabet.passed", letter, response.awardedXp, response.totalXp)
+                        : Loc.T("alphabet.passedNoXp", letter);
+                    if (!string.IsNullOrEmpty(response.unlockedSign))
+                        _practiceStatus += " " + Loc.T("alphabet.nextUnlocked", SignCodes.DisplayName(response.unlockedSign));
+                    _practiceBadgeTone = PracticeBadgeTone.Success;
+                    if (response.unlockedLevels != null)
+                        foreach (var level in response.unlockedLevels)
+                            Toast.Show(Loc.T("results.unlockedLevel", Loc.Translate(SignCodes.SpanishLevelName(level))), 5f);
+                }
+                else
+                {
+                    // Sin conexión, sesión terminada, resultado inconsistente…: no se cambia nada en pantalla.
+                    _hasPracticeScore = false;
+                    _practiceStatus = ApiMessages.For(submission.Error) + " " + Loc.T("alphabet.notSaved");
+                    _practiceBadgeTone = PracticeBadgeTone.Warning;
+                }
+            }
+            finally
+            {
+                if (this != null) _submitting = false;
+            }
+
+            _showPracticeFeedback = true;
+            RefreshButtons();
             RefreshPracticeUI();
         }
 
@@ -461,11 +593,10 @@ namespace Lumina.Alphabet
                 _practiceView?.SetBadge("ABECEDARIO COMPLETADO", PracticeBadgeTone.Success);
             else if (letterPassed)
             {
-                string scoreKey = GetPracticedScorePreferenceKey(entry.letter);
-                bool hasSavedScore = _hasPracticeScore || PlayerPrefs.HasKey(scoreKey);
+                bool hasSavedScore = _hasPracticeScore || _bestPrecision[_current] > 0f;
                 float displayedScore = _hasPracticeScore
                     ? _practiceSimilarity
-                    : PlayerPrefs.GetFloat(scoreKey, 0f);
+                    : _bestPrecision[_current] / 100f;
                 _practiceView?.SetBadge(hasSavedScore
                     ? $"{entry.letter} SUPERADA · {displayedScore:P0}"
                     : $"{entry.letter} SUPERADA", PracticeBadgeTone.Success);
@@ -505,12 +636,15 @@ namespace Lumina.Alphabet
             return 0;
         }
 
+        /// <summary>
+        /// Una letra se puede abrir si el backend no la marca LOCKED. Mientras no se conozca el estado (cargando, sin sesión o sin
+        /// conexión) solo se puede VER la primera letra; no se calcula ningún desbloqueo en local.
+        /// </summary>
         private bool IsUnlocked(int index)
         {
             if (index < 0 || index >= alphabet.letters.Length) return false;
-            for (var i = 0; i < index; i++)
-                if (!_practiced[i]) return false;
-            return true;
+            if (!_statesLoaded) return index == 0;
+            return _statuses[index] != SignStatusNames.Locked;
         }
 
         private void RefreshButtons()

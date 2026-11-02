@@ -15,8 +15,9 @@ namespace Lumina.UI
 {
     /// <summary>
     /// Ventana de confirmación para cerrar sesión, integrada en el menú principal (que permanece visible detrás).
-    /// Sena se muestra en una textura (cámara propia) y se despide con su animación Wave. El cierre de sesión es solo
-    /// visual: se limpia el estado en memoria y se vuelve a la pantalla de acceso; no hay datos persistentes que borrar.
+    /// Sena se muestra en una textura (cámara propia) y se despide con su animación Wave. Al confirmar se llama a
+    /// <see cref="IAuthenticationService.SignOutAsync"/> (con el backend: POST /auth/logout, que revoca la sesión), se borra la
+    /// sesión en memoria y se vuelve a la pantalla de acceso. El progreso queda en el backend: al volver a entrar está intacto.
     /// </summary>
     public class LogoutModalController : MonoBehaviour
     {

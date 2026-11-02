@@ -5,7 +5,11 @@ namespace Lumina.Auth
     /// <summary>Validaciones locales de formularios. Devuelven null si el valor es válido, o un mensaje amable si no lo es.</summary>
     public static class AuthValidation
     {
-        public const int MinPasswordLength = 6;
+        // Reglas del backend (POST /auth/register): contraseña de 8 a 72 caracteres con al menos una letra y un número; nombre de 2 a 40.
+        public const int MinPasswordLength = 8;
+        public const int MaxPasswordLength = 72;
+        public const int MinDisplayNameLength = 2;
+        public const int MaxDisplayNameLength = 40;
         public const int MinUsernameLength = 3;
         public const int MaxUsernameLength = 20;
 
@@ -21,10 +25,36 @@ namespace Lumina.Auth
             return EmailPattern.IsMatch(email) ? null : "Revisa el formato: nombre@correo.com";
         }
 
+        /// <summary>Contraseña NUEVA (registro): 8–72 caracteres, con al menos una letra y un número.</summary>
         public static string Password(string value)
         {
             if (string.IsNullOrEmpty(value)) return "Escribe tu contraseña.";
-            return value.Length >= MinPasswordLength ? null : $"Usa al menos {MinPasswordLength} caracteres.";
+            if (value.Length < MinPasswordLength) return $"Usa al menos {MinPasswordLength} caracteres.";
+            if (value.Length > MaxPasswordLength) return $"Usa máximo {MaxPasswordLength} caracteres.";
+            bool hasLetter = false, hasDigit = false;
+            foreach (char c in value)
+            {
+                if (char.IsLetter(c)) hasLetter = true;
+                else if (char.IsDigit(c)) hasDigit = true;
+            }
+            if (!hasLetter) return "Incluye al menos una letra.";
+            return hasDigit ? null : "Incluye al menos un número.";
+        }
+
+        /// <summary>Contraseña al INICIAR sesión: solo se exige que exista; el backend es quien la valida.</summary>
+        public static string LoginPassword(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return "Escribe tu contraseña.";
+            return value.Length <= MaxPasswordLength ? null : $"Usa máximo {MaxPasswordLength} caracteres.";
+        }
+
+        /// <summary>Nombre visible (registro): 2–40 caracteres.</summary>
+        public static string DisplayName(string value)
+        {
+            string v = value?.Trim();
+            if (string.IsNullOrEmpty(v)) return "Escribe tu nombre.";
+            if (v.Length < MinDisplayNameLength) return $"Usa al menos {MinDisplayNameLength} caracteres.";
+            return v.Length <= MaxDisplayNameLength ? null : $"Usa máximo {MaxDisplayNameLength} caracteres.";
         }
 
         public static string Required(string value, string fieldDescription)

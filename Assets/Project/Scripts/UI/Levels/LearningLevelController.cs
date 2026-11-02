@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Lumina.Api;
 using Lumina.Core;
 using Lumina.Player;
 using Lumina.Signs;
@@ -17,6 +18,8 @@ namespace Lumina.UI
     /// moverse entre elementos o PRACTICAR (abre Practice con esa seña). No reconoce señas: el reconocimiento vive en
     /// Practice (<see cref="ISignRecognizer"/>) y la demostración del avatar entra por <see cref="DemonstrationRequested"/>.
     /// "Visto" no significa "aprendido": la barra cuenta lo visto en esta visita, no evalúa nada.
+    /// El estado de cada seña (bloqueada, disponible, superada) lo dice el backend (<see cref="ProgressStore"/>). Solo los
+    /// Números tienen reconocimiento en Unity; Meses y Saludos y frases muestran PRÓXIMAMENTE en lugar de PRACTICAR.
     /// </summary>
     public class LearningLevelController : MonoBehaviour
     {
@@ -55,6 +58,8 @@ namespace Lumina.UI
         private static readonly Color Sand = new Color(0.98f, 0.89f, 0.74f);
 
         private LevelDefinition _level;
+        private string _levelCode;
+        private bool _loadingState;
         private readonly HashSet<int> _seen = new HashSet<int>();
         private LearningItemTarget[] _targets;
         private int _index;
@@ -62,6 +67,9 @@ namespace Lumina.UI
         private void Awake()
         {
             _level = LearningLevels.Get(kind);
+            _levelCode = kind == LevelKind.Numbers ? SignCodes.NumbersLevel
+                : kind == LevelKind.Months ? SignCodes.MonthsLevel
+                : SignCodes.GreetingsLevel;
             _targets = FindObjectsByType<LearningItemTarget>(FindObjectsSortMode.None);
             demoNotice.gameObject.SetActive(false);
             previousButton.onClick.AddListener(() => Move(-1));
@@ -72,8 +80,20 @@ namespace Lumina.UI
             panelRoot.SetActive(false);
         }
 
-        private void OnEnable() => GameSettings.LanguageChanged += Refresh;
-        private void OnDisable() => GameSettings.LanguageChanged -= Refresh;
+        private void OnEnable() { GameSettings.LanguageChanged += Refresh; ProgressStore.Changed += Refresh; }
+        private void OnDisable() { GameSettings.LanguageChanged -= Refresh; ProgressStore.Changed -= Refresh; }
+
+        private void Start() => LoadState();
+
+        /// <summary>Pide al backend el estado de las señas de esta casa (solo si Unity ya implementa el nivel).</summary>
+        private async void LoadState()
+        {
+            if (_loadingState || !SignCodes.IsImplementedInUnity(_levelCode) || !ApiSession.HasSession) return;
+            _loadingState = true;
+            try { await ProgressStore.LoadLevelAsync(_levelCode); }
+            catch (ApiException e) { if (this != null) Toast.Show(ApiMessages.For(e)); }
+            finally { if (this != null) _loadingState = false; }
+        }
 
         private void Update()
         {
@@ -156,9 +176,36 @@ namespace Lumina.UI
             }
 
             instructionLabel.text = _level.Hint(item);
+            RefreshPracticeButton(item);
             previousButton.interactable = _index > 0;
             nextButton.interactable = _index < total - 1;
             progressBar.Set((float)_seen.Count / total, Loc.T("levels.seen", _seen.Count, total));
+        }
+
+        /// <summary>
+        /// PRACTICAR solo si Unity ya implementa el nivel y el backend no tiene la seña BLOQUEADA. Si todavía no se conoce el
+        /// estado (sin sesión o sin conexión) no se deja practicar: el resultado no se podría guardar.
+        /// </summary>
+        private void RefreshPracticeButton(LevelItem item)
+        {
+            var label = practiceButton.GetComponentInChildren<TMP_Text>();
+            string text = Loc.T("practice.go");
+            bool enabled = true;
+
+            if (!SignCodes.IsImplementedInUnity(_levelCode))
+            {
+                text = Loc.T("levels.comingSoon");
+                enabled = false;
+            }
+            else
+            {
+                string status = ProgressStore.StatusOf(item.id); // item.id = numeros.N, el código del backend
+                if (status == SignStatusNames.Locked) { text = Loc.T("levels.signLocked"); enabled = false; }
+                else if (status == null) enabled = false;
+            }
+
+            practiceButton.interactable = enabled;
+            if (label != null) label.text = text;
         }
 
         private void OnLearn()

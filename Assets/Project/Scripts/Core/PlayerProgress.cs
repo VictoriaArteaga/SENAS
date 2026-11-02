@@ -29,39 +29,23 @@ namespace Lumina.Core
         public float XpFraction => xpForNextLevel > 0 ? Math.Clamp((float)xp / xpForNextLevel, 0f, 1f) : 0f;
     }
 
-    /// <summary>Origen de los datos de progreso. Implementarlo con Firebase y asignarlo a <see cref="PlayerProgressService.Provider"/>.</summary>
+    /// <summary>Origen de los datos de progreso. El de producción es <c>Lumina.Api.BackendProgressProvider</c> (caché del backend).</summary>
     public interface IPlayerProgressProvider
     {
         PlayerProgress Load();
     }
 
-    /// <summary>Punto único de acceso al progreso del jugador (mismo patrón que AuthServices).</summary>
+    /// <summary>Punto único de acceso al progreso del jugador (mismo patrón que AuthServices). No guarda nada en local.</summary>
     public static class PlayerProgressService
     {
         private static IPlayerProgressProvider _provider;
 
         public static IPlayerProgressProvider Provider
         {
-            get => _provider ??= new EmptyProgressProvider();
+            get => _provider ??= new Lumina.Api.BackendProgressProvider();
             set => _provider = value;
         }
 
         public static PlayerProgress Load() => Provider.Load();
-
-        /// <summary>Estado inicial real de un jugador sin historial: nada aprendido y solo el primer nivel abierto.</summary>
-        // TODO(Firebase): sustituir por un proveedor que lea el progreso persistido del usuario.
-        private class EmptyProgressProvider : IPlayerProgressProvider
-        {
-            public PlayerProgress Load() => new PlayerProgress
-            {
-                learningLevels = new[]
-                {
-                    new LearningLevelProgress { title = "Primeras señas", state = LearningLevelState.InProgress },
-                    new LearningLevelProgress { title = "Mi mundo", state = LearningLevelState.Locked },
-                    new LearningLevelProgress { title = "Situaciones cotidianas", state = LearningLevelState.Locked },
-                    new LearningLevelProgress { title = "Reto universitario", state = LearningLevelState.Locked },
-                }
-            };
-        }
     }
 }

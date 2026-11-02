@@ -3,8 +3,9 @@ using System;
 namespace Lumina.Auth
 {
     /// <summary>
-    /// Punto único de acceso al servicio de autenticación. Para pasar a un servicio real basta con asignar
-    /// <see cref="Current"/> al arrancar el juego; los controladores de interfaz no cambian.
+    /// Punto único de acceso al servicio de autenticación. Al arrancar el juego, <c>Lumina.Api</c> asigna aquí el servicio
+    /// HTTP del backend (salvo que ApiConfig pida la simulación); los controladores de interfaz no cambian. Este ensamblado
+    /// no depende de Unity, por eso el valor por defecto sigue siendo la simulación (la usan las pruebas).
     /// </summary>
     public static class AuthServices
     {
@@ -18,8 +19,8 @@ namespace Lumina.Auth
     }
 
     /// <summary>
-    /// Estado de sesión SOLO en memoria durante la ejecución (simulación visual). No se guarda en disco,
-    /// en PlayerPrefs ni en ningún servicio; desaparece al cerrar el juego.
+    /// Estado de sesión SOLO en memoria durante la ejecución. No se guarda en disco ni en PlayerPrefs; desaparece al cerrar
+    /// el juego. Los tokens de la API viven en <c>Lumina.Api.ApiSession</c>, también solo en memoria.
     /// </summary>
     public static class AuthSession
     {
@@ -36,8 +37,8 @@ namespace Lumina.Auth
         public static string NormalizeUserId(string raw) => string.IsNullOrWhiteSpace(raw) ? null : raw.Trim().ToLowerInvariant();
 
         /// <summary>
-        /// Avatar elegido en esta ejecución (null si no se eligió ninguno). Sobrevive a «cerrar sesión»: como no hay cuentas
-        /// persistentes, así el flujo Registro → Login → Mundo conserva la elección hasta que se cierre el juego o se elija otra.
+        /// Avatar de la cuenta activa (null si no se eligió ninguno). Al registrarse sale de la elección del formulario y al iniciar
+        /// sesión del perfil del backend. Se borra al cerrar sesión para que no pase a la cuenta siguiente.
         /// </summary>
         public static string AvatarId { get; private set; }
 
@@ -61,6 +62,7 @@ namespace Lumina.Auth
             IsSignedIn = false;
             DisplayName = null;
             UserId = null;
+            AvatarId = null;
             SignedOut?.Invoke();
         }
     }

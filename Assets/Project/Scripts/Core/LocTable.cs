@@ -117,7 +117,7 @@ namespace Lumina.Core
             ("auth.playerNamePlaceholder", "Como te llamas", "What's your name"),
             ("auth.username", "Nombre de usuario", "Username"),
             ("auth.usernamePlaceholder", "tu_usuario", "your_username"),
-            ("auth.passwordMin", "Mínimo 6 caracteres", "At least 6 characters"),
+            ("auth.passwordHint", "Mínimo 8 caracteres, con letras y números", "At least 8 characters, with letters and numbers"),
             ("auth.confirm", "Confirmar contraseña", "Confirm password"),
             ("auth.confirmPlaceholder", "Repite tu contraseña", "Repeat your password"),
             ("auth.backToLogin", "VOLVER AL INICIO DE SESIÓN", "BACK TO LOG IN"),
@@ -128,7 +128,7 @@ namespace Lumina.Core
             ("auth.selected", "SELECCIONADO", "SELECTED"),
             ("auth.welcome", "¡Bienvenido a Lúmina!", "Welcome to Lúmina!"),
             ("auth.welcomeNamed", "¡Bienvenido a Lúmina, {0}!", "Welcome to Lúmina, {0}!"),
-            ("auth.welcomeBody", "Tu compañero {0} ya te espera.\nEsta es una cuenta de prueba: no se guardó ninguna información.", "Your companion {0} is waiting for you.\nThis is a test account: no information was saved."),
+            ("auth.welcomeBody", "Tu compañero {0} ya te espera.", "Your companion {0} is waiting for you."),
             ("auth.toMenu", "IR AL MENÚ PRINCIPAL", "GO TO MAIN MENU"),
             ("auth.show", "VER", "SHOW"),
             ("auth.hide", "OCULTAR", "HIDE"),
@@ -195,6 +195,63 @@ namespace Lumina.Core
             ("levels.enterNumbers", "Entrar a la Casa de los Números", "Enter the Numbers House"),
             ("levels.enterMonths", "Entrar a la Casa de los Meses", "Enter the Months House"),
             ("levels.enterGreetings", "Entrar a la Casa de los Saludos", "Enter the Greetings House"),
+            ("levels.comingSoon", "PRÓXIMAMENTE", "COMING SOON"),
+            ("levels.signLocked", "BLOQUEADA", "LOCKED"),
+            ("levels.levelLocked", "Este nivel está bloqueado. Sigue ganando XP (te faltan {0}).", "This level is locked. Keep earning XP ({0} to go)."),
+            ("levels.loadFailed", "No se pudo cargar tu progreso.", "Couldn't load your progress."),
+
+            // ---- Nombres de los niveles del backend (el español es la referencia de Loc.Translate)
+            ("level.ALPHABET", "Abecedario", "Alphabet"),
+            ("level.NUMBERS", "Números", "Numbers"),
+            ("level.MONTHS", "Meses del año", "Months of the year"),
+            ("level.GREETINGS_PHRASES", "Saludos y frases", "Greetings and phrases"),
+
+            // ---- Autenticación con el backend (validaciones nuevas y mensajes)
+            ("val.passwordLetter", "Incluye al menos una letra.", "Include at least one letter."),
+            ("val.passwordDigit", "Incluye al menos un número.", "Include at least one number."),
+            ("auth.resetUnavailable", "La recuperación de contraseña todavía no está disponible.", "Password recovery isn't available yet."),
+
+            // ---- Errores de la API (se eligen por el código del backend)
+            ("api.err.network", "No hay conexión con el servidor. Revisa tu internet e inténtalo otra vez.", "Can't reach the server. Check your internet and try again."),
+            ("api.err.timeout", "El servidor tardó demasiado en responder. Inténtalo de nuevo.", "The server took too long to respond. Please try again."),
+            ("api.err.server", "El servidor no está disponible ahora. Inténtalo en un momento.", "The server isn't available right now. Try again in a moment."),
+            ("api.err.notConfigured", "El juego no sabe dónde está el servidor (falta configurar la API).", "The game doesn't know where the server is (the API isn't configured)."),
+            ("api.err.sessionEnded", "Tu sesión terminó. Inicia sesión de nuevo.", "Your session ended. Please log in again."),
+            ("api.err.generic", "Algo salió mal. Inténtalo otra vez.", "Something went wrong. Please try again."),
+            ("api.err.EMAIL_IN_USE", "Ese correo ya está en uso.", "That email is already in use."),
+            ("api.err.INVALID_CREDENTIALS", "Correo o contraseña incorrectos.", "Wrong email or password."),
+            ("api.err.INACTIVE_USER", "Esta cuenta está desactivada.", "This account is disabled."),
+            ("api.err.TOO_MANY_REQUESTS", "Demasiados intentos. Espera un momento e inténtalo otra vez.", "Too many attempts. Wait a moment and try again."),
+            ("api.err.VALIDATION_FAILED", "Revisa los datos que escribiste.", "Check the details you entered."),
+            ("api.err.INVALID_AVATAR", "Ese avatar no existe.", "That avatar doesn't exist."),
+            ("api.err.INVALID_AVATAR_CONFIG", "La configuración del avatar no es válida.", "The avatar settings aren't valid."),
+            ("api.err.SIGN_LOCKED", "Esta seña todavía está bloqueada. Aprueba la anterior primero.", "This sign is still locked. Pass the previous one first."),
+            ("api.err.LEVEL_LOCKED", "Este nivel todavía está bloqueado. Sigue ganando XP.", "This level is still locked. Keep earning XP."),
+            ("api.err.INCONSISTENT_RESULT", "El resultado no coincidió con la tabla de puntuación, así que no se guardó.", "The result didn't match the scoring table, so it wasn't saved."),
+            ("api.err.SIGN_NOT_FOUND", "Esa seña no está en el catálogo.", "That sign isn't in the catalog."),
+            ("api.err.LEVEL_NOT_FOUND", "Ese nivel no existe.", "That level doesn't exist."),
+            ("api.err.DUPLICATE_ATTEMPT", "Ese intento ya se había enviado con otros datos.", "That attempt was already sent with different data."),
+
+            // ---- Resultados enviados al backend
+            ("results.saving", "Guardando tu resultado…", "Saving your result…"),
+            ("results.retrying", "Sin conexión. Reintentando… ({0}/{1})", "No connection. Retrying… ({0}/{1})"),
+            ("results.notSaved", "Tu resultado no se guardó.", "Your result wasn't saved."),
+            ("results.xpAwarded", "XP GANADA", "XP EARNED"),
+            ("results.totalXp", "XP total: {0}", "Total XP: {0}"),
+            ("results.noXp", "Sin XP nueva: ya habías ganado esto en esta seña.", "No new XP: you had already earned this on this sign."),
+            ("results.notPassed", "Todavía no alcanzas el mínimo para aprobar. ¡Inténtalo otra vez!", "You haven't reached the passing score yet. Try again!"),
+            ("results.unlockedSign", "Seña desbloqueada: {0}", "Sign unlocked: {0}"),
+            ("results.unlockedLevel", "Nivel desbloqueado: {0}", "Level unlocked: {0}"),
+
+            // ---- Abecedario
+            ("alphabet.loading", "Cargando tu progreso…", "Loading your progress…"),
+            ("alphabet.loadFailed", "No se pudo cargar tu progreso. Inicia sesión y revisa tu conexión.", "Couldn't load your progress. Log in and check your connection."),
+            ("alphabet.saving", "Guardando tu resultado…", "Saving your result…"),
+            ("alphabet.passed", "¡Bien hecho! {0} superada: +{1} XP (total {2}).", "Well done! {0} passed: +{1} XP (total {2})."),
+            ("alphabet.passedNoXp", "¡Bien hecho! {0} superada (sin XP nueva: ya la habías ganado).", "Well done! {0} passed (no new XP: you had already earned it)."),
+            ("alphabet.nextUnlocked", "Ya puedes avanzar a {0}.", "You can now move on to {0}."),
+            ("alphabet.completeToUnlock", "Completa {0} para desbloquear {1}.", "Complete {0} to unlock {1}."),
+            ("alphabet.notSaved", "Tu resultado no se guardó.", "Your result wasn't saved."),
         };
     }
 }

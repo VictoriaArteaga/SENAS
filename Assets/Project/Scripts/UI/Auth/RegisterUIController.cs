@@ -14,8 +14,9 @@ namespace Lumina.UI
 {
     /// <summary>
     /// Pantalla de creación de cuenta. Valida el formulario y el avatar, pide el resultado a
-    /// <see cref="AuthServices.Current"/> (simulación local: no se envía ni se guarda nada) y muestra una bienvenida
-    /// desde la que se continúa al menú principal.
+    /// <see cref="AuthServices.Current"/> (el backend, o la simulación si ApiConfig la pide) y muestra una bienvenida
+    /// desde la que se continúa al menú principal. El backend no tiene «nombre de usuario»: ese campo solo se usa (y se
+    /// muestra) con la simulación; el nombre visible es el «nombre del jugador».
     /// </summary>
     public class RegisterUIController : MonoBehaviour
     {
@@ -45,6 +46,7 @@ namespace Lumina.UI
         private CancellationTokenSource _cts;
         private bool _busy;
         private string _createLabelText;
+        private bool _usesUsername;
 
         private void Awake()
         {
@@ -67,7 +69,10 @@ namespace Lumina.UI
             // Un solo botón alterna ambas contraseñas.
             passwordField.RevealToggled += revealed => confirmField.SetRevealed(revealed, false);
 
-            nameField.Submitted += usernameField.Focus;
+            _usesUsername = AuthServices.Current is AuthenticationMockService;
+            usernameField.gameObject.SetActive(_usesUsername);
+
+            nameField.Submitted += () => (_usesUsername ? usernameField : emailField).Focus();
             usernameField.Submitted += emailField.Focus;
             emailField.Submitted += passwordField.Focus;
             passwordField.Submitted += confirmField.Focus;
@@ -86,6 +91,7 @@ namespace Lumina.UI
             panelGroup.alpha = 0f;
             StartCoroutine(Intro());
             status.Info("Cuéntanos quién eres y elige a tu compañero de aventura.");
+            ShowPasswordHint();
             nameField.Focus();
         }
 
@@ -93,6 +99,16 @@ namespace Lumina.UI
         {
             _cts?.Cancel();
             _cts?.Dispose();
+        }
+
+        /// <summary>La escena trae el texto viejo de la ayuda de contraseña; aquí se reemplaza por la regla real del backend.</summary>
+        private void ShowPasswordHint()
+        {
+            if (passwordField.Input != null && passwordField.Input.placeholder is TMP_Text placeholder)
+            {
+                placeholder.text = Loc.T("auth.passwordHint");
+                LocalizedText.Bind(placeholder, "auth.passwordHint");
+            }
         }
 
         private IEnumerator Intro()
@@ -115,8 +131,8 @@ namespace Lumina.UI
         {
             string[] errors =
             {
-                AuthValidation.Required(nameField.Text, "tu nombre"),
-                AuthValidation.Username(usernameField.Text),
+                AuthValidation.DisplayName(nameField.Text),
+                _usesUsername ? AuthValidation.Username(usernameField.Text) : null,
                 AuthValidation.Email(emailField.Text),
                 AuthValidation.Password(passwordField.Text),
                 AuthValidation.PasswordConfirmation(passwordField.Text, confirmField.Text)
