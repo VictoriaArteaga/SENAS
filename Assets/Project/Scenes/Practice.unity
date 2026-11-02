@@ -8176,6 +8176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   catalog: {fileID: 11400000, guid: 25c44ae1776256b4da5f50238ab594c2, type: 2}
   numberTemplates: {fileID: 11400000, guid: 6d568711955245399f3023e1d8cce658, type: 2}
+  greetingTemplates: {fileID: 11400000, guid: c31f9e63d3c74f5dafcc7335c0101b74, type: 2}
   header: {fileID: 81347504}
   selectionPanel: {fileID: 154898303}
   levelShortcuts: {fileID: 988393245}

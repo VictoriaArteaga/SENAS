@@ -10,6 +10,8 @@ namespace Senas.AI.Editor
   {
     private static readonly string[] Letters = { "G", "H", "J", "Ñ", "S", "Z" };
     private static readonly string[] Numbers = CreateNumberLabels();
+    private static readonly string[] SingleHandGreetingIds = { "saludos.si", "saludos.no", "saludos.adios" };
+    private static readonly string[] SingleHandGreetingLabels = { "Sí", "No", "Adiós" };
     private const int LandmarkCount = 21;
     private const int WristIndex = 0;
     private const int MiddleFingerMcpIndex = 9;
@@ -17,6 +19,7 @@ namespace Senas.AI.Editor
     [SerializeField] private AlphabetLandmarkTemplateSet _templateSet;
     [SerializeField] private int _letterIndex;
     [SerializeField] private bool _numbersOnly;
+    [SerializeField] private bool _greetingsOnly;
     [SerializeField] private LandmarkHandedness _handedness = LandmarkHandedness.Any;
     [SerializeField, Range(0.05f, 1f)] private float _distanceThreshold = 0.35f;
     private HandLandmarkerCapture _capture;
@@ -33,10 +36,22 @@ namespace Senas.AI.Editor
     [MenuItem("Window/SENAS/LSC Number Motion Capture")]
     private static void OpenNumbers() => OpenWindow(true);
 
+    [MenuItem("Window/SENAS/LSC Single-Hand Greeting Capture")]
+    private static void OpenSingleHandGreetings()
+    {
+      var window = GetWindow<AlphabetMotionSequenceCaptureWindow>("LSC Hand-Only Greetings");
+      window._numbersOnly = false;
+      window._greetingsOnly = true;
+      window._letterIndex = 0;
+      window._templateSet = AssetDatabase.LoadAssetAtPath<AlphabetLandmarkTemplateSet>(GetTemplateAssetPath(false, true));
+    }
+
     private static void OpenWindow(bool numbersOnly)
     {
-      var window = GetWindow<AlphabetMotionSequenceCaptureWindow>(numbersOnly ? "LSC Number Motion" : "LSC Motion Capture");
+      var title = numbersOnly ? "LSC Number Motion" : "LSC Motion Capture";
+      var window = GetWindow<AlphabetMotionSequenceCaptureWindow>(title);
       window._numbersOnly = numbersOnly;
+      window._greetingsOnly = false;
       window._letterIndex = 0;
       window._templateSet = AssetDatabase.LoadAssetAtPath<AlphabetLandmarkTemplateSet>(GetTemplateAssetPath(numbersOnly));
     }
@@ -44,7 +59,7 @@ namespace Senas.AI.Editor
     private void OnEnable()
     {
       if (_templateSet == null)
-        _templateSet = AssetDatabase.LoadAssetAtPath<AlphabetLandmarkTemplateSet>(GetTemplateAssetPath(_numbersOnly));
+        _templateSet = AssetDatabase.LoadAssetAtPath<AlphabetLandmarkTemplateSet>(GetTemplateAssetPath(_numbersOnly, _greetingsOnly));
       EditorApplication.update += EditorUpdate;
       EditorApplication.playModeStateChanged += OnPlayModeChanged;
     }
@@ -58,13 +73,17 @@ namespace Senas.AI.Editor
 
     private void OnGUI()
     {
-      EditorGUILayout.HelpBox(_numbersOnly
-        ? "Captura secuencias dinámicas de números del 0 al 30. Solo guarda landmarks normalizados; no graba video ni imágenes."
-        : "Captura secuencias de G, H, J, Ñ, S y Z. Solo guarda landmarks normalizados; no graba video ni imágenes.", MessageType.Info);
+      var help = _greetingsOnly
+        ? "Captura movimientos de una mano para Sí, No y Adiós usando el mismo detector que números y letras. Solo guarda landmarks; no graba video ni imágenes."
+        : _numbersOnly
+          ? "Captura secuencias dinámicas de números del 0 al 30. Solo guarda landmarks normalizados; no graba video ni imágenes."
+          : "Captura secuencias de G, H, J, Ñ, S y Z. Solo guarda landmarks normalizados; no graba video ni imágenes.";
+      EditorGUILayout.HelpBox(help, MessageType.Info);
       _templateSet = (AlphabetLandmarkTemplateSet)EditorGUILayout.ObjectField("Asset", _templateSet, typeof(AlphabetLandmarkTemplateSet), false);
-      if (_templateSet == null && GUILayout.Button("Crear asset de números")) CreateNumberTemplateAsset();
-      var labels = _numbersOnly ? Numbers : Letters;
-      _letterIndex = Mathf.Clamp(EditorGUILayout.Popup(_numbersOnly ? "Número dinámico" : "Letra dinámica", _letterIndex, labels), 0, labels.Length - 1);
+      if (_templateSet == null && GUILayout.Button("Crear asset de plantillas")) CreateTemplateAsset();
+      var labels = _greetingsOnly ? SingleHandGreetingLabels : _numbersOnly ? Numbers : Letters;
+      var labelField = _greetingsOnly ? "Saludo de una mano" : _numbersOnly ? "Número dinámico" : "Letra dinámica";
+      _letterIndex = Mathf.Clamp(EditorGUILayout.Popup(labelField, _letterIndex, labels), 0, labels.Length - 1);
       _handedness = (LandmarkHandedness)EditorGUILayout.EnumPopup("Mano", _handedness);
       _distanceThreshold = EditorGUILayout.Slider("Umbral DTW inicial", _distanceThreshold, 0.05f, 1f);
 
@@ -124,7 +143,7 @@ namespace Senas.AI.Editor
       _motionDetected = false;
       _stillFrameCount = 0;
       _recording = true;
-      _status = $"Haz el movimiento completo de {CurrentLabel()}. La captura se cierra al quedar la mano quieta.";
+      _status = $"Haz el movimiento completo de {CurrentDisplayLabel()}. La captura se cierra al quedar la mano quieta.";
     }
 
     private void OnLandmarks(HandLandmarkFrame frame)
@@ -165,10 +184,10 @@ namespace Senas.AI.Editor
         FinishRecording();
         _status = "Movimiento completado automaticamente. " + _status;
       }
-      else if (_frames.Count >= 90) FinishRecording();
+      else if (_frames.Count >= 90) FinishRecording(true);
     }
 
-    private void FinishRecording()
+    private void FinishRecording(bool reachedFrameLimit = false)
     {
       _recording = false;
       if (_frames.Count < 6 || _frames[_frames.Count - 1].Timestamp - _frames[0].Timestamp < 150)
@@ -183,20 +202,24 @@ namespace Senas.AI.Editor
       foreach (var frame in _frames)
         normalized.Add(new MotionLandmarkFrame((frame.Timestamp - start) / (float)duration, frame.Wrist, frame.Points));
 
-      var label = CurrentLabel();
+      var id = CurrentLabel();
+      var label = CurrentDisplayLabel();
       Undo.RecordObject(_templateSet, $"Capturar movimiento LSC {label}");
-      _templateSet.AddMotionTemplate(label, _handedness, normalized, _distanceThreshold);
+      _templateSet.AddMotionTemplate(id, _handedness, normalized, _distanceThreshold);
       EditorUtility.SetDirty(_templateSet);
       AssetDatabase.SaveAssets();
-      _status = $"Secuencia {label} guardada: {_frames.Count} fotogramas en {duration / 1000f:F2} s.";
+      _status = reachedFrameLimit
+        ? $"Se guardó «{label}»: {_frames.Count} fotogramas en {duration / 1000f:F2} s (límite alcanzado)."
+        : $"Se guardó «{label}»: {_frames.Count} fotogramas en {duration / 1000f:F2} s.";
       _frames.Clear();
     }
 
-    private string CurrentLabel() => _numbersOnly ? Numbers[_letterIndex] : Letters[_letterIndex];
+    private string CurrentLabel() => _greetingsOnly ? SingleHandGreetingIds[_letterIndex] : _numbersOnly ? Numbers[_letterIndex] : Letters[_letterIndex];
+    private string CurrentDisplayLabel() => _greetingsOnly ? SingleHandGreetingLabels[_letterIndex] : CurrentLabel();
 
-    private void CreateNumberTemplateAsset()
+    private void CreateTemplateAsset()
     {
-      var path = AssetDatabase.GenerateUniqueAssetPath(GetTemplateAssetPath(true));
+      var path = AssetDatabase.GenerateUniqueAssetPath(GetTemplateAssetPath(_numbersOnly, _greetingsOnly));
       var asset = CreateInstance<AlphabetLandmarkTemplateSet>();
       AssetDatabase.CreateAsset(asset, path);
       AssetDatabase.SaveAssets();
@@ -205,9 +228,11 @@ namespace Senas.AI.Editor
       _status = $"Asset creado: {path}";
     }
 
-    private static string GetTemplateAssetPath(bool numbersOnly) => numbersOnly
-      ? "Assets/Project/Data/NumberLandmarkTemplates.asset"
-      : "Assets/IA/MediaPipe/AlphabetLandmarkTemplates.asset";
+    private static string GetTemplateAssetPath(bool numbersOnly, bool greetingsOnly = false) => greetingsOnly
+      ? "Assets/Project/Data/GreetingLandmarkTemplates.asset"
+      : numbersOnly
+        ? "Assets/Project/Data/NumberLandmarkTemplates.asset"
+        : "Assets/IA/MediaPipe/AlphabetLandmarkTemplates.asset";
 
     private static string[] CreateNumberLabels()
     {

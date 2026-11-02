@@ -12,8 +12,8 @@ namespace Lumina.UI
 {
     /// <summary>
     /// Flujo de PRÁCTICA: selección → aprendizaje → preparación → práctica → Results.
-    /// El reconocimiento entra por <see cref="SetRecognizer"/>; el Nivel 2 configura MediaPipe al volver desde la casa
-    /// de números. La demostración del avatar entra por <see cref="DemonstrationRequested"/>.
+    /// El reconocimiento entra por <see cref="SetRecognizer"/>; los niveles de números y saludos configuran MediaPipe al volver desde sus casas.
+    /// La demostración del avatar entra por <see cref="DemonstrationRequested"/>.
     /// </summary>
     public class PracticeController : MonoBehaviour
     {
@@ -22,6 +22,7 @@ namespace Lumina.UI
         [Header("Datos")]
         [SerializeField] private SignCatalog catalog;
         [SerializeField] private AlphabetLandmarkTemplateSet numberTemplates;
+        [SerializeField] private AlphabetLandmarkTemplateSet greetingTemplates;
 
         [Header("Cabecera")]
         [SerializeField] private SceneHeaderUI header;
@@ -78,10 +79,14 @@ namespace Lumina.UI
             if (_recognizer != null) _recognizer.Completed -= OnAttemptCompleted;
             if (_recognizer is MediaPipeNumberSignRecognizer previous)
                 previous.StatusUpdated -= OnRecognizerStatusUpdated;
+            if (_recognizer is MediaPipeGreetingSignRecognizer previousGreeting)
+                previousGreeting.StatusUpdated -= OnRecognizerStatusUpdated;
             _recognizer = recognizer;
             if (_recognizer != null) _recognizer.Completed += OnAttemptCompleted;
             if (_recognizer is MediaPipeNumberSignRecognizer current)
                 current.StatusUpdated += OnRecognizerStatusUpdated;
+            if (_recognizer is MediaPipeGreetingSignRecognizer currentGreeting)
+                currentGreeting.StatusUpdated += OnRecognizerStatusUpdated;
         }
 
         private void OnRecognizerStatusUpdated(string message)
@@ -133,6 +138,18 @@ namespace Lumina.UI
                 var numberRecognizer = gameObject.AddComponent<MediaPipeNumberSignRecognizer>();
                 numberRecognizer.Configure(numberTemplates, cameraFeed);
                 SetRecognizer(numberRecognizer);
+            }
+            else if (PracticeSession.ReturnScene == LearningLevels.GreetingsScene && greetingTemplates != null)
+            {
+                var greetingRecognizer = gameObject.AddComponent<MediaPipeGreetingSignRecognizer>();
+                greetingRecognizer.Configure(greetingTemplates, cameraFeed);
+                SetRecognizer(greetingRecognizer);
+            }
+            else if (PracticeSession.ReturnScene == LearningLevels.MonthsScene && greetingTemplates != null)
+            {
+                var monthRecognizer = gameObject.AddComponent<MediaPipeGreetingSignRecognizer>();
+                monthRecognizer.Configure(greetingTemplates, cameraFeed);
+                SetRecognizer(monthRecognizer);
             }
 
             _category = catalog != null && catalog.categories.Length > 0 ? catalog.categories[0] : null;
