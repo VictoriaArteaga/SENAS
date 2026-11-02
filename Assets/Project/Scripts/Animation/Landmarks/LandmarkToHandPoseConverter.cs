@@ -163,6 +163,53 @@ namespace Lumina.Animation.Landmarks
         /// da cuánto movió la calibración cada articulación.
         /// </summary>
         public FingerPose[] PreCalibration;
+
+        /// <summary>Clase de convergencia con la definición nueva (ver <see cref="ConvergenceClass"/>).</summary>
+        public ConvergenceClass Class;
+        /// <summary>Mayor error de flexión (proximal, media, distal) de índice a meñique en la pose final aplicada, en grados.</summary>
+        public float MaxFlexionError;
+        /// <summary>
+        /// Error de posición de la punta (índices 1 a 4 = índice…meñique; el 0, pulgar, es informativo): |punta − MCP| expresada en el marco de la mano
+        /// y dividida por la longitud del dedo (suma de sus tres segmentos), en landmarks y en rig; se restan.
+        /// </summary>
+        public float[] TipError;
+        /// <summary>Por dedo largo (índice…meñique): la separación es observable (proyección ≥ 0,3 y ganancia del rig ≥ 0,5).</summary>
+        public bool[] SpreadObservable;
+        /// <summary>Por dedo largo: proyección de la falange proximal sobre el plano de la palma / su longitud (datos).</summary>
+        public float[] SpreadProjection;
+        /// <summary>Por dedo largo: ° de separación medidos en el rig por ° comandado.</summary>
+        public float[] SpreadGain;
+        /// <summary>Por dedo largo: la separación se sustituyó por el valor regularizado (último observable o neutro).</summary>
+        public bool[] SpreadRegularized;
+        /// <summary>Algún ángulo se acotó al rango alcanzable durante la calibración.</summary>
+        public bool ClampedToRange;
+        /// <summary>Mayor valor absoluto de ángulo en la pose final (dedos largos y pulgar), en grados.</summary>
+        public float MaxAbsAngle;
+    }
+
+    /// <summary>Clasificación de un fotograma con la definición de convergencia nueva.</summary>
+    public enum ConvergenceClass
+    {
+        /// <summary>Flexiones ≤ 0,25° en los cuatro dedos largos (el error de punta se reporta aparte).</summary>
+        Converged,
+        /// <summary>No se cumplen los umbrales y ningún dedo con separación no observable lo explica.</summary>
+        Failed,
+        /// <summary>Hubo que regularizar la separación de algún dedo; flexiones y punta cumplen. No cuenta ni como convergido ni como fallo.</summary>
+        SpreadUndeterminable,
+        /// <summary>Se regularizó la separación pero las flexiones o la punta siguen sin cumplir.</summary>
+        SpreadUndeterminableFailed,
+        /// <summary>Método sin calibración (no se clasifica).</summary>
+        NotEvaluated,
+    }
+
+    /// <summary>
+    /// Último valor observable de separación por dedo (índice, medio, anular, meñique) dentro de una secuencia. NaN = ninguno todavía.
+    /// Se pasa a <see cref="LandmarkToHandPoseConverter.TryConvert"/> fotograma a fotograma y se reinicia al empezar cada secuencia.
+    /// </summary>
+    public sealed class SpreadMemory
+    {
+        public readonly float[] Last = { float.NaN, float.NaN, float.NaN, float.NaN };
+        public void Reset() { for (int i = 0; i < Last.Length; i++) Last[i] = float.NaN; }
     }
 
     /// <summary>
@@ -191,7 +238,7 @@ namespace Lumina.Animation.Landmarks
         /// el llamador debe aplicar después la pose final.
         /// </summary>
         public static bool TryConvert(IReadOnlyList<Vector3> landmarks, RigRest rest, HandPoseDriver driver,
-            SeparationMethod method, bool solveThumb, float toleranceDegrees, out ConversionResult result)
+            SeparationMethod method, bool solveThumb, float toleranceDegrees, out ConversionResult result, SpreadMemory memory = null)
         {
             result = null;
             if (landmarks == null || landmarks.Count != LandmarkCount || rest == null || driver == null) return false;
@@ -226,10 +273,23 @@ namespace Lumina.Animation.Landmarks
             int iterations = 0;
             float residual = 0f;
             bool converged = false;
+            bool clamped = false;
+            var observable = new bool[4];
+            var projection = new float[4];
+            var gain = new float[4];
+            var regularized = new bool[4];
+            var cls = ConvergenceClass.NotEvaluated;
+            float maxFlex = 0f;
+            var tipError = new float[RigRest.FingerCount];
             if (method == SeparationMethod.RigCalibrated)
             {
+                // Etapa 1: calibración estándar (la de siempre, con ángulos envueltos y acotados al rango alcanzable).
                 // Se guarda la mejor pose medida: con algunos landmarks (p. ej. índice en hiperextensión) la corrección
                 // no converge de forma monótona y la última iteración no es la mejor.
+                pose.index = ClampFinger(pose.index, ref clamped);
+                pose.middle = ClampFinger(pose.middle, ref clamped);
+                pose.ring = ClampFinger(pose.ring, ref clamped);
+                pose.pinky = ClampFinger(pose.pinky, ref clamped);
                 var best = pose;
                 float bestResidual = float.MaxValue;
                 for (; iterations < MaxCalibrationIterations; iterations++)
@@ -242,6 +302,10 @@ namespace Lumina.Animation.Landmarks
                     pose.middle = Correct(pose.middle, target[2], measured[2], ref residual);
                     pose.ring = Correct(pose.ring, target[3], measured[3], ref residual);
                     pose.pinky = Correct(pose.pinky, target[4], measured[4], ref residual);
+                    pose.index = ClampFinger(pose.index, ref clamped);
+                    pose.middle = ClampFinger(pose.middle, ref clamped);
+                    pose.ring = ClampFinger(pose.ring, ref clamped);
+                    pose.pinky = ClampFinger(pose.pinky, ref clamped);
                     if (residual < bestResidual) { bestResidual = residual; best = measuredPose; }
                     if (residual < CalibrationToleranceDegrees) { iterations++; converged = true; break; }
                 }
@@ -259,6 +323,52 @@ namespace Lumina.Animation.Landmarks
                     if (finalResidual < bestResidual) { bestResidual = finalResidual; best = pose; }
                     pose = best;
                     residual = bestResidual;
+                }
+
+                // Observabilidad de la separación de cada dedo largo con la pose actual.
+                MeasureSpreadObservability(landmarks, rest, driver, pose, observable, projection, gain);
+
+                if (!converged)
+                {
+                    // Etapa 2: los dedos con separación no observable se fijan a un valor regularizado (último observable de la
+                    // secuencia o, si no lo hay, neutro = reposo del rig) y solo se calibran sus flexiones.
+                    var fixedSpread = new float[4];
+                    bool any = false;
+                    for (int f = 0; f < 4; f++)
+                    {
+                        if (observable[f]) continue;
+                        regularized[f] = true;
+                        any = true;
+                        fixedSpread[f] = memory != null && float.IsFinite(memory.Last[f]) ? memory.Last[f] : 0f;
+                    }
+                    if (any)
+                    {
+                        pose = CalibrateWithFixedSpread(pose, target, rest, driver, regularized, fixedSpread, ref clamped, out int extra);
+                        iterations += extra;
+                    }
+                }
+
+                // Clasificación con la definición nueva, sobre la pose final aplicada.
+                driver.SetPose(pose);
+                var applied = rest.MeasureCurrent();
+                maxFlex = MaxFlexionError(target, applied);
+                TipErrors(landmarks, rest, dataFrame, tipError);
+                float maxTip = 0f;
+                for (int f = 1; f < RigRest.FingerCount; f++) maxTip = Mathf.Max(maxTip, tipError[f]);
+                // El error de punta se calcula y se reporta (fidelidad geométrica) pero no decide la clase: con el rig actual ni las estáticas 0–5
+                // de referencia lo cumplen (mediana 0,13), por diferencias de proporciones y de desviación lateral que ningún ángulo corrige.
+                bool ok = float.IsFinite(maxFlex) && float.IsFinite(maxTip) && maxFlex <= FlexionToleranceDegrees && (!TipGatesConvergence || maxTip <= TipToleranceNormalized);
+                bool anyRegularized = regularized[0] || regularized[1] || regularized[2] || regularized[3];
+                cls = anyRegularized
+                    ? (ok ? ConvergenceClass.SpreadUndeterminable : ConvergenceClass.SpreadUndeterminableFailed)
+                    : (ok ? ConvergenceClass.Converged : ConvergenceClass.Failed);
+
+                // Último valor observable de separación, solo con la pose final y dedos observables no regularizados.
+                if (memory != null)
+                {
+                    var spreads = new[] { pose.index.spread, pose.middle.spread, pose.ring.spread, pose.pinky.spread };
+                    for (int f = 0; f < 4; f++)
+                        if (observable[f] && !regularized[f] && float.IsFinite(spreads[f])) memory.Last[f] = spreads[f];
                 }
             }
 
@@ -281,26 +391,191 @@ namespace Lumina.Animation.Landmarks
                 CalibrationResidual = residual,
                 CalibrationConverged = converged,
                 PreCalibration = preCalibration,
+                Class = cls,
+                MaxFlexionError = maxFlex,
+                TipError = tipError,
+                SpreadObservable = observable,
+                SpreadProjection = projection,
+                SpreadGain = gain,
+                SpreadRegularized = regularized,
+                ClampedToRange = clamped,
             };
+            float maxAbs = 0f;
+            foreach (var fp in new[] { pose.thumb, pose.index, pose.middle, pose.ring, pose.pinky })
+                maxAbs = Mathf.Max(maxAbs, Mathf.Abs(fp.spread), Mathf.Abs(fp.proximal), Mathf.Abs(fp.middle), Mathf.Abs(fp.distal), Mathf.Abs(fp.spreadMiddle));
+            result.MaxAbsAngle = maxAbs;
             return IsFinite(pose);
         }
 
         private const int MaxCalibrationIterations = 30;
         private const float CalibrationToleranceDegrees = 0.25f;
 
-        // Suma al valor actual el error medido (landmark − rig) y registra el mayor error absoluto antes de corregir.
-        private static FingerPose Correct(FingerPose p, FingerAngles target, FingerAngles measured, ref float worst)
+        // Definición de convergencia (umbrales fijados antes de medir).
+        public const float FlexionToleranceDegrees = 0.25f;
+        public const float TipToleranceNormalized = 0.05f;
+        /// <summary>Si es verdadero, el error de punta &gt; <see cref="TipToleranceNormalized"/> impide la clase Converged. Falso: solo se reporta (ver comentario en TryConvert).</summary>
+        public const bool TipGatesConvergence = false;
+
+        // Un dedo tiene la separación "observable" si la proyección de su falange proximal sobre el plano de la palma es ≥ 0,3
+        // (datos) y el rig mueve la separación medida al menos 0,5° por grado comandado (medido con ±3°).
+        public const float MinSpreadProjection = 0.3f;
+        public const float MinSpreadGain = 0.5f;
+        private const float GainProbeDegrees = 3f;
+
+        // Rango alcanzable (relativo al reposo del rig), de los percentiles 0,1–99,9 de los fotogramas ya convergidos más margen.
+        public const float SpreadMin = -65f, SpreadMax = 45f;
+        public const float ProximalMin = -60f, ProximalMax = 135f;
+        public const float MiddleMin = -30f, MiddleMax = 115f;
+        public const float DistalMin = -40f, DistalMax = 115f;
+
+        private static float Wrap180(float degrees)
         {
-            float dSpread = target.Spread - measured.Spread;
-            float dProximal = target.Proximal - measured.Proximal;
-            float dMiddle = target.Middle - measured.Middle;
-            float dDistal = target.Distal - measured.Distal;
+            if (!float.IsFinite(degrees)) return degrees;
+            degrees %= 360f;
+            if (degrees > 180f) degrees -= 360f;
+            else if (degrees <= -180f) degrees += 360f;
+            return degrees;
+        }
+
+        private static float ClampTo(float v, float min, float max, ref bool clamped)
+        {
+            if (v < min) { clamped = true; return min; }
+            if (v > max) { clamped = true; return max; }
+            return v;
+        }
+
+        private static FingerPose ClampFinger(FingerPose p, ref bool clamped)
+        {
+            p.spread = ClampTo(Wrap180(p.spread), SpreadMin, SpreadMax, ref clamped);
+            p.proximal = ClampTo(Wrap180(p.proximal), ProximalMin, ProximalMax, ref clamped);
+            p.middle = ClampTo(Wrap180(p.middle), MiddleMin, MiddleMax, ref clamped);
+            p.distal = ClampTo(Wrap180(p.distal), DistalMin, DistalMax, ref clamped);
+            return p;
+        }
+
+        // Suma al valor actual el error medido (landmark − rig, envuelto) y registra el mayor error absoluto antes de corregir.
+        private static FingerPose Correct(FingerPose p, FingerAngles target, FingerAngles measured, ref float worst)
+            => Correct(p, target, measured, ref worst, false);
+
+        private static FingerPose Correct(FingerPose p, FingerAngles target, FingerAngles measured, ref float worst, bool skipSpread)
+        {
+            float dSpread = skipSpread ? 0f : Wrap180(target.Spread - measured.Spread);
+            float dProximal = Wrap180(target.Proximal - measured.Proximal);
+            float dMiddle = Wrap180(target.Middle - measured.Middle);
+            float dDistal = Wrap180(target.Distal - measured.Distal);
             worst = Mathf.Max(worst, Mathf.Abs(dSpread), Mathf.Abs(dProximal), Mathf.Abs(dMiddle), Mathf.Abs(dDistal));
             p.spread += dSpread;
             p.proximal += dProximal;
             p.middle += dMiddle;
             p.distal += dDistal;
             return p;
+        }
+
+        // Calibra solo las flexiones de los dedos regularizados (su separación queda fija) y todo de los demás.
+        private static HandPose CalibrateWithFixedSpread(HandPose start, FingerAngles[] target, RigRest rest, HandPoseDriver driver,
+            bool[] fixedFinger, float[] fixedSpread, ref bool clamped, out int iterations)
+        {
+            var pose = start;
+            SetSpread(ref pose, fixedFinger, fixedSpread);
+            var best = pose;
+            float bestResidual = float.MaxValue;
+            iterations = 0;
+            for (; iterations < MaxCalibrationIterations; iterations++)
+            {
+                driver.SetPose(pose);
+                var measured = rest.MeasureCurrent();
+                var measuredPose = pose;
+                float residual = 0f;
+                pose.index = Correct(pose.index, target[1], measured[1], ref residual, fixedFinger[0]);
+                pose.middle = Correct(pose.middle, target[2], measured[2], ref residual, fixedFinger[1]);
+                pose.ring = Correct(pose.ring, target[3], measured[3], ref residual, fixedFinger[2]);
+                pose.pinky = Correct(pose.pinky, target[4], measured[4], ref residual, fixedFinger[3]);
+                pose.index = ClampFinger(pose.index, ref clamped);
+                pose.middle = ClampFinger(pose.middle, ref clamped);
+                pose.ring = ClampFinger(pose.ring, ref clamped);
+                pose.pinky = ClampFinger(pose.pinky, ref clamped);
+                SetSpread(ref pose, fixedFinger, fixedSpread);
+                if (residual < bestResidual) { bestResidual = residual; best = measuredPose; }
+                if (residual < CalibrationToleranceDegrees) { iterations++; return pose; }
+            }
+            return best;
+        }
+
+        private static void SetSpread(ref HandPose pose, bool[] fixedFinger, float[] fixedSpread)
+        {
+            bool dummy = false;
+            if (fixedFinger[0]) pose.index.spread = ClampTo(fixedSpread[0], SpreadMin, SpreadMax, ref dummy);
+            if (fixedFinger[1]) pose.middle.spread = ClampTo(fixedSpread[1], SpreadMin, SpreadMax, ref dummy);
+            if (fixedFinger[2]) pose.ring.spread = ClampTo(fixedSpread[2], SpreadMin, SpreadMax, ref dummy);
+            if (fixedFinger[3]) pose.pinky.spread = ClampTo(fixedSpread[3], SpreadMin, SpreadMax, ref dummy);
+        }
+
+        // Proyección de la falange proximal sobre el plano de la palma (datos) y ganancia del rig (separación medida por grado comandado).
+        // Deja el rig en la pose de prueba: el llamador vuelve a aplicar la pose final.
+        private static void MeasureSpreadObservability(IReadOnlyList<Vector3> lm, RigRest rest, HandPoseDriver driver, HandPose pose,
+            bool[] observable, float[] projection, float[] gain)
+        {
+            LandmarkHandFrame.TryCreate(lm[0], lm[9], lm[5], lm[17], out var frame);
+            for (int f = 0; f < 4; f++)
+            {
+                var d1 = lm[Chains[f + 1, 1]] - lm[Chains[f + 1, 0]];
+                float len = d1.magnitude;
+                projection[f] = len < 1e-9f ? 0f : Vector3.ProjectOnPlane(d1, frame.Palm).magnitude / len;
+            }
+
+            var plus = pose; var minus = pose;
+            plus.index.spread += GainProbeDegrees; minus.index.spread -= GainProbeDegrees;
+            plus.middle.spread += GainProbeDegrees; minus.middle.spread -= GainProbeDegrees;
+            plus.ring.spread += GainProbeDegrees; minus.ring.spread -= GainProbeDegrees;
+            plus.pinky.spread += GainProbeDegrees; minus.pinky.spread -= GainProbeDegrees;
+            driver.SetPose(plus);
+            var mp = rest.MeasureCurrent();
+            driver.SetPose(minus);
+            var mm = rest.MeasureCurrent();
+            for (int f = 0; f < 4; f++)
+            {
+                gain[f] = Mathf.Abs(Wrap180(mp[f + 1].Spread - mm[f + 1].Spread)) / (2f * GainProbeDegrees);
+                observable[f] = projection[f] >= MinSpreadProjection && gain[f] >= MinSpreadGain;
+            }
+        }
+
+        private static float MaxFlexionError(FingerAngles[] target, FingerAngles[] applied)
+        {
+            float worst = 0f;
+            for (int f = 1; f < RigRest.FingerCount; f++)
+            {
+                worst = Mathf.Max(worst,
+                    Mathf.Abs(Wrap180(applied[f].Proximal - target[f].Proximal)),
+                    Mathf.Abs(Wrap180(applied[f].Middle - target[f].Middle)),
+                    Mathf.Abs(Wrap180(applied[f].Distal - target[f].Distal)));
+            }
+            return worst;
+        }
+
+        /// <summary>
+        /// Error de posición de la punta de índice a meñique (posiciones 1 a 4 de <paramref name="result"/>; la 0 queda en 0, el pulgar no se evalúa aquí):
+        /// (punta − MCP) en el marco de la mano, dividida por la longitud del dedo (3 segmentos), en landmarks y en rig, y se restan.
+        /// El rig debe tener ya aplicada la pose final.
+        /// </summary>
+        public static void TipErrors(IReadOnlyList<Vector3> lm, RigRest rest, LandmarkHandFrame dataFrame, float[] result)
+        {
+            result[0] = 0f;
+            if (!LandmarkHandFrame.TryCreate(rest.Wrist.position, rest.Chain[2, 0].position, rest.Chain[1, 0].position, rest.Chain[4, 0].position, out var rigFrame))
+            {
+                for (int f = 1; f < RigRest.FingerCount; f++) result[f] = float.NaN;
+                return;
+            }
+            for (int f = 1; f < RigRest.FingerCount; f++)
+            {
+                var dataLen = (lm[Chains[f, 1]] - lm[Chains[f, 0]]).magnitude + (lm[Chains[f, 2]] - lm[Chains[f, 1]]).magnitude + (lm[Chains[f, 3]] - lm[Chains[f, 2]]).magnitude;
+                var rigLen = (rest.Chain[f, 1].position - rest.Chain[f, 0].position).magnitude + (rest.Chain[f, 2].position - rest.Chain[f, 1].position).magnitude + (rest.Chain[f, 3].position - rest.Chain[f, 2].position).magnitude;
+                if (dataLen < 1e-9f || rigLen < 1e-9f) { result[f] = float.NaN; continue; }
+                var dv = lm[Chains[f, 3]] - lm[Chains[f, 0]];
+                var rv = rest.Chain[f, 3].position - rest.Chain[f, 0].position;
+                var d = new Vector3(Vector3.Dot(dv, dataFrame.Finger), Vector3.Dot(dv, dataFrame.Ulnar), Vector3.Dot(dv, dataFrame.Palm)) / dataLen;
+                var r = new Vector3(Vector3.Dot(rv, rigFrame.Finger), Vector3.Dot(rv, rigFrame.Ulnar), Vector3.Dot(rv, rigFrame.Palm)) / rigLen;
+                result[f] = (d - r).magnitude;
+            }
         }
 
         /// <summary>
@@ -416,10 +691,10 @@ namespace Lumina.Animation.Landmarks
 
         private static FingerPose ToFingerPose(FingerAngles data, FingerAngles reference)
             => new FingerPose(
-                data.Spread - reference.Spread,
-                data.Proximal - reference.Proximal,
-                data.Middle - reference.Middle,
-                data.Distal - reference.Distal);
+                Wrap180(data.Spread - reference.Spread),
+                Wrap180(data.Proximal - reference.Proximal),
+                Wrap180(data.Middle - reference.Middle),
+                Wrap180(data.Distal - reference.Distal));
 
         private static bool IsFinite(HandPose p)
         {

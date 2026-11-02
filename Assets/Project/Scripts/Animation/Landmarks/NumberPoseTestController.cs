@@ -195,6 +195,9 @@ namespace Lumina.Animation.Landmarks
             if (method == SeparationMethod.RigCalibrated && !result.CalibrationConverged)
                 sb.AppendLine($"  Objetivo no alcanzable con la medida {rest.Mode}: se aplica la mejor pose medida; falta como máximo {MaxError(errors):F1}° ({WorstJoint(errors)}). " +
                               (rest.Mode == FlexionMeasure.Legacy ? "En el diagnóstico el rig sí alcanza ese rango; la limitación es la banda muerta de la medida Legacy (prueba la tecla M)." : ""));
+            if (method == SeparationMethod.RigCalibrated)
+                sb.AppendLine($"  Convergencia (definición nueva, flexiones ≤ {LandmarkToHandPoseConverter.FlexionToleranceDegrees:0.##}°): {result.Class}; error de flexión máx {result.MaxFlexionError:F2}°. " +
+                              $"Error de punta (fidelidad geométrica, no decide la clase) índice {result.TipError[1]:F2}, medio {result.TipError[2]:F2}, anular {result.TipError[3]:F2}, meñique {result.TipError[4]:F2}.");
             AppendPose(sb, result.Pose);
             if (method == SeparationMethod.RigCalibrated) AppendCalibrationShift(sb, result);
             AppendErrors(sb, errors, solveThumb);
