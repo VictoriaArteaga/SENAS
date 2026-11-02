@@ -535,8 +535,8 @@ MonoBehaviour:
   NailsMaterialIndex: 0
   ClothingItemHat: {fileID: 11400000, guid: 7ac7070522602e743b253284bdbdd7f5, type: 2}
   ClothingItemHatVariationIndex: 0
-  ClothingItemTop: {fileID: 11400000, guid: 8246b73db22e13046806923906bd0224, type: 2}
-  ClothingItemTopVariationIndex: 2
+  ClothingItemTop: {fileID: 11400000, guid: 1f0f996caf8ec1149ab16cc0d7267390, type: 2}
+  ClothingItemTopVariationIndex: 0
   ClothingItemBottom: {fileID: 11400000, guid: f571dc39c94943d4987dd465b5ce905f, type: 2}
   ClothingItemBottomVariationIndex: 1
   ClothingItemGlasses: {fileID: 11400000, guid: 75e434f18a59afc4ab2670613b653aef, type: 2}
@@ -1178,7 +1178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da0863d1b8a82f64d9c3006f6fe687cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ClothingItem: {fileID: 11400000, guid: 8246b73db22e13046806923906bd0224, type: 2}
+  ClothingItem: {fileID: 11400000, guid: 1f0f996caf8ec1149ab16cc0d7267390, type: 2}
   VariationIndex: 0
   IsEquipped: 1
 --- !u!33 &4780843752816253843
@@ -1212,7 +1212,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 078575702bcf37f40a3e75ae77fc6ea3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
