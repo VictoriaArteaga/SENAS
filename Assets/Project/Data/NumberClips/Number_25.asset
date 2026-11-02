@@ -1,0 +1,3485 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d145b43358d151489350f133361836d, type: 3}
+  m_Name: Number_25
+  m_EditorClassIdentifier: 
+  number: 25
+  sourceSequenceId: 187
+  sourceFrameCount: 69
+  sourceMayBeTruncated: 0
+  durationSeconds: 2.9333334
+  durationProvisional: 1
+  frames:
+  - time: 0
+    pose:
+      thumb:
+        spread: 24.66282
+        proximal: 0.2811552
+        middle: 3.156124
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 12.185051
+        opposition: 0
+      index:
+        spread: 1.2405226
+        proximal: 15.803932
+        middle: 83.395676
+        distal: 66.08782
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 4.90126
+        middle: 92.55589
+        distal: 85.69017
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -13.20992
+        proximal: 22.878235
+        middle: 81.935104
+        distal: 81.4337
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -20.343487
+        proximal: 17.42078
+        middle: 66.73349
+        distal: 90.88641
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.008212928
+    pose:
+      thumb:
+        spread: 24.479143
+        proximal: 0.09305724
+        middle: 3.4231021
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 12.596083
+        opposition: 0
+      index:
+        spread: 1.3497598
+        proximal: 15.899732
+        middle: 83.37056
+        distal: 66.25915
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 4.930382
+        middle: 92.45274
+        distal: 85.54419
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -13.204386
+        proximal: 22.654491
+        middle: 81.95707
+        distal: 81.02879
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -20.000895
+        proximal: 17.04574
+        middle: 66.710754
+        distal: 90.958954
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.015817491
+    pose:
+      thumb:
+        spread: 24.330692
+        proximal: -0.19172612
+        middle: 3.8285708
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 13.007116
+        opposition: 0
+      index:
+        spread: 1.4589971
+        proximal: 15.607211
+        middle: 83.34544
+        distal: 66.25937
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 4.7392387
+        middle: 92.43927
+        distal: 85.32993
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -13.088351
+        proximal: 22.219534
+        middle: 81.7669
+        distal: 80.623886
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -19.556515
+        proximal: 16.512625
+        middle: 67.02925
+        distal: 90.5042
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.021596959
+    pose:
+      thumb:
+        spread: 24.182236
+        proximal: -0.47512436
+        middle: 4.200652
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 13.395999
+        opposition: 0
+      index:
+        spread: 1.4861913
+        proximal: 15.260115
+        middle: 83.25792
+        distal: 66.346664
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 4.486916
+        middle: 92.4258
+        distal: 84.9942
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -12.859769
+        proximal: 21.721834
+        middle: 81.57673
+        distal: 80.190865
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -19.081036
+        proximal: 15.756409
+        middle: 67.57023
+        distal: 90.03934
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.02920152
+    pose:
+      thumb:
+        spread: 24.16082
+        proximal: -0.7585225
+        middle: 4.4550676
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 13.602226
+        opposition: 0
+      index:
+        spread: 1.3616173
+        proximal: 14.873975
+        middle: 83.01767
+        distal: 66.105385
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 4.04709
+        middle: 92.412315
+        distal: 84.63065
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -12.737964
+        proximal: 21.184307
+        middle: 81.3328
+        distal: 80.2236
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -18.761585
+        proximal: 15.109129
+        middle: 68.11122
+        distal: 89.58459
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.034828898
+    pose:
+      thumb:
+        spread: 24.163578
+        proximal: -0.9374571
+        middle: 4.56017
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 13.662684
+        opposition: 0
+      index:
+        spread: 1.1893783
+        proximal: 14.35837
+        middle: 82.7347
+        distal: 65.8641
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 3.607111
+        middle: 92.33983
+        distal: 84.145645
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -12.741957
+        proximal: 20.783352
+        middle: 81.088875
+        distal: 80.14079
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -18.45728
+        proximal: 14.591148
+        middle: 68.22221
+        distal: 89.4785
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.0469962
+    pose:
+      thumb:
+        spread: 24.060276
+        proximal: -1.1886427
+        middle: 4.824347
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 14.18192
+        opposition: 0
+      index:
+        spread: 0.26253462
+        proximal: 12.127837
+        middle: 81.93183
+        distal: 63.548626
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 1.7412529
+        middle: 92.164444
+        distal: 83.07225
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -12.757254
+        proximal: 19.5807
+        middle: 80.897
+        distal: 78.77458
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -18.282688
+        proximal: 13.284826
+        middle: 68.15556
+        distal: 89.372406
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.06661597
+    pose:
+      thumb:
+        spread: 23.85993
+        proximal: -1.758387
+        middle: 4.9500337
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 15.200711
+        opposition: 0
+      index:
+        spread: -1.1706538
+        proximal: 7.7429647
+        middle: 80.02574
+        distal: 61.404255
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -1.5786152
+        middle: 91.365166
+        distal: 81.33403
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -12.923407
+        proximal: 17.714237
+        middle: 80.56057
+        distal: 77.090836
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -18.209888
+        proximal: 12.107709
+        middle: 67.73664
+        distal: 88.97293
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.08547529
+    pose:
+      thumb:
+        spread: 23.659588
+        proximal: -2.5698
+        middle: 4.738835
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 16.24165
+        opposition: 0
+      index:
+        spread: -2.5955153
+        proximal: 1.1997128
+        middle: 73.99986
+        distal: 60.3808
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -6.0259485
+        middle: 89.30821
+        distal: 77.87404
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -13.008387
+        proximal: 15.910521
+        middle: 79.84007
+        distal: 75.00871
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -18.906454
+        proximal: 11.153692
+        middle: 65.9214
+        distal: 88.33728
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.103269964
+    pose:
+      thumb:
+        spread: 23.881727
+        proximal: -3.8486462
+        middle: 4.5276356
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 16.72002
+        opposition: 0
+      index:
+        spread: -4.2367816
+        proximal: -5.34354
+        middle: 62.049347
+        distal: 59.472748
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -10.925234
+        middle: 83.799644
+        distal: 69.84784
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -13.307205
+        proximal: 14.342485
+        middle: 77.930756
+        distal: 72.72146
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -19.891079
+        proximal: 10.199675
+        middle: 63.77952
+        distal: 87.15981
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.121520914
+    pose:
+      thumb:
+        spread: 25.136662
+        proximal: -5.1274924
+        middle: 4.316437
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 17.194965
+        opposition: 0
+      index:
+        spread: -6.285875
+        proximal: -12.287207
+        middle: 45.834263
+        distal: 53.54821
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -16.938118
+        middle: 72.41487
+        distal: 51.170387
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -13.801349
+        proximal: 12.792325
+        middle: 75.68833
+        distal: 66.37698
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -20.791666
+        proximal: 9.179087
+        middle: 61.48568
+        distal: 82.42131
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.13961977
+    pose:
+      thumb:
+        spread: 26.528553
+        proximal: -6.3010697
+        middle: 4.251214
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 16.916098
+        opposition: 0
+      index:
+        spread: -8.156535
+        proximal: -17.515945
+        middle: 29.775925
+        distal: 49.211628
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -21.480507
+        middle: 59.510517
+        distal: 32.91876
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -14.354277
+        proximal: 11.785734
+        middle: 73.455086
+        distal: 60.714275
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -21.733952
+        proximal: 8.7713375
+        middle: 59.97416
+        distal: 77.370514
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.15787072
+    pose:
+      thumb:
+        spread: 28.150467
+        proximal: -7.0594025
+        middle: 4.185991
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 15.745511
+        opposition: 0
+      index:
+        spread: -9.559451
+        proximal: -20.81314
+        middle: 14.610985
+        distal: 44.85788
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -25.975445
+        middle: 46.733723
+        distal: 15.783023
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -15.07204
+        proximal: 11.4623375
+        middle: 71.569885
+        distal: 55.048046
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -22.676239
+        proximal: 7.855118
+        middle: 58.496387
+        distal: 73.14038
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.17627376
+    pose:
+      thumb:
+        spread: 30.18718
+        proximal: -7.789525
+        middle: 4.630191
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 13.623617
+        opposition: 0
+      index:
+        spread: -10.888652
+        proximal: -22.3965
+        middle: 3.606652
+        distal: 39.12867
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -30.33219
+        middle: 34.458176
+        distal: 0.27758008
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -15.983525
+        proximal: 11.174438
+        middle: 70.06875
+        distal: 49.32319
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -23.106619
+        proximal: 6.794648
+        middle: 58.192432
+        distal: 68.30386
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.19422053
+    pose:
+      thumb:
+        spread: 32.12176
+        proximal: -8.052706
+        middle: 5.0743904
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 11.985115
+        opposition: 0
+      index:
+        spread: -12.066057
+        proximal: -24.076025
+        middle: -1.3366798
+        distal: 33.2525
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -34.236717
+        middle: 25.417208
+        distal: -10.723244
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -16.316778
+        proximal: 10.759982
+        middle: 69.727
+        distal: 43.090614
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -23.266579
+        proximal: 5.5923934
+        middle: 58.414406
+        distal: 63.342804
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.21368821
+    pose:
+      thumb:
+        spread: 33.05178
+        proximal: -8.315394
+        middle: 5.4510374
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 10.418367
+        opposition: 0
+      index:
+        spread: -12.825442
+        proximal: -25.282427
+        middle: -1.8987623
+        distal: 32.294018
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -37.052086
+        middle: 22.301762
+        distal: -11.011232
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -16.13181
+        proximal: 10.372894
+        middle: 69.72988
+        distal: 41.03361
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -23.72858
+        proximal: 4.6694236
+        middle: 58.85323
+        distal: 61.503883
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.23422053
+    pose:
+      thumb:
+        spread: 34.18155
+        proximal: -8.52796
+        middle: 5.522634
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 9.146654
+        opposition: 0
+      index:
+        spread: -13.071886
+        proximal: -26.362406
+        middle: -1.9962581
+        distal: 31.863636
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -40.014183
+        middle: 20.974194
+        distal: -11.191715
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -15.888059
+        proximal: 10.274683
+        middle: 69.73277
+        distal: 39.031254
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -24.215261
+        proximal: 3.8460479
+        middle: 59.026367
+        distal: 59.920887
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.2541445
+    pose:
+      thumb:
+        spread: 35.14311
+        proximal: -8.735893
+        middle: 5.599881
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 8.267103
+        opposition: 0
+      index:
+        spread: -13.279729
+        proximal: -26.737982
+        middle: -1.8114628
+        distal: 31.576456
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -41.245777
+        middle: 20.488956
+        distal: -12.183804
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -15.881628
+        proximal: 10.413904
+        middle: 69.763145
+        distal: 37.349953
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -25.105658
+        proximal: 3.63592
+        middle: 59.10393
+        distal: 58.33789
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.27422053
+    pose:
+      thumb:
+        spread: 35.71091
+        proximal: -8.728228
+        middle: 5.5379777
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 8.2586355
+        opposition: 0
+      index:
+        spread: -13.562205
+        proximal: -26.614435
+        middle: -1.5741118
+        distal: 31.456741
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -41.572243
+        middle: 20.775906
+        distal: -12.962946
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -15.8752
+        proximal: 10.472023
+        middle: 69.6711
+        distal: 36.1457
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -25.76969
+        proximal: 3.2843735
+        middle: 59.1815
+        distal: 57.546642
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.29414448
+    pose:
+      thumb:
+        spread: 35.92058
+        proximal: -8.720072
+        middle: 5.3680243
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 8.326724
+        opposition: 0
+      index:
+        spread: -13.893788
+        proximal: -26.394726
+        middle: -1.2756693
+        distal: 31.404251
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -41.639885
+        middle: 21.279896
+        distal: -13.619763
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -16.052334
+        proximal: 10.575747
+        middle: 69.52844
+        distal: 35.549923
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -26.305676
+        proximal: 3.2637672
+        middle: 58.809437
+        distal: 57.347847
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.31391636
+    pose:
+      thumb:
+        spread: 36.123432
+        proximal: -8.86969
+        middle: 5.265625
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 8.323058
+        opposition: 0
+      index:
+        spread: -14.245569
+        proximal: -25.978449
+        middle: -1.0511987
+        distal: 31.450556
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -41.664795
+        middle: 21.783884
+        distal: -13.911894
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -16.38839
+        proximal: 10.549387
+        middle: 69.29629
+        distal: 34.994846
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -26.52688
+        proximal: 3.167254
+        middle: 58.66214
+        distal: 56.988995
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.33353612
+    pose:
+      thumb:
+        spread: 36.095634
+        proximal: -9.020754
+        middle: 5.504407
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 8.319391
+        opposition: 0
+      index:
+        spread: -14.540273
+        proximal: -25.566366
+        middle: -1.0691005
+        distal: 31.556824
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -41.50869
+        middle: 22.17828
+        distal: -13.75162
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -16.520895
+        proximal: 10.492277
+        middle: 69.06413
+        distal: 35.18443
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -26.506413
+        proximal: 3.1466477
+        middle: 58.338898
+        distal: 56.686523
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.3526996
+    pose:
+      thumb:
+        spread: 36.004993
+        proximal: -9.286878
+        middle: 5.737539
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 8.385445
+        opposition: 0
+      index:
+        spread: -14.828822
+        proximal: -25.161228
+        middle: -1.1594751
+        distal: 31.836298
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -41.12185
+        middle: 22.260258
+        distal: -13.08119
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -16.210888
+        proximal: 10.353935
+        middle: 69.28221
+        distal: 35.480698
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -26.082226
+        proximal: 2.9499238
+        middle: 58.21891
+        distal: 57.063744
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.37338403
+    pose:
+      thumb:
+        spread: 35.419827
+        proximal: -9.446096
+        middle: 5.767316
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 8.46947
+        opposition: 0
+      index:
+        spread: -14.839624
+        proximal: -24.842434
+        middle: -0.69741726
+        distal: 33.121387
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -38.262344
+        middle: 24.883947
+        distal: -12.410762
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -16.24152
+        proximal: 10.261197
+        middle: 69.66963
+        distal: 37.005535
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -25.53729
+        proximal: 3.0388691
+        middle: 58.232567
+        distal: 59.025826
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.39452472
+    pose:
+      thumb:
+        spread: 33.96299
+        proximal: -9.499086
+        middle: 5.7303877
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 9.043792
+        opposition: 0
+      index:
+        spread: -12.970395
+        proximal: -23.70774
+        middle: 5.384967
+        distal: 36.91575
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -35.33435
+        middle: 34.397312
+        distal: -1.7036743
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -16.340435
+        proximal: 10.122854
+        middle: 70.3584
+        distal: 41.465534
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -24.764988
+        proximal: 2.5590017
+        middle: 59.082436
+        distal: 62.925667
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.41505703
+    pose:
+      thumb:
+        spread: 30.96109
+        proximal: -9.297281
+        middle: 5.6934595
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 10.009516
+        opposition: 0
+      index:
+        spread: -10.062945
+        proximal: -21.750332
+        middle: 15.039151
+        distal: 40.769188
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -30.633015
+        middle: 46.171333
+        distal: 10.772077
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -15.86075
+        proximal: 9.18078
+        middle: 71.43019
+        distal: 45.925537
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -22.820831
+        proximal: 1.1744375
+        middle: 60.482624
+        distal: 67.003265
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.43528518
+    pose:
+      thumb:
+        spread: 26.826385
+        proximal: -9.093538
+        middle: 5.4646635
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 11.633081
+        opposition: 0
+      index:
+        spread: -6.367182
+        proximal: -17.876736
+        middle: 29.210373
+        distal: 44.56266
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -24.400274
+        middle: 59.33474
+        distal: 26.605524
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -15.13623
+        proximal: 8.095572
+        middle: 74.4987
+        distal: 49.22135
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -20.668047
+        proximal: -1.6440903
+        middle: 63.07081
+        distal: 70.426
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.44076046
+    pose:
+      thumb:
+        spread: 22.754528
+        proximal: -8.73653
+        middle: 5.422203
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 13.475828
+        opposition: 0
+      index:
+        spread: -2.6775694
+        proximal: -12.830256
+        middle: 44.073112
+        distal: 48.47761
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -17.630177
+        middle: 72.63905
+        distal: 42.918324
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -14.278203
+        proximal: 7.045993
+        middle: 77.09815
+        distal: 52.410473
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -18.515263
+        proximal: -4.3624077
+        middle: 65.52862
+        distal: 73.169044
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.45003802
+    pose:
+      thumb:
+        spread: 19.488613
+        proximal: -8.23956
+        middle: 5.630027
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 15.67277
+        opposition: 0
+      index:
+        spread: 0.8695959
+        proximal: -6.906848
+        middle: 59.53486
+        distal: 51.463287
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -11.959547
+        middle: 83.53148
+        distal: 59.760143
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -12.934952
+        proximal: 6.6095934
+        middle: 79.15191
+        distal: 55.74994
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -16.678427
+        proximal: -6.481163
+        middle: 67.67887
+        distal: 74.838615
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.4555133
+    pose:
+      thumb:
+        spread: 17.40868
+        proximal: -7.1309156
+        middle: 6.012605
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 18.123837
+        opposition: 0
+      index:
+        spread: 2.696773
+        proximal: -0.4110218
+        middle: 69.785995
+        distal: 53.143463
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -5.3940682
+        middle: 87.53424
+        distal: 67.677704
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -11.508433
+        proximal: 7.282317
+        middle: 80.93482
+        distal: 57.68462
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -15.159943
+        proximal: -7.0680285
+        middle: 69.24327
+        distal: 74.73734
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.46509504
+    pose:
+      thumb:
+        spread: 17.271963
+        proximal: -5.772917
+        middle: 6.133513
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 20.242252
+        opposition: 0
+      index:
+        spread: 3.6691024
+        proximal: 5.855539
+        middle: 76.89292
+        distal: 54.949036
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -0.37232512
+        middle: 89.27634
+        distal: 73.85209
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -10.500572
+        proximal: 9.265745
+        middle: 82.10222
+        distal: 59.643402
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -14.963094
+        proximal: -6.514642
+        middle: 71.11045
+        distal: 74.63606
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.47437263
+    pose:
+      thumb:
+        spread: 18.332111
+        proximal: -4.414918
+        middle: 6.105108
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 21.702826
+        opposition: 0
+      index:
+        spread: 4.2306557
+        proximal: 10.770485
+        middle: 79.665245
+        distal: 56.75461
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 3.3918834
+        middle: 89.60568
+        distal: 76.2364
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -9.91229
+        proximal: 11.660231
+        middle: 81.14751
+        distal: 62.90928
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -15.16997
+        proximal: -4.3790526
+        middle: 71.83587
+        distal: 75.02602
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.47969583
+    pose:
+      thumb:
+        spread: 19.468569
+        proximal: -3.214869
+        middle: 6.072772
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 22.874496
+        opposition: 0
+      index:
+        spread: 4.792209
+        proximal: 14.446394
+        middle: 81.765755
+        distal: 58.004784
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 6.3074636
+        middle: 89.598206
+        distal: 78.51608
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -9.457515
+        proximal: 14.515673
+        middle: 79.68417
+        distal: 66.265175
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -15.166143
+        proximal: -1.8952572
+        middle: 72.561295
+        distal: 75.41597
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.48775664
+    pose:
+      thumb:
+        spread: 20.272564
+        proximal: -2.265209
+        middle: 5.9935074
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 23.934856
+        opposition: 0
+      index:
+        spread: 5.037944
+        proximal: 17.311527
+        middle: 82.68385
+        distal: 59.178608
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 7.995163
+        middle: 89.445145
+        distal: 80.26787
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -9.148944
+        proximal: 16.757935
+        middle: 78.71959
+        distal: 68.88045
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -14.967123
+        proximal: 0.07080402
+        middle: 73.460625
+        distal: 75.35545
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.49581748
+    pose:
+      thumb:
+        spread: 21.028082
+        proximal: -1.8563893
+        middle: 5.702155
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 24.002934
+        opposition: 0
+      index:
+        spread: 5.257205
+        proximal: 18.581873
+        middle: 83.2204
+        distal: 59.364796
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 8.455776
+        middle: 89.41758
+        distal: 80.7762
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -8.923641
+        proximal: 17.678371
+        middle: 77.77511
+        distal: 69.96534
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -14.785635
+        proximal: 0.88463175
+        middle: 74.2834
+        distal: 75.20607
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.50357413
+    pose:
+      thumb:
+        spread: 21.357258
+        proximal: -1.7944355
+        middle: 5.6724725
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 24.012255
+        opposition: 0
+      index:
+        spread: 5.346968
+        proximal: 18.951344
+        middle: 83.329346
+        distal: 59.42981
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 8.5494
+        middle: 89.448784
+        distal: 80.95423
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -8.821979
+        proximal: 18.108173
+        middle: 77.15987
+        distal: 71.01188
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -14.652904
+        proximal: 1.1927952
+        middle: 74.41614
+        distal: 75.05669
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.5110266
+    pose:
+      thumb:
+        spread: 21.62237
+        proximal: -1.8658806
+        middle: 5.6427894
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 23.874279
+        opposition: 0
+      index:
+        spread: 4.6978197
+        proximal: 18.396652
+        middle: 83.18156
+        distal: 59.43153
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 7.799376
+        middle: 89.73945
+        distal: 81.2299
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -8.749124
+        proximal: 17.764389
+        middle: 76.94275
+        distal: 71.32755
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -14.5420685
+        proximal: 0.9712116
+        middle: 74.291565
+        distal: 75.16471
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.51908743
+    pose:
+      thumb:
+        spread: 21.700262
+        proximal: -1.8642073
+        middle: 5.234001
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 23.615906
+        opposition: 0
+      index:
+        spread: 3.9927344
+        proximal: 17.139797
+        middle: 82.96535
+        distal: 59.50474
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 6.6422973
+        middle: 90.213425
+        distal: 80.49628
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -8.681402
+        proximal: 16.470419
+        middle: 77.23426
+        distal: 70.942245
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -14.6419325
+        proximal: 0.13678208
+        middle: 73.98714
+        distal: 75.27272
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.5269962
+    pose:
+      thumb:
+        spread: 21.67685
+        proximal: -2.2631955
+        middle: 4.8252134
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 23.131237
+        opposition: 0
+      index:
+        spread: 3.3483386
+        proximal: 14.708406
+        middle: 81.755905
+        distal: 58.27231
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 4.5134425
+        middle: 90.68739
+        distal: 76.88784
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -8.621637
+        proximal: 14.260218
+        middle: 77.42183
+        distal: 68.18535
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -14.396299
+        proximal: -1.9916556
+        middle: 73.32151
+        distal: 73.78494
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.5344487
+    pose:
+      thumb:
+        spread: 20.997364
+        proximal: -3.778459
+        middle: 4.6114135
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 22.812092
+        opposition: 0
+      index:
+        spread: 2.624871
+        proximal: 11.308447
+        middle: 79.08506
+        distal: 56.537994
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: 1.9844799
+        middle: 90.605515
+        distal: 72.625534
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -8.692177
+        proximal: 11.694524
+        middle: 77.3153
+        distal: 63.496765
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -13.595978
+        proximal: -4.668196
+        middle: 72.58764
+        distal: 71.534676
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.54524714
+    pose:
+      thumb:
+        spread: 19.748959
+        proximal: -5.567854
+        middle: 2.9519753
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 22.349922
+        opposition: 0
+      index:
+        spread: 1.7055912
+        proximal: 4.852088
+        middle: 72.915955
+        distal: 54.740387
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -3.2265866
+        middle: 88.01568
+        distal: 63.1032
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -8.837192
+        proximal: 6.4169855
+        middle: 75.43131
+        distal: 57.028114
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -12.43562
+        proximal: -9.019938
+        middle: 70.44336
+        distal: 66.227615
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.56593156
+    pose:
+      thumb:
+        spread: 17.931137
+        proximal: -7.282576
+        middle: 1.0367174
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 21.43114
+        opposition: 0
+      index:
+        spread: 1.0859488
+        proximal: -1.6317415
+        middle: 65.24369
+        distal: 53.084618
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -8.945023
+        middle: 82.85709
+        distal: 53.813545
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -9.167974
+        proximal: 0.72146606
+        middle: 71.84967
+        distal: 50.94976
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -10.201117
+        proximal: -13.597392
+        middle: 65.98712
+        distal: 60.82679
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.58692014
+    pose:
+      thumb:
+        spread: 16.150673
+        proximal: -9.136576
+        middle: -0.68184006
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 20.564655
+        opposition: 0
+      index:
+        spread: 0.2290227
+        proximal: -8.222181
+        middle: 55.110004
+        distal: 52.50683
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -15.291016
+        middle: 76.15055
+        distal: 45.0771
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -9.372034
+        proximal: -5.5319963
+        middle: 67.69446
+        distal: 45.54612
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -7.832019
+        proximal: -18.80666
+        middle: 60.382927
+        distal: 55.425964
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.60577947
+    pose:
+      thumb:
+        spread: 14.413435
+        proximal: -10.863287
+        middle: -2.2193089
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 18.669916
+        opposition: 0
+      index:
+        spread: -1.3665841
+        proximal: -13.617894
+        middle: 44.29668
+        distal: 53.234688
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -20.665234
+        middle: 68.26698
+        distal: 38.891098
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -9.566513
+        proximal: -10.869226
+        middle: 61.626904
+        distal: 41.883858
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -5.8025618
+        proximal: -22.803743
+        middle: 54.39997
+        distal: 50.87434
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.623422
+    pose:
+      thumb:
+        spread: 12.995493
+        proximal: -12.488241
+        middle: -3.376294
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 16.780964
+        opposition: 0
+      index:
+        spread: -2.856645
+        proximal: -16.909666
+        middle: 32.93673
+        distal: 52.716503
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -25.045115
+        middle: 58.31131
+        distal: 28.476597
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -9.630689
+        proximal: -15.258024
+        middle: 52.314075
+        distal: 36.40404
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -3.1491857
+        proximal: -26.192093
+        middle: 46.72649
+        distal: 43.26409
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.6407605
+    pose:
+      thumb:
+        spread: 12.174655
+        proximal: -13.839066
+        middle: -2.8447642
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 14.838736
+        opposition: 0
+      index:
+        spread: -3.5675743
+        proximal: -17.034182
+        middle: 24.758175
+        distal: 50.96999
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -26.623636
+        middle: 48.77879
+        distal: 22.500837
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -9.427565
+        proximal: -16.676031
+        middle: 42.393143
+        distal: 31.723577
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: -0.4602459
+        proximal: -27.560715
+        middle: 40.06272
+        distal: 36.949577
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.65855515
+    pose:
+      thumb:
+        spread: 11.980197
+        proximal: -14.824597
+        middle: -2.3002915
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 12.707292
+        opposition: 0
+      index:
+        spread: -4.210617
+        proximal: -17.199635
+        middle: 16.834768
+        distal: 48.90941
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -27.484344
+        middle: 40.04684
+        distal: 16.417698
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -9.2265
+        proximal: -17.17039
+        middle: 32.560703
+        distal: 26.879223
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 1.4486889
+        proximal: -28.322119
+        middle: 35.094612
+        distal: 29.863781
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.67604566
+    pose:
+      thumb:
+        spread: 11.859296
+        proximal: -15.370371
+        middle: -1.5129429
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 10.575521
+        opposition: 0
+      index:
+        spread: -4.560439
+        proximal: -17.117826
+        middle: 11.059367
+        distal: 45.754204
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -27.721247
+        middle: 32.466225
+        distal: 10.33456
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -8.9592
+        proximal: -17.114666
+        middle: 22.61728
+        distal: 21.839893
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 3.359845
+        proximal: -28.480877
+        middle: 31.024456
+        distal: 22.392406
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.69460076
+    pose:
+      thumb:
+        spread: 11.64004
+        proximal: -15.642772
+        middle: -0.7887338
+        distal: 0
+        adduction: 0
+        twist: 0
+        spreadMiddle: 8.957345
+        opposition: 0
+      index:
+        spread: -4.069449
+        proximal: -17.036018
+        middle: 6.9568224
+        distal: 42.56797
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -27.958155
+        middle: 26.062637
+        distal: 4.27735
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -8.609146
+        proximal: -17.05894
+        middle: 14.512606
+        distal: 16.620663
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 5.662688
+        proximal: -28.639637
+        middle: 27.277729
+        distal: 15.667628
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.71361214
+    pose:
+      thumb:
+        spread: 11.2821865
+        proximal: -15.077716
+        middle: -0.4279085
+        distal: 2.5767806
+        adduction: 0
+        twist: 0
+        spreadMiddle: 6.7548876
+        opposition: 0
+      index:
+        spread: -3.4097366
+        proximal: -17.708033
+        middle: 4.673192
+        distal: 40.745613
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -27.91991
+        middle: 22.228762
+        distal: 2.4792514
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -8.114316
+        proximal: -16.689373
+        middle: 10.124847
+        distal: 14.838602
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 6.94568
+        proximal: -28.563278
+        middle: 25.013264
+        distal: 12.812055
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.7326236
+    pose:
+      thumb:
+        spread: 10.850683
+        proximal: -14.227858
+        middle: -0.02868948
+        distal: 5.153561
+        adduction: 0
+        twist: 0
+        spreadMiddle: 4.2240496
+        opposition: 0
+      index:
+        spread: -3.480575
+        proximal: -17.69166
+        middle: 2.8351908
+        distal: 40.12074
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -27.28241
+        middle: 20.420895
+        distal: 1.5024284
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -7.886785
+        proximal: -16.178093
+        middle: 8.0664215
+        distal: 13.996256
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 7.9037285
+        proximal: -28.123936
+        middle: 23.115503
+        distal: 11.717537
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.75163496
+    pose:
+      thumb:
+        spread: 10.082466
+        proximal: -13.33795
+        middle: 0.25945297
+        distal: 6.767749
+        adduction: 0
+        twist: 0
+        spreadMiddle: 2.4863362
+        opposition: 0
+      index:
+        spread: -3.419726
+        proximal: -16.63616
+        middle: 2.2812035
+        distal: 39.3831
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -25.349083
+        middle: 19.948435
+        distal: 0.8035423
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -7.2363877
+        proximal: -14.927948
+        middle: 7.3444138
+        distal: 13.373053
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 8.316274
+        proximal: -27.26002
+        middle: 21.654398
+        distal: 11.174842
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.7724715
+    pose:
+      thumb:
+        spread: 9.071238
+        proximal: -12.2634325
+        middle: 0.30471936
+        distal: 8.074662
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0.7678758
+        opposition: 0
+      index:
+        spread: -3.4905643
+        proximal: -14.507971
+        middle: 2.164309
+        distal: 38.61709
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -22.922932
+        middle: 19.724213
+        distal: 0.27062884
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -6.7716856
+        proximal: -13.16346
+        middle: 7.2163835
+        distal: 12.825826
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 8.487196
+        proximal: -25.791245
+        middle: 20.201786
+        distal: 10.825222
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.7943726
+    pose:
+      thumb:
+        spread: 8.025564
+        proximal: -11.184107
+        middle: 0.20261621
+        distal: 9.044336
+        adduction: 0
+        twist: 0
+        spreadMiddle: -0.39026064
+        opposition: 0
+      index:
+        spread: -3.3373857
+        proximal: -12.344542
+        middle: 2.0353398
+        distal: 37.88211
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -20.122412
+        middle: 19.43043
+        distal: 0.19575891
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -6.2286863
+        proximal: -10.869712
+        middle: 7.265892
+        distal: 12.385521
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 8.365382
+        proximal: -24.138012
+        middle: 19.007782
+        distal: 10.475603
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.8153612
+    pose:
+      thumb:
+        spread: 7.2757936
+        proximal: -9.781691
+        middle: 0.069004044
+        distal: 7.1877136
+        adduction: 0
+        twist: 0
+        spreadMiddle: -0.99676645
+        opposition: 0
+      index:
+        spread: -3.2712464
+        proximal: -9.792946
+        middle: 2.0183024
+        distal: 37.219646
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -17.421574
+        middle: 18.9729
+        distal: 0.69300807
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.76842
+        proximal: -9.151674
+        middle: 7.0310144
+        distal: 11.505342
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 8.160501
+        proximal: -22.280958
+        middle: 17.823223
+        distal: 10.04989
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.83558935
+    pose:
+      thumb:
+        spread: 6.469615
+        proximal: -8.664078
+        middle: -0.31436902
+        distal: 5.3310924
+        adduction: 0
+        twist: 0
+        spreadMiddle: -1.0923399
+        opposition: 0
+      index:
+        spread: -3.0578759
+        proximal: -7.929738
+        middle: 1.974749
+        distal: 36.48585
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -15.319987
+        middle: 18.51537
+        distal: 1.1730797
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.308154
+        proximal: -7.64982
+        middle: 6.8853636
+        distal: 10.622287
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 7.9846396
+        proximal: -20.861303
+        middle: 16.617176
+        distal: 9.52888
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.85551333
+    pose:
+      thumb:
+        spread: 5.999009
+        proximal: -7.8930817
+        middle: -0.323516
+        distal: 4.437063
+        adduction: 0
+        twist: 0
+        spreadMiddle: -1.2019289
+        opposition: 0
+      index:
+        spread: -3.2474189
+        proximal: -6.799887
+        middle: 2.1519358
+        distal: 36.100338
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -14.058615
+        middle: 18.266697
+        distal: 1.4225082
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.082929
+        proximal: -6.860038
+        middle: 6.6879473
+        distal: 9.550118
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 8.06014
+        proximal: -19.866224
+        middle: 15.638763
+        distal: 9.161272
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.87589353
+    pose:
+      thumb:
+        spread: 5.735466
+        proximal: -7.4947395
+        middle: -0.332663
+        distal: 3.7578812
+        adduction: 0
+        twist: 0
+        spreadMiddle: -1.2753465
+        opposition: 0
+      index:
+        spread: -3.313829
+        proximal: -6.1668983
+        middle: 2.2541788
+        distal: 35.965412
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -12.973694
+        middle: 18.055721
+        distal: 1.5059643
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -4.9592338
+        proximal: -6.114302
+        middle: 6.632867
+        distal: 8.533199
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 8.131847
+        proximal: -19.208324
+        middle: 15.065714
+        distal: 8.986166
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.89520913
+    pose:
+      thumb:
+        spread: 5.662798
+        proximal: -7.1012053
+        middle: -0.20017648
+        distal: 3.3699253
+        adduction: 0
+        twist: 0
+        spreadMiddle: -1.5003507
+        opposition: 0
+      index:
+        spread: -3.5119271
+        proximal: -5.56582
+        middle: 2.3721633
+        distal: 35.830482
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -12.048014
+        middle: 18.01678
+        distal: 1.4287007
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -4.9965887
+        proximal: -5.8710318
+        middle: 6.664598
+        distal: 7.5892553
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 7.9061813
+        proximal: -18.554415
+        middle: 14.6065445
+        distal: 9.068307
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.9146768
+    pose:
+      thumb:
+        spread: 5.552616
+        proximal: -7.092267
+        middle: -0.030312395
+        distal: 3.2555633
+        adduction: 0
+        twist: 0
+        spreadMiddle: -1.7085911
+        opposition: 0
+      index:
+        spread: -3.763929
+        proximal: -5.5233107
+        middle: 2.4885764
+        distal: 35.835674
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -11.758287
+        middle: 18.074356
+        distal: 1.2966835
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.271552
+        proximal: -5.732623
+        middle: 6.803176
+        distal: 7.556445
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 7.634038
+        proximal: -18.430914
+        middle: 14.535034
+        distal: 9.164194
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.9353612
+    pose:
+      thumb:
+        spread: 5.6237855
+        proximal: -7.094426
+        middle: 0.1475075
+        distal: 3.1171222
+        adduction: 0
+        twist: 0
+        spreadMiddle: -1.9549191
+        opposition: 0
+      index:
+        spread: -3.9258575
+        proximal: -5.4808006
+        middle: 2.4922433
+        distal: 35.816322
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -11.468562
+        middle: 18.104837
+        distal: 1.181844
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.5465155
+        proximal: -5.69232
+        middle: 6.7840095
+        distal: 7.5416517
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 7.4482017
+        proximal: -18.307415
+        middle: 14.474965
+        distal: 9.311332
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.9409886
+    pose:
+      thumb:
+        spread: 5.7250495
+        proximal: -7.117486
+        middle: 0.26558918
+        distal: 2.8094223
+        adduction: 0
+        twist: 0
+        spreadMiddle: -2.1872315
+        opposition: 0
+      index:
+        spread: -3.7855706
+        proximal: -5.461193
+        middle: 2.4919028
+        distal: 35.782204
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -11.345507
+        middle: 18.13972
+        distal: 1.1084359
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.8161664
+        proximal: -5.870793
+        middle: 6.81661
+        distal: 7.6607223
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 7.3676987
+        proximal: -18.239506
+        middle: 14.333035
+        distal: 9.524533
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.95072246
+    pose:
+      thumb:
+        spread: 5.8622613
+        proximal: -7.2109885
+        middle: 0.44420958
+        distal: 2.5941498
+        adduction: 0
+        twist: 0
+        spreadMiddle: -2.3113687
+        opposition: 0
+      index:
+        spread: -3.648415
+        proximal: -5.5211
+        middle: 2.4528074
+        distal: 35.605686
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -11.219592
+        middle: 18.174603
+        distal: 0.85647
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.873496
+        proximal: -6.022472
+        middle: 6.8011475
+        distal: 7.754152
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 7.4104414
+        proximal: -18.14547
+        middle: 14.207123
+        distal: 9.745111
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.95619774
+    pose:
+      thumb:
+        spread: 5.865486
+        proximal: -7.2633834
+        middle: 0.5610632
+        distal: 2.4211657
+        adduction: 0
+        twist: 0
+        spreadMiddle: -2.1630445
+        opposition: 0
+      index:
+        spread: -3.5112598
+        proximal: -5.6131334
+        middle: 2.3674133
+        distal: 35.524796
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -11.435313
+        middle: 18.27879
+        distal: 0.6045042
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.9308257
+        proximal: -6.200945
+        middle: 6.7436233
+        distal: 7.8475814
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 7.650819
+        proximal: -18.177893
+        middle: 14.132825
+        distal: 9.708445
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.9657795
+    pose:
+      thumb:
+        spread: 5.868711
+        proximal: -7.247757
+        middle: 0.6720483
+        distal: 2.3054266
+        adduction: 0
+        twist: 0
+        spreadMiddle: -1.9605389
+        opposition: 0
+      index:
+        spread: -3.401883
+        proximal: -5.789914
+        middle: 2.2460527
+        distal: 35.47892
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -11.754457
+        middle: 18.382973
+        distal: 0.44646367
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.866797
+        proximal: -6.406869
+        middle: 6.686099
+        distal: 7.8335023
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 7.891196
+        proximal: -18.17948
+        middle: 14.014471
+        distal: 9.671776
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.97596955
+    pose:
+      thumb:
+        spread: 5.8528132
+        proximal: -7.221032
+        middle: 0.84262276
+        distal: 2.0436063
+        adduction: 0
+        twist: 0
+        spreadMiddle: -1.7444904
+        opposition: 0
+      index:
+        spread: -3.3641644
+        proximal: -5.981957
+        middle: 2.1232052
+        distal: 35.552143
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -12.148302
+        middle: 18.380905
+        distal: 0.30390596
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.802768
+        proximal: -6.6810923
+        middle: 6.734552
+        distal: 7.8595304
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 8.022536
+        proximal: -18.181067
+        middle: 13.979846
+        distal: 9.661149
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.9857034
+    pose:
+      thumb:
+        spread: 5.848154
+        proximal: -7.283868
+        middle: 1.2078602
+        distal: 1.9510453
+        adduction: 0
+        twist: 0
+        spreadMiddle: -1.602309
+        opposition: 0
+      index:
+        spread: -3.2568512
+        proximal: -6.3039083
+        middle: 1.9444526
+        distal: 35.539005
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -12.5632305
+        middle: 18.419338
+        distal: 0.3274145
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.5851045
+        proximal: -6.8575883
+        middle: 6.8263273
+        distal: 7.747679
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 8.213442
+        proximal: -18.085754
+        middle: 14.080236
+        distal: 9.41934
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 0.9911787
+    pose:
+      thumb:
+        spread: 5.8434944
+        proximal: -7.346705
+        middle: 1.5125592
+        distal: 1.8584837
+        adduction: 0
+        twist: 0
+        spreadMiddle: -1.5553011
+        opposition: 0
+      index:
+        spread: -3.1378512
+        proximal: -6.5808477
+        middle: 1.8044548
+        distal: 35.525867
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -12.909719
+        middle: 18.457771
+        distal: 0.52948064
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.480361
+        proximal: -7.0340843
+        middle: 6.914399
+        distal: 7.66147
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 8.389703
+        proximal: -17.990442
+        middle: 14.180629
+        distal: 9.1701565
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  - time: 1
+    pose:
+      thumb:
+        spread: 5.972821
+        proximal: -7.4506493
+        middle: 1.7668116
+        distal: 1.7696474
+        adduction: 0
+        twist: 0
+        spreadMiddle: -1.6291682
+        opposition: 0
+      index:
+        spread: -3.0188518
+        proximal: -6.828992
+        middle: 1.7070887
+        distal: 35.417107
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      middle:
+        spread: 0
+        proximal: -13.129704
+        middle: 18.324425
+        distal: 0.73154676
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      ring:
+        spread: -5.375617
+        proximal: -7.2105803
+        middle: 6.9577208
+        distal: 7.57526
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      pinky:
+        spread: 8.560895
+        proximal: -17.949133
+        middle: 14.2734585
+        distal: 8.920971
+        adduction: 0
+        twist: 0
+        spreadMiddle: 0
+        opposition: 0
+      wristEuler: {x: 0, y: 0, z: 0}
+      wristOffset: {x: 0, y: 0, z: 0}
+      adduction: 0
+  medianWindow: 3
+  averageWindow: 5
+  convergedFrames: 69
+  spreadUndeterminableFrames: 0
+  failedFrames: 0
+  tipErrorMedian: 0.15219063
+  tipErrorP95: 0.26214853
+  thumb3AffectedPercent: 73.91304
+  wristRotationMedianDegrees: 10.232075
+  wristRotationMaxDegrees: 19.088257
+  notes: "Horneado desde la secuencia 187 de NumberLandmarkTemplates.asset. Duraci\xF3n
+    PROVISIONAL (88 fotogramas medianos / 30 = 2,93 s). Mu\xF1eca en cero (rotaci\xF3n
+    no aplicada). Validaci\xF3n LSC pendiente de un hablante o int\xE9rprete; sin
+    referencias para este n\xFAmero."
