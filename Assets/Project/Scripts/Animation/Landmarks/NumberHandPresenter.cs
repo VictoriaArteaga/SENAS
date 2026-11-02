@@ -9,7 +9,8 @@ namespace Lumina.Animation.Landmarks
     /// Muestra la mano 3D con la seña de un número (0 a 5) en la casa de los números. Se engancha al botón VER SEÑA del panel
     /// (<see cref="LearningLevelController.DemonstrationRequested"/>), que hoy no tiene oyentes: el número se lee del texto grande
     /// del propio panel, así no hace falta tocar ni leer miembros privados de <see cref="LearningLevelController"/>.
-    /// Solo habilita VER SEÑA para los números 0 a 5 (el resto sigue mostrando el aviso que ya existía).
+    /// Habilita VER SEÑA para los números 0 a 5 (pose estática) y para los que tengan un <see cref="NumberSignClip"/> asignado en
+    /// <c>clips</c> (animación única que mantiene la última pose); el resto sigue mostrando el aviso que ya existía.
     /// La mano está oculta hasta que se pide; al pedirla se coloca delante de la cámara del jugador, en el lado libre del panel,
     /// con la palma hacia el jugador y los dedos hacia arriba (mano derecha, como en las imágenes de referencia), y se oculta
     /// al cambiar de número o al cerrar el panel. El 0 sigue provisional (ver <see cref="NumberPoseTestController.ShowNumber"/>).
@@ -25,10 +26,16 @@ namespace Lumina.Animation.Landmarks
         [Tooltip("Cámara del jugador. Vacío = Camera.main.")]
         [SerializeField] private Camera viewCamera;
 
+        [Header("Clips animados (números 6 en adelante)")]
+        [Tooltip("Clips horneados con NumberSignClipBaker. VER SEÑA se habilita para 0 a 5 y para los números que tengan un clip aquí; los demás conservan el aviso.")]
+        [SerializeField] private NumberSignClip[] clips = new NumberSignClip[0];
+        [Tooltip("Con true (por defecto) se muestran también los clips con lscValidated = false. Con false, VER SEÑA queda deshabilitado para los clips no validados por un hablante o intérprete de LSC.")]
+        [SerializeField] private bool allowUnvalidatedClips = true;
+
         [Header("Encuadre (relativo a la cámara)")]
-        [Tooltip("Posición en pantalla del centro de la mano (0 a 1). El panel ocupa el lado derecho; la mano va a la izquierda.")]
-        [SerializeField, Range(0.05f, 0.95f)] private float viewportX = 0.27f;
-        [SerializeField, Range(0.05f, 0.95f)] private float viewportY = 0.5f;
+        [Tooltip("Posición en pantalla del centro de la mano (0 a 1). El panel ocupa el lado derecho; la mano va a la izquierda, bajo el cubo del decorado y sobre el botón SALIR A LÚMINA.")]
+        [SerializeField, Range(0.05f, 0.95f)] private float viewportX = 0.20f;
+        [SerializeField, Range(0.05f, 0.95f)] private float viewportY = 0.45f;
         [Tooltip("Distancia deseada a la cámara en metros.")]
         [SerializeField, Min(0.3f)] private float distance = 0.9f;
         [Tooltip("Distancia mínima si hay una pared u objeto delante; la mano se acerca y conserva su tamaño aparente.")]
@@ -36,7 +43,7 @@ namespace Lumina.Animation.Landmarks
         [Tooltip("Margen respecto a lo que haya delante, en metros.")]
         [SerializeField, Min(0f)] private float clearance = 0.1f;
         [Tooltip("Altura de la mano (muñeca a punta del medio) como fracción del alto de pantalla.")]
-        [SerializeField, Range(0.2f, 0.9f)] private float heightFraction = 0.5f;
+        [SerializeField, Range(0.2f, 0.9f)] private float heightFraction = 0.37f;
 
         private Transform _root;
         private HandPoseDriver _driver;
@@ -48,6 +55,7 @@ namespace Lumina.Animation.Landmarks
         private readonly RaycastHit[] _hits = new RaycastHit[16];
         private bool _visible;
         private int _shownNumber = -1;
+        private NumberSignClipPlayer _player;
 
         /// <summary>Verdadero mientras la mano está a la vista.</summary>
         public bool IsVisible => _visible;
@@ -61,6 +69,8 @@ namespace Lumina.Animation.Landmarks
                 return;
             }
             _root = hand.transform;
+            _player = _root.GetComponent<NumberSignClipPlayer>();
+            if (_player == null) _player = _root.gameObject.AddComponent<NumberSignClipPlayer>();
             _root.gameObject.SetActive(false);
         }
 
@@ -79,7 +89,7 @@ namespace Lumina.Animation.Landmarks
         {
             bool open = level.IsOpen;
             int n = ReadNumber();
-            if (open) level.DemonstrationAvailable = n >= 0 && n <= 5;
+            if (open) level.DemonstrationAvailable = CanShow(n);
             if (_visible && (!open || n != _shownNumber)) Hide();
         }
 
@@ -93,14 +103,29 @@ namespace Lumina.Animation.Landmarks
         private void OnDemonstration()
         {
             int n = ReadNumber();
-            if (n < 0 || n > 5) return;
+            if (!CanShow(n)) return;
             Present(n);
         }
 
-        /// <summary>Muestra la mano con el número (0 a 5) delante de la cámara. Devuelve false si no se pudo.</summary>
+        /// <summary>Hay demostración para 0 a 5 (pose estática) y para los números con un clip jugable.</summary>
+        public bool CanShow(int n) => (n >= 0 && n <= 5) || FindClip(n) != null;
+
+        private NumberSignClip FindClip(int n)
+        {
+            if (clips == null) return null;
+            foreach (var clip in clips)
+                if (clip != null && clip.Number == n && clip.IsPlayable && (allowUnvalidatedClips || clip.LscValidated)) return clip;
+            return null;
+        }
+
+        /// <summary>
+        /// Muestra la mano con el número delante de la cámara: pose estática para 0 a 5 y clip animado (una vez, manteniendo la última pose)
+        /// para los números con clip. Volver a llamarla con el mismo número repite la demostración. Devuelve false si no se pudo.
+        /// </summary>
         public bool Present(int n)
         {
-            if (n < 0 || n > 5 || _root == null) return false;
+            var clip = n > 5 ? FindClip(n) : null;
+            if (n < 0 || (n > 5 && clip == null) || _root == null) return false;
             if (!_root.gameObject.activeSelf) _root.gameObject.SetActive(true);
             if (!EnsureFrame())
             {
@@ -108,15 +133,27 @@ namespace Lumina.Animation.Landmarks
                 Hide();
                 return false;
             }
-            if (!hand.ShowNumber(n))
+            if (clip == null)
             {
+                _player.Stop();
+                if (!hand.ShowNumber(n))
+                {
+                    Hide();
+                    return false;
+                }
+            }
+            else if (!_player.Play(clip))
+            {
+                Debug.LogError($"[NumberHand] No se pudo reproducir el clip del número {n}.", this);
                 Hide();
                 return false;
             }
             _shownNumber = n;
             _visible = true;
             Place();
-            Debug.Log($"[NumberHand] VER SEÑA → número {n}. {hand.Status}", this);
+            Debug.Log(clip == null
+                ? $"[NumberHand] VER SEÑA → número {n}. {hand.Status}"
+                : $"[NumberHand] VER SEÑA → número {n} (clip, {clip.Frames.Count} fotogramas, {clip.DurationSeconds:0.00} s PROVISIONAL).", this);
             return true;
         }
 
@@ -125,6 +162,7 @@ namespace Lumina.Animation.Landmarks
         {
             _visible = false;
             _shownNumber = -1;
+            if (_player != null) _player.Stop();
             if (_root != null) _root.gameObject.SetActive(false);
         }
 
