@@ -7,9 +7,11 @@ namespace Lumina.Core
     public enum GameLanguage { Spanish = 0, English = 1 }
 
     /// <summary>
-    /// Ajustes locales del jugador (PlayerPrefs) y única fuente de verdad de idioma y tema. Los valores se guardan; aplicar el
-    /// volumen/cámara es trabajo de cada sistema, y los eventos <see cref="LanguageChanged"/> / <see cref="ThemeChanged"/>
-    /// avisan a la interfaz para que se actualice sin recargar escenas.
+    /// Ajustes del jugador y única fuente de verdad de idioma y tema. Volumen, cámara y calidad son del dispositivo y se guardan
+    /// en PlayerPrefs. El IDIOMA y el TEMA son del jugador: viven en su perfil del backend (los aplica <c>Lumina.Api.ProfileSync</c>
+    /// al iniciar sesión y los guarda cuando cambian); aquí solo están en memoria, y antes del login valen los valores por defecto
+    /// (español, tema claro). Los eventos <see cref="LanguageChanged"/> / <see cref="ThemeChanged"/> avisan a la interfaz para que
+    /// se actualice sin recargar escenas.
     /// </summary>
     public static class GameSettings
     {
@@ -17,10 +19,11 @@ namespace Lumina.Core
         /// <summary>Nivel de calidad tras «Restaurar»: el penúltimo (o el único) de la lista del proyecto.</summary>
         public static int DefaultQualityLevel => Mathf.Max(0, QualitySettings.names.Length - 2);
         private const string MusicKey = "settings.music", SfxKey = "settings.sfx", CameraKey = "settings.camera", QualityKey = "settings.quality";
-        private const string LanguageKey = "settings.language", DarkKeyPrefix = "settings.dark.user.";
 
         public static event Action LanguageChanged;
         public static event Action ThemeChanged;
+        /// <summary>Se emite cuando el JUGADOR cambia el idioma o el tema (no al aplicar las preferencias de su perfil).</summary>
+        public static event Action PreferencesEdited;
 
         public static float MusicVolume
         {
@@ -52,80 +55,68 @@ namespace Lumina.Core
             }
         }
 
-        /// <summary>Idioma de la interfaz. Español por defecto; cambiarlo avisa a toda la UI al instante.</summary>
+        private static GameLanguage _language = GameLanguage.Spanish;
+
+        /// <summary>Idioma de la interfaz. Español por defecto; cambiarlo avisa a toda la UI al instante (y, con sesión, se guarda en el perfil).</summary>
         public static GameLanguage Language
         {
-            get => PlayerPrefs.GetInt(LanguageKey, 0) == 1 ? GameLanguage.English : GameLanguage.Spanish;
+            get => _language;
             set
             {
-                if (Language == value) return;
-                PlayerPrefs.SetInt(LanguageKey, (int)value);
-                Save();
+                if (_language == value) return;
+                _language = value;
                 LanguageChanged?.Invoke();
+                PreferencesEdited?.Invoke();
             }
         }
 
-        /// <summary>Enlaza la sesión con el tema (una sola vez, sin duplicar suscripciones). Se llama sola al arrancar el juego.</summary>
+        /// <summary>Aplica idioma y tema que vienen del perfil (o los valores por defecto) sin tratarlos como un cambio del jugador.</summary>
+        public static void ApplyPreferences(GameLanguage language, bool dark)
+        {
+            if (_language != language) { _language = language; LanguageChanged?.Invoke(); }
+            SetActiveTheme(dark);
+        }
+
+        /// <summary>Enlaza el cierre de sesión con los valores por defecto (una sola vez, sin duplicar suscripciones). Se llama sola al arrancar el juego.</summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void BindSession()
         {
-            _userId = null; _activeDark = false; // arranque (y recarga de dominio): sin sesión, tema claro
+            _language = GameLanguage.Spanish; _activeDark = false; // arranque (y recarga de dominio): sin sesión, valores por defecto
             EnsureBound();
         }
 
-        /// <summary>Suscribe el tema a la sesión (idempotente: nunca duplica) y, si ya hay una sesión activa, adopta su preferencia.</summary>
+        /// <summary>Suscribe el cierre de sesión (idempotente: nunca duplica).</summary>
         public static void EnsureBound()
         {
-            AuthSession.SignedIn -= BeginSession; AuthSession.SignedIn += BeginSession;
             AuthSession.SignedOut -= EndSession; AuthSession.SignedOut += EndSession;
-            if (AuthSession.IsSignedIn && _userId == null && !string.IsNullOrEmpty(AuthSession.UserId)) BeginSession(AuthSession.UserId);
         }
 
         [System.Diagnostics.Conditional("UNITY_EDITOR"), System.Diagnostics.Conditional("DEVELOPMENT_BUILD")]
         private static void Trace(string message) => Debug.Log("[Tema] " + message);
 
         private static bool _activeDark;   // tema en uso ahora mismo; no se persiste (siempre arranca en claro)
-        private static string _userId;     // cuenta con sesión iniciada; null = nadie
-
-        private static string DarkKey(string userId) => DarkKeyPrefix + userId;
-
-        /// <summary>Preferencia guardada de una cuenta (claro si nunca eligió).</summary>
-        public static bool GetThemePreference(string userId) => !string.IsNullOrEmpty(userId) && PlayerPrefs.GetInt(DarkKey(userId), 0) == 1;
 
         /// <summary>
         /// Tema ACTIVO. Leerlo da el tema que se está mostrando; asignarlo lo aplica al instante y, con sesión iniciada,
-        /// guarda además la preferencia de esa cuenta (sin sesión no se guarda nada).
+        /// se guarda en el perfil del backend (sin sesión solo queda activo en esta ejecución).
         /// </summary>
         public static bool DarkMode
         {
             get => _activeDark;
             set
             {
-                if (!string.IsNullOrEmpty(_userId))
-                {
-                    PlayerPrefs.SetInt(DarkKey(_userId), value ? 1 : 0);
-                    Save();
-                    Trace($"preferencia guardada: {DarkKey(_userId)} = {(value ? 1 : 0)}");
-                }
-                else Trace("tema cambiado SIN sesión: solo activo, no se guarda");
+                if (_activeDark == value) return;
+                Trace("tema cambiado por el jugador: " + (value ? "oscuro" : "claro"));
                 SetActiveTheme(value);
+                PreferencesEdited?.Invoke();
             }
         }
 
-        /// <summary>Inicio de sesión confirmado: el tema activo pasa a ser la preferencia de la cuenta (claro si nunca eligió, también en cuentas nuevas: cada cuenta tiene su propia clave).</summary>
-        private static void BeginSession(string userId)
-        {
-            _userId = string.IsNullOrEmpty(userId) ? null : userId;
-            Trace($"sesión iniciada: id='{_userId}' preferencia oscuro={GetThemePreference(_userId)}");
-            SetActiveTheme(GetThemePreference(_userId));
-        }
-
-        /// <summary>Cierre de sesión confirmado: el tema activo vuelve a claro; la preferencia guardada de la cuenta no se toca.</summary>
+        /// <summary>Cierre de sesión confirmado: vuelven los valores por defecto (español, tema claro). Lo guardado en el perfil no se toca.</summary>
         private static void EndSession()
         {
-            _userId = null;
-            Trace("sesión cerrada: tema activo -> claro");
-            SetActiveTheme(false);
+            Trace("sesión cerrada: idioma y tema por defecto");
+            ApplyPreferences(GameLanguage.Spanish, false);
         }
 
         private static void SetActiveTheme(bool dark)

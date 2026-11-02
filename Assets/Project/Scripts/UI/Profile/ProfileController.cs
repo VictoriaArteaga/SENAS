@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Lumina.Api;
 using Lumina.Auth;
 using Lumina.Core;
 using Lumina.Player;
@@ -9,8 +10,9 @@ using Lumina.Player;
 namespace Lumina.UI
 {
     /// <summary>
-    /// «MI PROGRESO»: pinta el avatar elegido y los datos de <see cref="PlayerProgressService"/>. No calcula nada propio;
-    /// cuando el progreso venga de Firebase solo cambia el proveedor.
+    /// «MI PROGRESO»: pinta el nombre, el avatar y los datos que el backend tiene del jugador (perfil y progreso, vía
+    /// <see cref="ProfileStore"/> y <see cref="PlayerProgressService"/>). No calcula nada propio: pinta lo que haya en la caché y
+    /// la actualiza al abrir la pantalla.
     /// </summary>
     public class ProfileController : MonoBehaviour
     {
@@ -52,14 +54,35 @@ namespace Lumina.UI
             ShowAvatar();
             _progress = PlayerProgressService.Load();
             Bind(_progress);
+            RefreshFromBackend();
             if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(header.gameObject.GetComponentInChildren<Button>().gameObject);
+        }
+
+        /// <summary>Vuelve a pedir al backend el perfil, el progreso y la precisión media, y repinta con lo que llegue.</summary>
+        private async void RefreshFromBackend()
+        {
+            if (!ApiSession.HasSession) return; // sin sesión (por ejemplo, la simulación): no hay nada que pedir
+            try
+            {
+                await System.Threading.Tasks.Task.WhenAll(
+                    ProfileStore.LoadAsync(), ProgressStore.RefreshAsync(), ProgressStore.LoadAveragePrecisionAsync());
+                if (this == null) return;
+                _progress = PlayerProgressService.Load();
+                Bind(_progress);
+                ShowName();
+            }
+            catch (ApiException e)
+            {
+                if (this != null) Toast.Show(ApiMessages.For(e));
+            }
         }
 
         private void ShowAvatar()
         {
             ShowName();
-            // Sin avatar elegido en esta ejecución se muestra el primero del catálogo, para no dejar el escenario vacío.
-            var entry = avatarCatalog != null ? (avatarCatalog.Find(AuthSession.AvatarId) ?? avatarCatalog.First()) : null;
+            // Sin avatar elegido se muestra el primero del catálogo, para no dejar el escenario vacío.
+            string avatarId = ProfileStore.Current?.avatarId ?? AuthSession.AvatarId;
+            var entry = avatarCatalog != null ? (avatarCatalog.Find(avatarId) ?? avatarCatalog.First()) : null;
             if (entry == null) return;
 
             var body = Instantiate(entry.prefab, avatarAnchor);
@@ -70,7 +93,8 @@ namespace Lumina.UI
 
         private void ShowName()
         {
-            playerNameLabel.text = string.IsNullOrWhiteSpace(AuthSession.DisplayName) ? Loc.T("progress.player") : AuthSession.DisplayName.ToUpperInvariant();
+            string name = ProfileStore.Current?.displayName ?? AuthSession.DisplayName;
+            playerNameLabel.text = string.IsNullOrWhiteSpace(name) ? Loc.T("progress.player") : name.ToUpperInvariant();
         }
 
         private void Bind(PlayerProgress progress)
