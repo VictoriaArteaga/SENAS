@@ -52,8 +52,21 @@ namespace Senas.AI.MediaPipe
     private readonly object _resultLock = new object();
     private HandLandmarkFrame _pendingResult;
     private long _lastTimestampMilliseconds;
+    private bool _cameraRestartWarningLogged;
 
-    private IEnumerator Start()
+    private void OnEnable()
+    {
+      if (Application.isPlaying) StartCoroutine(InitializeAfterEnable());
+    }
+
+    private IEnumerator InitializeAfterEnable()
+    {
+      // AddComponent callers can assign a shared webcam immediately after OnEnable.
+      yield return null;
+      yield return InitializeAndCapture();
+    }
+
+    private IEnumerator InitializeAndCapture()
     {
       var devices = WebCamTexture.devices;
       if (_sharedWebCamTexture == null && (devices == null || devices.Length == 0))
@@ -97,8 +110,9 @@ namespace Senas.AI.MediaPipe
       }
 
       var timeoutFrames = 2000;
-      while (_webCamTexture != null && _webCamTexture.width <= 16 && timeoutFrames-- > 0)
+      while (_webCamTexture != null && (_webCamTexture.width <= 16 || !_webCamTexture.isPlaying) && timeoutFrames-- > 0)
       {
+        if (!_webCamTexture.isPlaying) _webCamTexture.Play();
         yield return null;
       }
 
@@ -109,11 +123,31 @@ namespace Senas.AI.MediaPipe
         yield break;
       }
 
-      _textureFramePool = new TextureFramePool(_webCamTexture.width, _webCamTexture.height, TextureFormat.RGBA32, 3);
       var waitForEndOfFrame = new WaitForEndOfFrame();
 
-      while (isActiveAndEnabled && _webCamTexture != null && _webCamTexture.isPlaying)
+      while (isActiveAndEnabled && _webCamTexture != null)
       {
+        if (!_webCamTexture.isPlaying || _webCamTexture.width <= 16)
+        {
+          _webCamTexture.Play();
+          var restartTimeout = 300;
+          while (isActiveAndEnabled && _webCamTexture != null && (!_webCamTexture.isPlaying || _webCamTexture.width <= 16) && restartTimeout-- > 0)
+            yield return null;
+          if (_webCamTexture == null || !_webCamTexture.isPlaying || _webCamTexture.width <= 16)
+          {
+            if (!_cameraRestartWarningLogged)
+            {
+              Debug.LogWarning("MediaPipe hand capture: webcam paused; retrying camera startup.", this);
+              _cameraRestartWarningLogged = true;
+            }
+            yield return new WaitForSecondsRealtime(1f);
+            continue;
+          }
+          _cameraRestartWarningLogged = false;
+        }
+
+        if (_textureFramePool == null)
+          _textureFramePool = new TextureFramePool(_webCamTexture.width, _webCamTexture.height, TextureFormat.RGBA32, 3);
         if (!_textureFramePool.TryGetTextureFrame(out var textureFrame))
         {
           yield return waitForEndOfFrame;
