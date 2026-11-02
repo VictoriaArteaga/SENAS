@@ -1,0 +1,526 @@
+{
+  "levels": [
+    {
+      "code": "ALPHABET",
+      "name": "Alphabet",
+      "description": "The 27 letters of the Spanish alphabet in Colombian Sign Language.",
+      "position": 1,
+      "requiredXp": 0,
+      "items": [
+        {
+          "code": "A",
+          "name": "Letter A",
+          "type": "LETTER",
+          "position": 1
+        },
+        {
+          "code": "B",
+          "name": "Letter B",
+          "type": "LETTER",
+          "position": 2
+        },
+        {
+          "code": "C",
+          "name": "Letter C",
+          "type": "LETTER",
+          "position": 3
+        },
+        {
+          "code": "D",
+          "name": "Letter D",
+          "type": "LETTER",
+          "position": 4
+        },
+        {
+          "code": "E",
+          "name": "Letter E",
+          "type": "LETTER",
+          "position": 5
+        },
+        {
+          "code": "F",
+          "name": "Letter F",
+          "type": "LETTER",
+          "position": 6
+        },
+        {
+          "code": "G",
+          "name": "Letter G",
+          "type": "LETTER",
+          "position": 7
+        },
+        {
+          "code": "H",
+          "name": "Letter H",
+          "type": "LETTER",
+          "position": 8
+        },
+        {
+          "code": "I",
+          "name": "Letter I",
+          "type": "LETTER",
+          "position": 9
+        },
+        {
+          "code": "J",
+          "name": "Letter J",
+          "type": "LETTER",
+          "position": 10
+        },
+        {
+          "code": "K",
+          "name": "Letter K",
+          "type": "LETTER",
+          "position": 11
+        },
+        {
+          "code": "L",
+          "name": "Letter L",
+          "type": "LETTER",
+          "position": 12
+        },
+        {
+          "code": "M",
+          "name": "Letter M",
+          "type": "LETTER",
+          "position": 13
+        },
+        {
+          "code": "N",
+          "name": "Letter N",
+          "type": "LETTER",
+          "position": 14
+        },
+        {
+          "code": "Ñ",
+          "name": "Letter Ñ",
+          "type": "LETTER",
+          "position": 15
+        },
+        {
+          "code": "O",
+          "name": "Letter O",
+          "type": "LETTER",
+          "position": 16
+        },
+        {
+          "code": "P",
+          "name": "Letter P",
+          "type": "LETTER",
+          "position": 17
+        },
+        {
+          "code": "Q",
+          "name": "Letter Q",
+          "type": "LETTER",
+          "position": 18
+        },
+        {
+          "code": "R",
+          "name": "Letter R",
+          "type": "LETTER",
+          "position": 19
+        },
+        {
+          "code": "S",
+          "name": "Letter S",
+          "type": "LETTER",
+          "position": 20
+        },
+        {
+          "code": "T",
+          "name": "Letter T",
+          "type": "LETTER",
+          "position": 21
+        },
+        {
+          "code": "U",
+          "name": "Letter U",
+          "type": "LETTER",
+          "position": 22
+        },
+        {
+          "code": "V",
+          "name": "Letter V",
+          "type": "LETTER",
+          "position": 23
+        },
+        {
+          "code": "W",
+          "name": "Letter W",
+          "type": "LETTER",
+          "position": 24
+        },
+        {
+          "code": "X",
+          "name": "Letter X",
+          "type": "LETTER",
+          "position": 25
+        },
+        {
+          "code": "Y",
+          "name": "Letter Y",
+          "type": "LETTER",
+          "position": 26
+        },
+        {
+          "code": "Z",
+          "name": "Letter Z",
+          "type": "LETTER",
+          "position": 27
+        }
+      ]
+    },
+    {
+      "code": "NUMBERS",
+      "name": "Numbers",
+      "description": "Numbers from 0 to 30.",
+      "position": 2,
+      "requiredXp": 300,
+      "items": [
+        {
+          "code": "numeros.0",
+          "name": "Number 0",
+          "type": "NUMBER",
+          "position": 1
+        },
+        {
+          "code": "numeros.1",
+          "name": "Number 1",
+          "type": "NUMBER",
+          "position": 2
+        },
+        {
+          "code": "numeros.2",
+          "name": "Number 2",
+          "type": "NUMBER",
+          "position": 3
+        },
+        {
+          "code": "numeros.3",
+          "name": "Number 3",
+          "type": "NUMBER",
+          "position": 4
+        },
+        {
+          "code": "numeros.4",
+          "name": "Number 4",
+          "type": "NUMBER",
+          "position": 5
+        },
+        {
+          "code": "numeros.5",
+          "name": "Number 5",
+          "type": "NUMBER",
+          "position": 6
+        },
+        {
+          "code": "numeros.6",
+          "name": "Number 6",
+          "type": "NUMBER",
+          "position": 7
+        },
+        {
+          "code": "numeros.7",
+          "name": "Number 7",
+          "type": "NUMBER",
+          "position": 8
+        },
+        {
+          "code": "numeros.8",
+          "name": "Number 8",
+          "type": "NUMBER",
+          "position": 9
+        },
+        {
+          "code": "numeros.9",
+          "name": "Number 9",
+          "type": "NUMBER",
+          "position": 10
+        },
+        {
+          "code": "numeros.10",
+          "name": "Number 10",
+          "type": "NUMBER",
+          "position": 11
+        },
+        {
+          "code": "numeros.11",
+          "name": "Number 11",
+          "type": "NUMBER",
+          "position": 12
+        },
+        {
+          "code": "numeros.12",
+          "name": "Number 12",
+          "type": "NUMBER",
+          "position": 13
+        },
+        {
+          "code": "numeros.13",
+          "name": "Number 13",
+          "type": "NUMBER",
+          "position": 14
+        },
+        {
+          "code": "numeros.14",
+          "name": "Number 14",
+          "type": "NUMBER",
+          "position": 15
+        },
+        {
+          "code": "numeros.15",
+          "name": "Number 15",
+          "type": "NUMBER",
+          "position": 16
+        },
+        {
+          "code": "numeros.16",
+          "name": "Number 16",
+          "type": "NUMBER",
+          "position": 17
+        },
+        {
+          "code": "numeros.17",
+          "name": "Number 17",
+          "type": "NUMBER",
+          "position": 18
+        },
+        {
+          "code": "numeros.18",
+          "name": "Number 18",
+          "type": "NUMBER",
+          "position": 19
+        },
+        {
+          "code": "numeros.19",
+          "name": "Number 19",
+          "type": "NUMBER",
+          "position": 20
+        },
+        {
+          "code": "numeros.20",
+          "name": "Number 20",
+          "type": "NUMBER",
+          "position": 21
+        },
+        {
+          "code": "numeros.21",
+          "name": "Number 21",
+          "type": "NUMBER",
+          "position": 22
+        },
+        {
+          "code": "numeros.22",
+          "name": "Number 22",
+          "type": "NUMBER",
+          "position": 23
+        },
+        {
+          "code": "numeros.23",
+          "name": "Number 23",
+          "type": "NUMBER",
+          "position": 24
+        },
+        {
+          "code": "numeros.24",
+          "name": "Number 24",
+          "type": "NUMBER",
+          "position": 25
+        },
+        {
+          "code": "numeros.25",
+          "name": "Number 25",
+          "type": "NUMBER",
+          "position": 26
+        },
+        {
+          "code": "numeros.26",
+          "name": "Number 26",
+          "type": "NUMBER",
+          "position": 27
+        },
+        {
+          "code": "numeros.27",
+          "name": "Number 27",
+          "type": "NUMBER",
+          "position": 28
+        },
+        {
+          "code": "numeros.28",
+          "name": "Number 28",
+          "type": "NUMBER",
+          "position": 29
+        },
+        {
+          "code": "numeros.29",
+          "name": "Number 29",
+          "type": "NUMBER",
+          "position": 30
+        },
+        {
+          "code": "numeros.30",
+          "name": "Number 30",
+          "type": "NUMBER",
+          "position": 31
+        }
+      ]
+    },
+    {
+      "code": "MONTHS",
+      "name": "Months of the year",
+      "description": "The twelve months of the year.",
+      "position": 3,
+      "requiredXp": 700,
+      "items": [
+        {
+          "code": "MONTH_JANUARY",
+          "name": "January",
+          "type": "MONTH",
+          "position": 1
+        },
+        {
+          "code": "MONTH_FEBRUARY",
+          "name": "February",
+          "type": "MONTH",
+          "position": 2
+        },
+        {
+          "code": "MONTH_MARCH",
+          "name": "March",
+          "type": "MONTH",
+          "position": 3
+        },
+        {
+          "code": "MONTH_APRIL",
+          "name": "April",
+          "type": "MONTH",
+          "position": 4
+        },
+        {
+          "code": "MONTH_MAY",
+          "name": "May",
+          "type": "MONTH",
+          "position": 5
+        },
+        {
+          "code": "MONTH_JUNE",
+          "name": "June",
+          "type": "MONTH",
+          "position": 6
+        },
+        {
+          "code": "MONTH_JULY",
+          "name": "July",
+          "type": "MONTH",
+          "position": 7
+        },
+        {
+          "code": "MONTH_AUGUST",
+          "name": "August",
+          "type": "MONTH",
+          "position": 8
+        },
+        {
+          "code": "MONTH_SEPTEMBER",
+          "name": "September",
+          "type": "MONTH",
+          "position": 9
+        },
+        {
+          "code": "MONTH_OCTOBER",
+          "name": "October",
+          "type": "MONTH",
+          "position": 10
+        },
+        {
+          "code": "MONTH_NOVEMBER",
+          "name": "November",
+          "type": "MONTH",
+          "position": 11
+        },
+        {
+          "code": "MONTH_DECEMBER",
+          "name": "December",
+          "type": "MONTH",
+          "position": 12
+        }
+      ]
+    },
+    {
+      "code": "GREETINGS_PHRASES",
+      "name": "Greetings and phrases",
+      "description": "Basic greetings and phrases for everyday conversation.",
+      "position": 4,
+      "requiredXp": 1200,
+      "items": [
+        {
+          "code": "PHRASE_GOOD_MORNING",
+          "name": "Good morning",
+          "type": "PHRASE",
+          "position": 1
+        },
+        {
+          "code": "PHRASE_GOOD_AFTERNOON",
+          "name": "Good afternoon",
+          "type": "PHRASE",
+          "position": 2
+        },
+        {
+          "code": "PHRASE_GOOD_EVENING",
+          "name": "Good evening",
+          "type": "PHRASE",
+          "position": 3
+        },
+        {
+          "code": "WORD_HELLO",
+          "name": "Hello",
+          "type": "WORD",
+          "position": 4
+        },
+        {
+          "code": "WORD_GOODBYE",
+          "name": "Goodbye",
+          "type": "WORD",
+          "position": 5
+        },
+        {
+          "code": "WORD_YES",
+          "name": "Yes",
+          "type": "WORD",
+          "position": 6
+        },
+        {
+          "code": "WORD_NO",
+          "name": "No",
+          "type": "WORD",
+          "position": 7
+        },
+        {
+          "code": "PHRASE_HOW_ARE_YOU",
+          "name": "How are you?",
+          "type": "PHRASE",
+          "position": 8
+        },
+        {
+          "code": "WORD_THANK_YOU",
+          "name": "Thank you",
+          "type": "WORD",
+          "position": 9
+        },
+        {
+          "code": "PHRASE_FINE_THANK_YOU",
+          "name": "Fine, thank you",
+          "type": "PHRASE",
+          "position": 10
+        },
+        {
+          "code": "PHRASE_YOU_ARE_WELCOME",
+          "name": "You're welcome",
+          "type": "PHRASE",
+          "position": 11
+        }
+      ]
+    }
+  ]
+}
