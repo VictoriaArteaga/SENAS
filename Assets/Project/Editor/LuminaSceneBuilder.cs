@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using Lumina.Interaction;
 using Lumina.NPC;
@@ -259,6 +260,9 @@ namespace Lumina.EditorTools
             existingCamera.transform.localPosition = new Vector3(0f, 1.65f, 0f);
             existingCamera.transform.localRotation = Quaternion.identity;
             existingCamera.GetComponent<Camera>().nearClipPlane = 0.1f;
+            // El postprocesado del mundo llega por el pipeline (Lumina_World_PC / Lumina_World_Mobile, ver LuminaPostProcessSetup):
+            // la cámara solo necesita tener «Post Processing» activado. No se añade ningún Volume a la escena.
+            existingCamera.GetComponent<Camera>().GetUniversalAdditionalCameraData().renderPostProcessing = true;
 
             player.AddComponent<FirstPersonController>();
         }

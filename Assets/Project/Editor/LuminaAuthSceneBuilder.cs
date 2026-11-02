@@ -42,9 +42,8 @@ namespace Lumina.EditorTools
         private const string MaterialDir = "Assets/Project/Materials/Auth/";
         private const string GroundMaterialPath = "Assets/Project/Materials/Lumina_Ground.mat";
 
-        // Cielo y perfil de postproceso del menú principal (se buscan por GUID para no depender de su ruta).
+        // Cielo de las pantallas con fondo 3D. Su perfil de postproceso es Lumina_UI_2D (ver LuminaPostProcessSetup).
         internal const string WorldSkyPath = "Assets/Models/Fantasy Skybox FREE/Panoramics/FS002/FS002_Day.mat";
-        private const string MenuVolumeGuid = "10fc4df2da32a41aaa32d77bc913491c";
 
         private struct AvatarSpec
         {
@@ -699,7 +698,7 @@ namespace Lumina.EditorTools
             var volumeGo = new GameObject("Global Volume");
             var volume = volumeGo.AddComponent<Volume>();
             volume.isGlobal = true;
-            volume.sharedProfile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(AssetDatabase.GUIDToAssetPath(MenuVolumeGuid));
+            volume.sharedProfile = LuminaPostProcessSetup.EnsureUiProfile();
             DynamicGI.UpdateEnvironment();
         }
 
