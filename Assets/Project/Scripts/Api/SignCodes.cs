@@ -68,10 +68,10 @@ namespace Lumina.Api
         }
 
         /// <summary>
-        /// Contenido implementado en Unity y listo para evaluación en el backend. El nivel de Meses sigue en modo de prueba local.
+        /// Contenido implementado en Unity y listo para evaluación en el backend.
         /// </summary>
         public static bool IsImplementedInUnity(string levelCode) =>
-            levelCode == AlphabetLevel || levelCode == NumbersLevel || levelCode == GreetingsLevel;
+            levelCode == AlphabetLevel || levelCode == NumbersLevel || levelCode == GreetingsLevel || levelCode == MonthsLevel;
 
         /// <summary>Texto corto para mostrar un código de seña: la letra, o el número de «numeros.N».</summary>
         public static string DisplayName(string code)

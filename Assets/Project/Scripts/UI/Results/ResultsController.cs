@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Lumina.Api;
 using Lumina.Core;
-using Lumina.Signs;
 
 namespace Lumina.UI
 {
@@ -41,13 +40,6 @@ namespace Lumina.UI
             _submission = PracticeSession.Submission;
             _feedback = result.HasValue ? result.Value.feedback : null;
 
-            if (PracticeSession.ConsumeLocalPracticeOnly())
-            {
-                ShowLocalPracticeResult(result);
-                if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(practiceAgainButton.gameObject);
-                return;
-            }
-
             if (_submission != null)
             {
                 ShowPending();
@@ -65,26 +57,6 @@ namespace Lumina.UI
             }
 
             if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(practiceAgainButton.gameObject);
-        }
-
-        private void ShowLocalPracticeResult(SignAttemptResult? result)
-        {
-            practiceAgainButton.interactable = true;
-            xpCard.gameObject.SetActive(false);
-            if (!result.HasValue || !result.Value.evaluated)
-            {
-                starsCard.gameObject.SetActive(false);
-                precisionCard.Set("—", Loc.T("results.notEvaluated"));
-                messageLabel.text = Loc.T("results.localOnly");
-                return;
-            }
-
-            var attempt = result.Value;
-            precisionCard.Set(Mathf.RoundToInt(attempt.precision) + "%", Loc.T("results.similarity"));
-            starsCard.gameObject.SetActive(attempt.stars >= 0);
-            if (attempt.stars >= 0) starsCard.Set(attempt.stars.ToString(), Loc.T("progress.stars"));
-            messageLabel.text = (string.IsNullOrWhiteSpace(_feedback) ? Loc.T("results.good") : _feedback) +
-                "\n" + Loc.T("results.localOnly");
         }
 
         private void OnDestroy()

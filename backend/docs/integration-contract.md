@@ -390,16 +390,13 @@ Findings from reviewing (read-only) `Assets/Project/Scripts`, `Assets/Project/Da
 What Unity actually has today: the 27 letters are fully implemented (3D models and
 animations, AI templates and evaluator). Numbers have AI templates
 (`NumberLandmarkTemplates.asset`), `MediaPipeNumberSignRecognizer` and the 31 objects of
-`NumbersHouse`, but no 3D animations. Greetings have a Unity learning house and MediaPipe
-evaluation; their local `saludos.*` IDs are translated to the backend's canonical codes.
-Months have a Unity learning house and local Holistic capture/evaluation for validation; their
-local `meses.*` IDs map to the backend's canonical `MONTH_*` codes. Months are not enabled for
-backend progression until their references are validated.
+`NumbersHouse`, but no 3D animations. Greetings and Months have Unity learning houses and
+MediaPipe evaluation. Their Unity ids (`saludos.*` and `meses.*`) map to the backend's canonical
+`WORD_*`, `PHRASE_*` and `MONTH_*` codes. Both levels use backend sign status and progression.
 
 ### 9.1 Changes Unity must make
 
-> **Status:** items 1–3 are implemented in the Unity client (section 10). Greeting codes are mapped in Unity; item 4 remains
-> open for the Months level.
+> **Status:** items 1–4 are implemented in the Unity client (section 10).
 
 1. **Send `stars` and `xp` as the AI produces them** (the numbers recognizer already gives
    `stars * 10` XP, which matches the table), and `precision` as the AI produces it
@@ -442,16 +439,16 @@ Not added to the backend:
   `colores.amarillo`) and `personas` (`personas.yo`, `personas.tú`, `personas.amigo`,
   `personas.familia`), plus `saludos.por_favor`, `saludos.adiós` (with accent; `LearningLevels`
   uses `saludos.adios`) and `numeros.uno` … `numeros.cuatro` (as words).
-- `LearningLevels` keeps local ids for Months (`meses.*`) and Greetings (`saludos.*`) so the
-  recognizers can find their templates. Greeting ids are translated to canonical API codes by
-  `SignCodes.BackendCodeFor`; the Unity greeting order matches the backend's 11-item order.
+- `LearningLevels` uses Unity ids for Months (`meses.*`) and Greetings (`saludos.*`) to find
+  recognition templates. `SignCodes.BackendCodeFor` maps them to canonical API codes, and the
+  Unity greeting order matches the backend's 11-item order.
 
 ### 9.4 Other behavior to be aware of
 
 - **Sequential unlock:** the backend rejects (`403 SIGN_LOCKED`) practicing a sign whose
   previous one is not passed, and levels need XP (300 / 700 / 1200). The practice screens
-  must start from the `AVAILABLE`/`PASSED` signs the backend reports. The Numbers and Greetings
-  houses use backend sign status; the alphabet retains its own sequential practice flow.
+   must start from the `AVAILABLE`/`PASSED` signs the backend reports. Numbers, Greetings and
+   Months use backend sign status; the alphabet retains its own sequential practice flow.
 - **The numbers recognizer does not report attempts below its `MinimumSimilarity`** (it only
   emits `Completed` on recognition). The backend supports failed attempts
   (`precision < 60`), but to have a history of failures Unity would have to send them.
@@ -494,10 +491,8 @@ section 9.1; what is still open is listed at the end of this section.
    stars, `awardedXp`, total XP and unlocks. On failure it says so and adds nothing.
 5. **Practicing a letter:** `AlphabetLevelController` loads `GET /levels/ALPHABET`; when a letter is recognized it computes
    precision/stars/XP with `ScoreAdapter`, sends `POST /evaluations` with `signCode` = the letter, and shows the response.
-6. **Learning houses:** on entering (`SceneEntrance`, Practice shortcuts) the level's unlocked state is checked; Numbers and
-   Greetings load the state of each sign from the backend; Months show "COMING SOON" instead of PRACTICE.
-   For manual Editor validation only, `GreetingsHouse` allows local practice despite XP/sign locks and does not submit local
-   results. Player builds retain the backend unlock rules.
+6. **Learning houses:** on entering (`SceneEntrance`, Practice shortcuts) the level's unlocked state is checked; Numbers,
+   Greetings and Months load the state of each sign from the backend. Practice results are submitted to the backend.
 7. **Sign out:** `LogoutModalController` → `POST /auth/logout` → tokens and caches cleared → Login. Progress stays in the
    backend.
 
@@ -535,6 +530,6 @@ If another program holds port 3000, change `PORT` in `backend/.env` and `develop
 - **No manual retry button:** if sending a result fails after the automatic retries, Results says so but does not offer a
   "retry" button; the attempt is not saved and the player can practice again.
 - **Old local data** (`Lumina.Alphabet.*` in `PlayerPrefs`) is ignored, not migrated.
-- **Still open in Unity:** number animations; Months (use the backend codes); cleaning the provisional
+- **Still open in Unity:** number animations; cleaning the provisional
   data of section 9.3; a UI to change the avatar from the profile (the client already has `ProfileStore.UpdateAvatarAsync`;
   the button is missing).
