@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Lumina.Core
 {
@@ -13,6 +14,10 @@ namespace Lumina.Core
         private const float MusicGain = 0.6f; // el fondo queda por debajo de los efectos
         private static GameAudio _instance;
 
+        /// <summary>Escenas sin música de fondo: sus videos traen sonido propio y la música lo taparía.</summary>
+        private static readonly string[] SilentScenes = { "NumbersHouse", "GreetingsHouse" };
+
+        private bool _silenced;
         private AudioSource _music;
         private AudioSource _sfx;
         private AudioClip _signPassed, _levelCompleted;
@@ -55,8 +60,19 @@ namespace Lumina.Core
 
         private void Update()
         {
+            bool silent = System.Array.IndexOf(SilentScenes, SceneManager.GetActiveScene().name) >= 0;
+            if (silent)
+            {
+                if (_music.isPlaying) _music.Pause();
+                _silenced = true;
+            }
+            else if (_silenced)
+            {
+                _silenced = false;
+                _music.UnPause(); // al salir de la casa la música sigue donde se quedó
+            }
             // La música se reanuda sola si el sistema la pausó (por ejemplo al perder el foco la ventana).
-            if (_music.clip != null && !_music.isPlaying && Application.isFocused) _music.Play();
+            else if (_music.clip != null && !_music.isPlaying && Application.isFocused) _music.Play();
             if (Time.unscaledTime < _nextVolumeCheck) return;
             _nextVolumeCheck = Time.unscaledTime + 0.25f;
             ApplyVolumes();
