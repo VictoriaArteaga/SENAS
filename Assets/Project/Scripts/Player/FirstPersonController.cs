@@ -109,6 +109,40 @@ namespace Lumina.Player
             _controller.Move(velocity * Time.deltaTime);
         }
 
+        /// <summary>
+        /// Gira al jugador para mirar un punto del mundo. <paramref name="screenX"/> (−1 izquierda … 1 derecha) es dónde debe
+        /// quedar el punto en la pantalla: −0,5 lo deja en el cuarto izquierdo, para dejar libre la mitad derecha a un panel.
+        /// </summary>
+        public void LookTowards(Vector3 worldPoint, float screenX = 0f)
+        {
+            Vector3 from = cameraPivot != null ? cameraPivot.position : transform.position;
+            Vector3 d = worldPoint - from;
+            float flat = new Vector2(d.x, d.z).magnitude;
+            float yaw = Mathf.Atan2(d.x, d.z) * Mathf.Rad2Deg;
+            float pitch = -Mathf.Atan2(d.y, flat) * Mathf.Rad2Deg;
+
+            var cam = cameraPivot != null ? cameraPivot.GetComponentInChildren<Camera>() : null;
+            if (cam != null && !Mathf.Approximately(screenX, 0f))
+            {
+                float halfWidth = Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * cam.aspect;
+                yaw += Mathf.Atan(-screenX * halfWidth) * Mathf.Rad2Deg;
+            }
+
+            transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+            _pitch = Mathf.Clamp(pitch, -maxLookAngle, maxLookAngle);
+            if (cameraPivot != null) cameraPivot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
+        }
+
+        /// <summary>Coloca al jugador en un punto (el CharacterController se desactiva un instante para que no lo deshaga).</summary>
+        public void TeleportTo(Vector3 position)
+        {
+            if (_controller == null) _controller = GetComponent<CharacterController>();
+            _controller.enabled = false;
+            transform.position = position;
+            _controller.enabled = true;
+            _verticalVelocity = 0f;
+        }
+
         public void SetCursorLocked(bool locked)
         {
             CursorLocked = locked;
