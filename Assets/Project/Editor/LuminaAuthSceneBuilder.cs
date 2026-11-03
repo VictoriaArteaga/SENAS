@@ -66,6 +66,12 @@ namespace Lumina.EditorTools
                 Top = "Tops/ClothingItem_TShirt", Bottom = "Bottoms/ClothingItem_Pants_Cargo_Shorts", Shoes = "Shoes/ClothingItem_Basketball_Shoes", Glasses = "Glasses/Clear/ClothingItem_Glasses_02_Clear" }
         };
 
+        /// <summary>Ids y nombres de los cuatro avatares modulares antiguos (los construye este builder). Los consulta LuminaAvatarRoster.</summary>
+        internal static IEnumerable<(string id, string name)> LegacyAvatars()
+        {
+            foreach (var a in Avatars) yield return (a.Id, a.Name);
+        }
+
         // ------------------------------------------------------------------ Punto de entrada
 
         [MenuItem("Lumina/Autenticación/Construir todo")]
@@ -73,9 +79,10 @@ namespace Lumina.EditorTools
         {
             EnsureFolders();
             var bubble = EnsureBubblePrefab();
-            var avatarPrefabs = EnsureAvatarPrefabs();
+            EnsureAvatarPrefabs();   // solo los cuatro modulares antiguos; los seis de AVATARS2 ya son prefabs aprobados
+            LuminaAvatarRoster.RequirePrefabs();
             BuildLogin(bubble);
-            BuildRegister(avatarPrefabs);
+            BuildRegister();
             BuildLogoutModal(bubble);
             RegisterInBuildSettings();
             AssetDatabase.SaveAssets();
@@ -89,13 +96,11 @@ namespace Lumina.EditorTools
         {
             EnsureFolders();
             var bubble = AssetDatabase.LoadAssetAtPath<GameObject>(BubblePrefabPath);
-            var avatarPrefabs = new GameObject[Avatars.Length];
-            for (int i = 0; i < Avatars.Length; i++)
-                avatarPrefabs[i] = AssetDatabase.LoadAssetAtPath<GameObject>(AvatarPrefabDir + "Avatar_" + Avatars[i].Id + ".prefab");
-            if (bubble == null || System.Array.Exists(avatarPrefabs, p => p == null))
-                throw new System.InvalidOperationException("Faltan prefabs de la burbuja o de los avatares; ejecuta primero 'Construir todo'.");
+            if (bubble == null)
+                throw new System.InvalidOperationException("Falta el prefab de la burbuja; ejecuta primero 'Construir todo'.");
+            LuminaAvatarRoster.RequirePrefabs();
             BuildLogin(bubble);
-            BuildRegister(avatarPrefabs);
+            BuildRegister();
             AssetDatabase.SaveAssets();
             Debug.Log("[Lumina] LoginScene y RegisterScene reconstruidas.");
         }
@@ -394,7 +399,8 @@ namespace Lumina.EditorTools
 
         // ------------------------------------------------------------------ RegisterScene
 
-        private static void BuildRegister(GameObject[] avatarPrefabs)
+        /// <summary>Construye el contenido de RegisterScene y lo guarda. Con save=false solo lo deja en una escena en memoria (pruebas; no persiste nada).</summary>
+        private static UnityEngine.SceneManagement.Scene BuildRegister(bool save = true)
         {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             SetupSceneBasics(new Vector3(0f, 0.42f, -5.6f), new Vector3(-5f, 0f, 0f), 36f, WorldSkyPath);
@@ -426,14 +432,24 @@ namespace Lumina.EditorTools
             // Avatares: todos bajo un pivote que gira; solo se ve el elegido.
             var pivot = Child(stage, "AvatarPivot");
             pivot.localPosition = new Vector3(0f, 0.24f, 0f);
-            var options = new List<AvatarOption>();
-            for (int i = 0; i < avatarPrefabs.Length; i++)
+            // Los cuatro antiguos se instancian DESACTIVADOS (siguen en la escena pero no son opciones); las opciones visibles son solo los avatares aprobados.
+            foreach (var legacy in LuminaAvatarRoster.Legacy)
             {
-                var instance = (GameObject)PrefabUtility.InstantiatePrefab(avatarPrefabs[i], pivot);
-                instance.name = Avatars[i].Id;
+                var old = (GameObject)PrefabUtility.InstantiatePrefab(legacy.LoadPrefab(), pivot);
+                old.name = legacy.Id;
+                old.transform.localPosition = Vector3.zero;
+                old.transform.localRotation = Quaternion.identity;
+                old.SetActive(false);
+            }
+            var selectable = LuminaAvatarRoster.Selectable;
+            var options = new List<AvatarOption>();
+            foreach (var avatar in selectable)
+            {
+                var instance = (GameObject)PrefabUtility.InstantiatePrefab(avatar.LoadPrefab(), pivot);
+                instance.name = avatar.Id;
                 instance.transform.localPosition = Vector3.zero;
                 instance.transform.localRotation = Quaternion.identity;
-                options.Add(new AvatarOption { id = Avatars[i].Id, displayName = Avatars[i].Name, model = instance });
+                options.Add(new AvatarOption { id = avatar.Id, displayName = avatar.DisplayName, model = instance });
             }
 
             // Interfaz.
@@ -493,14 +509,14 @@ namespace Lumina.EditorTools
 
             var namePill = LuminaUiKit.Panel(left, "NamePill", LuminaUiKit.Coral);
             LuminaUiKit.Place(namePill.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(470f, 236f), new Vector2(320f, 64f));
-            var nameLabel = LuminaUiKit.Label(namePill.transform, "Label", "LUNA", 38f, LuminaUiKit.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 8f);
+            var nameLabel = LuminaUiKit.Label(namePill.transform, "Label", selectable[0].DisplayName.ToUpperInvariant(), 38f, LuminaUiKit.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 8f);
             LuminaUiKit.Stretch(nameLabel.rectTransform);
 
             var dots = new List<Image>();
-            for (int i = 0; i < avatarPrefabs.Length; i++)
+            for (int i = 0; i < selectable.Count; i++)
             {
                 var dot = LuminaUiKit.Panel(left, "Dot" + (i + 1), LuminaUiKit.TurquoiseSoft, LuminaUiKit.Circle);
-                float x = 470f + (i - (avatarPrefabs.Length - 1) * 0.5f) * 40f;
+                float x = 470f + (i - (selectable.Count - 1) * 0.5f) * 40f;
                 LuminaUiKit.Place(dot.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(x, 184f), new Vector2(20f, 20f));
                 dots.Add(dot);
             }
@@ -554,8 +570,12 @@ namespace Lumina.EditorTools
             LuminaUiKit.Set(controller, "continueButton", cont);
 
             LuminaUiKit.EnsureEventSystem();
-            EditorSceneManager.SaveScene(scene, RegisterPath);
+            if (save) EditorSceneManager.SaveScene(scene, RegisterPath);
+            return scene;
         }
+
+        /// <summary>Solo pruebas: construye RegisterScene en una escena en memoria SIN guardarla ni tocar RegisterScene.unity.</summary>
+        internal static UnityEngine.SceneManagement.Scene BuildRegisterInMemoryForTest() => BuildRegister(false);
 
         private static void SetAvatarOptions(Object target, List<AvatarOption> options)
         {

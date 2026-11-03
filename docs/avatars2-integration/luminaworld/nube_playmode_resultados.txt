@@ -1,0 +1,15 @@
+Play Mode: Application.isPlaying=True; jugador='Player' pos=(-15.50, 0.10, -2.50); cámara fov=60 altura local=1,65
+[Catálogo real] 'AvatarCatalog' Find('nube') -> Avatar_nube (Assets/Project/Prefabs/Avatars/Avatar_nube.prefab)
+[PlayerAvatar] Body='Avatar_nube' id=nube localPos=(0.00, 0.00, -0.20) escala=(1.00, 1.00, 1.00)
+   Hair_05(Clone)   shadowCastingMode=On           enabled=True activeInHierarchy=True
+   ClothingItem_Hat_Empty shadowCastingMode=On           enabled=True activeInHierarchy=True
+   ClothingItem_Glasses_Empty shadowCastingMode=On           enabled=True activeInHierarchy=True
+   Hair_19(Clone)   shadowCastingMode=On           enabled=True activeInHierarchy=False
+Prefab en disco (no debe haber cambiado): Hair_05(Clone)=On, ClothingItem_Hat_Empty=On, ClothingItem_Glasses_Empty=On, Hair_19(Clone)=On
+Cuerpo instanciado: altura=2,04 m ancho=1,75/1,85 pies y=-0,03 (suelo y=0,08); coincide con el prefab del catálogo: True
+Colliders en el cuerpo: 0; Rigidbody: 0; Animators: 2
+[Mirada] pitch real=0,0° (objetivo 0)
+[Mirada] pitch real=55,0° (objetivo 55)
+[Mirada] pitch real=80,0° (objetivo 80)
+[Movimiento con cuerpo] 6,00 m en 1,50 s = 4,00 m/s (moveSpeed=4); y=0,08; collisionFlags=Below; fotogramas=1340; tiempo medio de fotograma=1,1 ms
+[Movimiento sin cuerpo] 6,00 m en 1,50 s = 4,00 m/s (moveSpeed=4); y=0,08; collisionFlags=Below; fotogramas=2162; tiempo medio de fotograma=0,7 ms

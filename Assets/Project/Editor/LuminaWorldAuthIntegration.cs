@@ -18,11 +18,8 @@ namespace Lumina.EditorTools
     {
         private const string WorldPath = "Assets/Project/Scenes/LuminaWorld.unity";
         private const string CatalogPath = "Assets/Project/Data/AvatarCatalog.asset";
-        private const string AvatarPrefabDir = "Assets/Project/Prefabs/Avatars/";
         private const string LevelScene = "AlphabetHouse";
         private const string StartLabel = "COMENZAR";
-
-        private static readonly string[,] Avatars = { { "luna", "Luna" }, { "nube", "Nube" }, { "rio", "Río" }, { "sol", "Sol" } };
 
         /// <summary>Reconstruye Login/Register (formularios con layout) e integra LuminaWorld, en una sola ejecución.</summary>
         public static void RebuildAndApply()
@@ -70,6 +67,9 @@ namespace Lumina.EditorTools
             Debug.Log("[Lumina] LuminaWorld integrado: avatar del jugador y botón COMENZAR → " + LevelScene);
         }
 
+        /// <summary>
+        /// Carga (o crea) AvatarCatalog.asset y se asegura de que contenga las 10 entradas de LuminaAvatarRoster. NO lo sobrescribe: ver MergeCatalog.
+        /// </summary>
         private static AvatarCatalog EnsureCatalog()
         {
             var catalog = AssetDatabase.LoadAssetAtPath<AvatarCatalog>(CatalogPath);
@@ -78,22 +78,46 @@ namespace Lumina.EditorTools
                 catalog = ScriptableObject.CreateInstance<AvatarCatalog>();
                 AssetDatabase.CreateAsset(catalog, CatalogPath);
             }
+            if (MergeCatalog(catalog)) EditorUtility.SetDirty(catalog);
+            return catalog;
+        }
 
+        /// <summary>
+        /// Añade al catálogo las entradas de LuminaAvatarRoster que falten (los 4 antiguos primero y después los 6 de AVATARS2). Es idempotente y NO
+        /// destructivo: nunca elimina, reordena ni reemplaza entradas existentes (ni sus prefabs ni nombres); solo rellena el prefab de una entrada
+        /// existente si estaba vacío. Devuelve true si cambió algo. Trabaja sobre el objeto recibido (no guarda nada por sí mismo).
+        /// </summary>
+        internal static bool MergeCatalog(AvatarCatalog catalog)
+        {
+            bool changed = false;
             var so = new SerializedObject(catalog);
             var list = so.FindProperty("avatars");
-            list.arraySize = Avatars.GetLength(0);
-            for (int i = 0; i < list.arraySize; i++)
+            foreach (var wanted in LuminaAvatarRoster.Catalog)
             {
-                var element = list.GetArrayElementAtIndex(i);
-                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(AvatarPrefabDir + "Avatar_" + Avatars[i, 0] + ".prefab");
-                if (prefab == null) throw new System.InvalidOperationException("Falta el prefab del avatar " + Avatars[i, 0]);
-                element.FindPropertyRelative("id").stringValue = Avatars[i, 0];
-                element.FindPropertyRelative("displayName").stringValue = Avatars[i, 1];
-                element.FindPropertyRelative("prefab").objectReferenceValue = prefab;
+                int index = -1;
+                for (int i = 0; i < list.arraySize; i++)
+                    if (list.GetArrayElementAtIndex(i).FindPropertyRelative("id").stringValue == wanted.Id) { index = i; break; }
+
+                var prefab = wanted.LoadPrefab();
+                if (index < 0)
+                {
+                    if (prefab == null) throw new System.InvalidOperationException("Falta el prefab del avatar " + wanted.Id + " (" + wanted.PrefabPath + ")");
+                    index = list.arraySize;
+                    list.arraySize++;
+                    var added = list.GetArrayElementAtIndex(index);
+                    added.FindPropertyRelative("id").stringValue = wanted.Id;
+                    added.FindPropertyRelative("displayName").stringValue = wanted.DisplayName;
+                    added.FindPropertyRelative("prefab").objectReferenceValue = prefab;
+                    changed = true;
+                }
+                else
+                {
+                    var existing = list.GetArrayElementAtIndex(index).FindPropertyRelative("prefab");
+                    if (existing.objectReferenceValue == null && prefab != null) { existing.objectReferenceValue = prefab; changed = true; }
+                }
             }
             so.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(catalog);
-            return catalog;
+            return changed;
         }
 
         private static void SetRef(Object target, string property, Object value)

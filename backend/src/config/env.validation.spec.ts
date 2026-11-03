@@ -25,9 +25,24 @@ describe('validateEnv', () => {
       SCORE_TWO_STARS_THRESHOLD: 74,
       SCORE_THREE_STARS_THRESHOLD: 88,
       XP_PER_STAR: 10,
-      AVATAR_IDS: 'luna,nube,rio,sol',
+      AVATAR_IDS: 'luna,nube,rio,sol,carol,luna-crimson,tom,crimson,neon,tensy',
       THROTTLE_AUTH_LIMIT: 5,
     });
+  });
+
+  it('by default accepts exactly the 10 official avatar ids (4 legacy + 6 AVATARS2)', () => {
+    expect(buildConfig(validateEnv(base)).avatarIds).toEqual([
+      'luna',
+      'nube',
+      'rio',
+      'sol',
+      'carol',
+      'luna-crimson',
+      'tom',
+      'crimson',
+      'neon',
+      'tensy',
+    ]);
   });
 
   it('converts types from strings (as they arrive in process.env)', () => {

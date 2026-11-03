@@ -1,0 +1,11 @@
+ESCALA factor 0.8956 centro cuerpo -0.034 -0.126 tris originales 475545
+SOLDADURA vertices 279007 -> 237621
+COSTURAS UV: vertices de costura 36583 de 237621
+DECIMADO ratio 0.0946 tris 475545 -> 44999
+NORMALES personalizadas: True
+POSE A 35 grados; vertices movidos 1976
+FINAL bbox min [-0.585, -0.174, 0.0] max [0.633, 0.4, 1.701] tamano [1.219, 0.574, 1.701]
+TRIS 475545 -> 44999
+UV rango u[0.000,1.000] v[0.000,1.000]
+FBX export starting... 'C:/Users/MARIAV~1/AppData/Local/Temp/claude/c--Users-MARIA-VICTORIA-Desktop-universidad-SEMESTRES-QUINTO-SEMESTRE-Dise-o-de-interfaces-FINALES-SE-AS/750e936d-b75e-410f-8888-a32b724b5764/scratchpad/conv/tensy/tensy.fbx'
+EXPORTED

@@ -29,7 +29,61 @@ const codeOf = async (p: Promise<unknown>) =>
     (e: ApiError) => e.code,
   );
 
+const OFFICIAL_AVATARS = [
+  'luna',
+  'nube',
+  'rio',
+  'sol',
+  'carol',
+  'luna-crimson',
+  'tom',
+  'crimson',
+  'neon',
+  'tensy',
+];
+
 describe('ProfilesService', () => {
+  it('the test configuration holds exactly the 10 official avatar ids', () => {
+    expect(TEST_CONFIG.avatarIds).toEqual(OFFICIAL_AVATARS);
+  });
+
+  it.each(OFFICIAL_AVATARS)(
+    'resolveAvatar accepts the official id %s',
+    (id) => {
+      const { svc } = build(null);
+      expect(svc.resolveAvatar(id)).toBe(id);
+    },
+  );
+
+  it.each(['unknown', 'carolina', 'luna_crimson', 'Luna', 'TOM', 'avatar'])(
+    'resolveAvatar rejects %s with INVALID_AVATAR',
+    (id) => {
+      const { svc } = build(null);
+      expect(() => svc.resolveAvatar(id)).toThrow(ApiError);
+      try {
+        svc.resolveAvatar(id);
+      } catch (e) {
+        expect((e as ApiError).code).toBe('INVALID_AVATAR');
+      }
+    },
+  );
+
+  it.each([
+    ['luna', 'carol'],
+    ['carol', 'luna-crimson'],
+    ['luna-crimson', 'tom'],
+    ['tom', 'crimson'],
+    ['crimson', 'neon'],
+    ['neon', 'tensy'],
+  ])('updateAvatar changes %s -> %s', async (from, to) => {
+    const { svc, repo } = build({ ...baseProfile(), avatarId: from });
+    const res = await svc.updateAvatar('u1', { avatarId: to });
+    expect(res.avatarId).toBe(to);
+    expect(repo.save).toHaveBeenCalledWith(
+      expect.objectContaining({ avatarId: to }),
+    );
+  });
+
   it('resolveAvatar uses the first avatar if none is given and rejects unknown ones', () => {
     const { svc } = build(null);
     expect(svc.resolveAvatar()).toBe('luna');

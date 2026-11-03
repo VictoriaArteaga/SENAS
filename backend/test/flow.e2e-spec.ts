@@ -203,6 +203,53 @@ describe('Full flow (e2e, real PostgreSQL with synchronize and seed)', () => {
       );
     });
 
+    it.each([
+      'luna',
+      'nube',
+      'rio',
+      'sol',
+      'carol',
+      'luna-crimson',
+      'tom',
+      'crimson',
+      'neon',
+      'tensy',
+    ])(
+      'registers with the official avatar %s and GET /profile returns it',
+      async (avatarId) => {
+        const res = await request(http)
+          .post(`${API}/auth/register`)
+          .send({
+            email: `av-${randomUUID()}@example.com`,
+            password: 'Lumina2026',
+            displayName: 'Ana',
+            avatarId,
+          })
+          .expect(201);
+        const profile = await request(http)
+          .get(`${API}/profile`)
+          .set(auth(res.body.accessToken))
+          .expect(200);
+        expect(profile.body.avatarId).toBe(avatarId);
+      },
+    );
+
+    it.each(['unknown', 'carolina', 'luna_crimson', 'Luna', 'TOM', 'avatar'])(
+      'rejects the avatar %s with INVALID_AVATAR',
+      async (avatarId) => {
+        const res = await request(http)
+          .post(`${API}/auth/register`)
+          .send({
+            email: `av-${randomUUID()}@example.com`,
+            password: 'Lumina2026',
+            displayName: 'Ana',
+            avatarId,
+          })
+          .expect(400);
+        expect(res.body.code).toBe('INVALID_AVATAR');
+      },
+    );
+
     it('rejects an avatar that is not in AVATAR_IDS', async () => {
       const res = await request(http)
         .post(`${API}/auth/register`)
@@ -322,6 +369,36 @@ describe('Full flow (e2e, real PostgreSQL with synchronize and seed)', () => {
         avatarId: 'sol',
         avatarConfig: { color: 'blue' },
       });
+
+      // Every official avatar can be chosen in turn (and the profile keeps the last one).
+      for (const avatarId of [
+        'carol',
+        'luna-crimson',
+        'tom',
+        'crimson',
+        'neon',
+        'tensy',
+      ]) {
+        const r = await request(http)
+          .patch(`${API}/profile/avatar`)
+          .set(h)
+          .send({ avatarId })
+          .expect(200);
+        expect(r.body.avatarId).toBe(avatarId);
+      }
+      expect(
+        (
+          await request(http)
+            .patch(`${API}/profile/avatar`)
+            .set(h)
+            .send({ avatarId: 'unknown' })
+            .expect(400)
+        ).body.code,
+      ).toBe('INVALID_AVATAR');
+      expect(
+        (await request(http).get(`${API}/profile`).set(h).expect(200)).body
+          .avatarId,
+      ).toBe('tensy');
 
       await request(http)
         .patch(`${API}/profile`)

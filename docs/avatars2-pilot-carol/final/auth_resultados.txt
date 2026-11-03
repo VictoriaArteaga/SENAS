@@ -1,0 +1,8 @@
+Pivote 'AvatarPivot' pos=(-1.65, 0.24, 0.00) escala=(1.00, 1.00, 1.00); cámara Main Camera pos=(0.00, 0.42, -5.60) rot=(355.0, 0.0, 0.0) fov=36
+  opción existente: luna bounds=(1.85, 2.04, 1.75)
+  opción existente: nube bounds=(1.85, 2.04, 1.75)
+  opción existente: rio bounds=(2.58, 2.04, 1.75)
+  opción existente: sol bounds=(2.58, 2.04, 1.75)
+  carol instanciado como el selector (mismo prefab): tamaño (1.28, 1.70, 0.46), base y=0,24
+  Renderers en el selector: Carol_body=On, Carol_cap=On, Carol_hair=On, Carol_head=On, Carol_shirt=On, Carol_skirt=On, Carol_sneakers=On, Carol_socks=On, Carol_th1=On, Carol_neck=On
+  referencia luna: tamaño (2.24, 2.04, 2.17)

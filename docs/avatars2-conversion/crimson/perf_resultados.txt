@@ -1,0 +1,6 @@
+Renderers=1 materiales=1 triángulos=45000 vértices=36049 (submeshes=1)
+Texturas importadas (formato, mipmaps, memoria de ejecución):
+  crimson_body       _BaseMap           2048x2048 DXT1 mips=12 5,3 MB
+  crimson_body       _BumpMap           2048x2048 DXT5 mips=12 10,7 MB
+  crimson_body       _MetallicGlossMap  2048x2048 DXT5 mips=12 10,7 MB
+MEMORIA TEXTURAS TOTAL = 26,7 MB; mallas = 3,8 MB

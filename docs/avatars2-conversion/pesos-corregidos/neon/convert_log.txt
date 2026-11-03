@@ -1,0 +1,12 @@
+ESCALA factor 0.8958 centro cuerpo -0.004 0.0 tris originales 517530
+SOLDADURA vertices 301407 -> 258742
+COSTURAS UV: vertices de costura 37799 de 258742
+CABEZA (z >= 1.42): 55064 vertices, 110191 triangulos de 517530
+INTENTO protect_head=0.90 -> 49800 triangulos (limite 49999)
+DECIMADO protect_head elegido=0.90  tris 517530 -> 49800  (cabeza: 110191 -> 17217)
+NORMALES personalizadas: True
+FINAL bbox min [-0.33, -0.168, 0.0] max [0.334, 0.167, 1.701] tamano [0.663, 0.335, 1.701]
+TRIS 517530 -> 49800
+UV rango u[0.000,0.999] v[0.000,1.000]
+FBX export starting... 'C:/Users/MARIAV~1/AppData/Local/Temp/claude/c--Users-MARIA-VICTORIA-Desktop-universidad-SEMESTRES-QUINTO-SEMESTRE-Dise-o-de-interfaces-FINALES-SE-AS/750e936d-b75e-410f-8888-a32b724b5764/scratchpad/conv2/neon/neon.fbx'
+EXPORTED C:/Users/MARIAV~1/AppData/Local/Temp/claude/c--Users-MARIA-VICTORIA-Desktop-universidad-SEMESTRES-QUINTO-SEMESTRE-Dise-o-de-interfaces-FINALES-SE-AS/750e936d-b75e-410f-8888-a32b724b5764/scratchpad/conv2/neon/neon.fbx
