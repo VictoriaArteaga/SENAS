@@ -242,10 +242,29 @@ namespace Lumina.EditorTools
             var sena = GameObject.Find("Sena");
             Vector3 forward = player.transform.forward; forward.y = 0f; forward.Normalize();
             // Delante del jugador y un poco a su izquierda, para que no le tape el televisor que queda de frente.
-            var position = player.transform.position + forward * 2.2f - player.transform.right * 1.1f;
-            position.y = 0f;
+            // En Números queda a 3 m (a menos distancia la cámara le corta los zapatos) y apenas por encima de la alfombra.
+            bool numbers = kind == LevelKind.Numbers;
+            var position = player.transform.position + forward * (numbers ? 3.4f : 2.2f) - player.transform.right * 1.1f;
+            position.y = numbers ? 0.04f : 0f;
             PlaceSena(sena, position, kind == LevelKind.Numbers ? NumbersWelcome : kind == LevelKind.Months ? MonthsWelcome : GreetingsWelcome);
             sena.transform.rotation = Quaternion.LookRotation(-forward);
+
+            if (numbers)
+            {
+                // Más lejos que el radio de siempre: se amplía para poder hablar con ella desde el punto de inicio.
+                Ui.SetFloat(sena.GetComponent<ProximityInteractable>(), "interactionRadius", 4f);
+                // Los cubos que cuelgan del techo (≈ 2,15–2,9 m) cruzaban la burbuja de diálogo, que flotaba sobre su cabeza (1,85 m):
+                // la burbuja pasa a un costado (hacia el centro de la sala) y por debajo de los cubos.
+                var bubble = sena.transform.Find("WelcomeBubble");
+                if (bubble != null)
+                {
+                    bubble.position = position + new Vector3(1.05f, 1.15f, 0f);
+                    // Más chica en pantalla (el tamaño sale de la distancia a la cámara dividida por esta referencia): así no sube hasta los cubos.
+                    var so = new SerializedObject(bubble.GetComponent<DialogueBubble>());
+                    so.FindProperty("referenceDistance").floatValue = 4.6f;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                }
+            }
 
             // La puerta de salida alcanzaba al jugador en su punto de inicio: ahora hay que acercarse a ella.
             var exit = GameObject.Find("PuntoSalida");
