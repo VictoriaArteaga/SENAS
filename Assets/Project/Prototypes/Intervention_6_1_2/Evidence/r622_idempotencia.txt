@@ -1,0 +1,2 @@
+[R622-IDEMPOTENCIA]
+Objetos por nombre: 274 nombres distintos, 694 objetos; mallas R622: 68 y 68; segunda construcción IDÉNTICA

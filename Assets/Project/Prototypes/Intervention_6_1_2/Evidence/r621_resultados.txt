@@ -1,0 +1,162 @@
+  material nulo en: ClothingItem_TracksuitTop (SkinnedMeshRenderer, activo=False)
+  material nulo en: Avatar_Male_GEO (SkinnedMeshRenderer, activo=False)
+Referencias: GameObjects=442, scripts faltantes=0, materiales nulos=2 (los 2 de Sena pertenecen a renderers inactivos o sin malla, ver 6.1.4)
+[PASA] sin scripts faltantes
+-- Río: continuidad, anchura y forma --
+[PASA] cauce continuo: 205 muestras, paso máximo 0,50 m (sin huecos)
+[PASA] el río no se cruza ni se pliega sobre sí mismo (separación mínima entre tramos no vecinos 20,9 m)
+[PASA] río sinuoso: longitud 101,9 m frente a 90 m en línea recta (sinuosidad 1,13), giro acumulado 318°
+[PASA] anchura del agua entre 2,9 y 3,9 m (media 3,5 m)
+[PASA] orillas irregulares: el borde exterior varía 1,2 m entre tramos
+[PASA] malla de orillas continua: 3485 vértices = muestras × 17
+[PASA] el río atraviesa el mapa de norte (x=2,0) a sur (x=3,0)
+[PASA] casas a ≥ 18,5 m del eje del río (el espacio útil de las aldeas no lo consume el cauce)
+-- Cuatro aldeas --
+[PASA] Aldea del Abecedario (noroeste): casa (-22,14) y plaza temática (-16,24) en el mismo lado del río
+[PASA]   reserva (-24,2,24,0) de Aldea del Abecedario: a 9,3 m del camino, 18,9 m del río
+[PASA]   reserva (-18,1,31,9) de Aldea del Abecedario: a 6,1 m del camino, 12,6 m del río
+[PASA]   reserva (-21,8,29,8) de Aldea del Abecedario: a 8,6 m del camino, 16,1 m del río
+[PASA] Aldea de los Números (suroeste): casa (-22,-14) y plaza temática (-16,-24) en el mismo lado del río
+[PASA]   reserva (-20,1,-31,1) de Aldea de los Números: a 8,9 m del camino, 20,0 m del río
+[PASA]   reserva (-24,2,-24,0) de Aldea de los Números: a 11,7 m del camino, 21,3 m del río
+[PASA]   reserva (-16,0,-32,2) de Aldea de los Números: a 6,4 m del camino, 17,0 m del río
+[PASA] Aldea de los Meses (noreste): casa (22,14) y plaza temática (15,24) en el mismo lado del río
+[PASA]   reserva (17,1,31,9) de Aldea de los Meses: a 9,0 m del camino, 20,0 m del río
+[PASA]   reserva (7,9,19,9) de Aldea de los Meses: a 5,7 m del camino, 9,5 m del río
+[PASA]   reserva (23,2,24,0) de Aldea de los Meses: a 10,5 m del camino, 24,4 m del río
+[PASA] Aldea de los Saludos (sureste): casa (22,-14) y plaza temática (15,-24) en el mismo lado del río
+[PASA]   reserva (23,2,-24,0) de Aldea de los Saludos: a 10,1 m del camino, 20,0 m del río
+[PASA]   reserva (15,0,-32,2) de Aldea de los Saludos: a 6,3 m del camino, 9,3 m del río
+[PASA]   reserva (20,8,-29,8) de Aldea de los Saludos: a 9,9 m del camino, 15,5 m del río
+[PASA] plaza común en la orilla oeste
+[PASA] el río deja Abecedario y Números a un lado y Meses y Saludos al otro
+[PASA] aldeas bien separadas: distancia mínima entre casas 28,0 m
+[PASA] la plaza común no es una quinta aldea: la casa más cercana está a 17,0 m y no tiene casa propia
+-- Caminos --
+[PASA] ningún camino pisa el agua fuera de un puente (261 puntos revisados)
+[PASA] ningún camino termina junto al agua sin puente
+[PASA] ningún camino atraviesa la huella de una casa
+[PASA] sin cruces confusos entre caminos (solo empalmes en los extremos)
+[PASA] Aldea del Abecedario: el camino llega recto y perpendicular a la puerta real (desvío máximo 0,16 m en los últimos 6 m)
+[PASA] Aldea de los Números: el camino llega recto y perpendicular a la puerta real (desvío máximo 0,08 m en los últimos 6 m)
+[PASA] Aldea de los Meses: el camino llega recto y perpendicular a la puerta real (desvío máximo 0,00 m en los últimos 6 m)
+[PASA] Aldea de los Saludos: el camino llega recto y perpendicular a la puerta real (desvío máximo 0,05 m en los últimos 6 m)
+-- Cuatro puentes --
+[PASA] Puente norte: centro (-5,7,29,1) yaw 89°, perpendicular al cauce (desvío 0,0°), agua local 3,6 m, suelo en los extremos 0,00/0,00 m (tablero a ras, escalón < 0,3 m)
+[PASA] Puente centro-norte: centro (3,8,9,0) yaw 61°, perpendicular al cauce (desvío 0,0°), agua local 3,3 m, suelo en los extremos 0,00/0,00 m (tablero a ras, escalón < 0,3 m)
+[PASA] Puente centro-sur: centro (-1,8,-12,0) yaw 127°, perpendicular al cauce (desvío 0,0°), agua local 3,6 m, suelo en los extremos 0,00/0,00 m (tablero a ras, escalón < 0,3 m)
+[PASA] Puente sur: centro (4,4,-31,0) yaw 61°, perpendicular al cauce (desvío 0,0°), agua local 3,6 m, suelo en los extremos 0,00/0,00 m (tablero a ras, escalón < 0,3 m)
+[PASA] puentes bien distribuidos: separación mínima 20,1 m
+[PASA] 4 puentes en la escena: Puente_centro-sur, Puente_sur, Puente_centro-norte, Puente_norte
+[PASA] Puente_centro-sur: conserva el MeshCollider original (activo)
+[PASA] Puente_sur: conserva el MeshCollider original (activo)
+[PASA] Puente_centro-norte: conserva el MeshCollider original (activo)
+[PASA] Puente_norte: conserva el MeshCollider original (activo)
+[PASA] los 4 puentes comparten la arquitectura base pero cada uno tiene su tono de madera (4 materiales)
+-- Sena, señalización y reservas --
+[PASA] Sena (variante 6.1.4) presente con su componente de presencia
+[PASA] 13 postes de señalización (esperados 13)
+[PASA] Cartel_Puente_centro-norte: PUENTE CENTRO-NORTE
+[PASA] Cartel_Puente_centro-sur: PUENTE CENTRO-SUR
+[PASA] Marcador_Aldea_de_los_Numeros: ALDEA DE LOS NÚMEROS / RESERVA: CIFRAS
+[PASA] Cartel_Puente_sur: PUENTE SUR
+[PASA] Marcador_Aldea_de_los_Saludos: ALDEA DE LOS SALUDOS / RESERVA: MANOS
+[PASA] Marcador_Aldea_del_Abecedario: ALDEA DEL ABECEDARIO / RESERVA: LETRAS
+[PASA] Cartel_Casa_MonthsHouse: MESES
+[PASA] Cartel_Casa_GreetingsHouse: SALUDOS
+[PASA] Cartel_Plaza_Aldeas: NO · ABECEDARIO / NE · MESES / SO · NÚMEROS / SE · SALUDOS
+[PASA] Cartel_Puente_norte: PUENTE NORTE
+[PASA] Cartel_Casa_NumbersHouse: NÚMEROS
+[PASA] Cartel_Casa_AlphabetHouse: ABECEDARIO
+[PASA] Marcador_Aldea_de_los_Meses: ALDEA DE LOS MESES / RESERVA: RELOJ Y CALENDARIO
+[PASA] 12 reservas de monumentos marcadas en el suelo (3 por aldea, sin objetos ni colliders)
+[PASA] 4 plazas temáticas reservadas
+-- Despejes: bancos, faroles, señales, vegetación --
+[PASA] bancos: ≥2,4 m del eje de un camino (mín 5,0) · Bench(-13,6,0,5)
+[PASA] faroles: ≥1,8 m (mín 3,5) · Lantern(-13,7,2,4)
+[PASA] carteles: ≥1,9 m (mín 2,5) · Cartel_Casa_MonthsHouse(16,0,10,6)
+[PASA] vegetación y rocas: ≥4 m de los 10 m frente a cada puerta (mín 6,0) · Rock_2 ↔ GreetingsHouse
+  inventario de vegetación: 62 árboles, 20 rocas, 50 flores (la expansión completa queda para 6.2.3)
+[PASA] las reservas de monumentos quedan libres de vegetación (mín 4,1 m)
+[PASA] nada bloquea el eje de ningún puente (±12 m): separación mínima 2,5 m · Rock_4
+-- Accesibilidad: del spawn a las cuatro aldeas, siguiendo los caminos; y regreso a la plaza --
+[PASA] llegó Spawn → Aldea del Abecedario                       fin=(-14,3,0,08,16,3) y∈[0,08,0,08]  | termina a 4,4 m de la fachada
+[PASA] llegó Regreso Aldea del Abecedario → plaza               fin=(-10,1,0,08,-1,7) y∈[0,08,0,08] 
+[PASA] llegó Spawn → Aldea de los Números                       fin=(-14,4,0,08,-13,5) y∈[0,08,0,08]  | termina a 3,9 m de la fachada
+[PASA] llegó Regreso Aldea de los Números → plaza               fin=(-10,1,0,08,-2,4) y∈[0,08,0,08] 
+[PASA] llegó Spawn → Aldea de los Meses                         fin=(14,3,0,08,13,2) y∈[0,08,1,09]  | termina a 4,8 m de la fachada
+[PASA] llegó Regreso Aldea de los Meses → plaza                 fin=(-9,7,0,08,-1,7) y∈[0,08,1,09] 
+[PASA] llegó Spawn → Aldea de los Saludos                       fin=(13,5,0,08,-14,9) y∈[0,08,1,09]  | termina a 5,6 m de la fachada
+[PASA] llegó Regreso Aldea de los Saludos → plaza               fin=(-9,7,0,08,-2,3) y∈[0,08,1,09] 
+-- Cada camino de extremo a extremo --
+[PASA] llegó Camino_Plaza_Abecedario                            fin=(-14,3,0,08,16,3) y∈[0,08,0,08] 
+[PASA] llegó Camino_Plaza_Numeros                               fin=(-14,4,0,08,-13,5) y∈[0,08,0,08] 
+[PASA] llegó Camino_Puente_CentroNorte                          fin=(11,3,0,08,13,2) y∈[0,08,1,09] 
+[PASA] llegó Camino_Puente_CentroSur                            fin=(5,0,0,08,-17,2) y∈[0,08,1,09] 
+[PASA] llegó Camino_CentroNorte_Meses                           fin=(14,3,0,08,13,3) y∈[0,08,0,08] 
+[PASA] llegó Camino_CentroSur_Saludos                           fin=(13,5,0,08,-14,8) y∈[0,08,0,08] 
+[PASA] llegó Camino_Ribera_Este                                 fin=(5,6,0,08,-17,2) y∈[0,08,0,08] 
+[PASA] llegó Camino_Abecedario_Plaza_Tematica                   fin=(-15,8,0,08,23,7) y∈[0,08,0,08] 
+[PASA] llegó Camino_Numeros_Plaza_Tematica                      fin=(-15,7,0,08,-23,7) y∈[0,08,0,08] 
+[PASA] llegó Camino_Meses_Plaza_Tematica                        fin=(14,9,0,08,23,7) y∈[0,08,0,08] 
+[PASA] llegó Camino_Saludos_Plaza_Tematica                      fin=(14,9,0,08,-23,7) y∈[0,08,0,08] 
+[PASA] llegó Camino_Puente_Norte                                fin=(14,6,0,08,24,1) y∈[0,08,1,09] 
+[PASA] llegó Camino_Puente_Sur                                  fin=(14,7,0,08,-24,2) y∈[0,08,1,09] 
+-- Cuatro puentes: dos cruces completos (ida y vuelta) por puente --
+[PASA] llegó Puente norte cruce 1: este → oeste                 fin=(-15,3,0,08,28,9) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente norte cruce 1: oeste → este                 fin=(4,0,0,08,29,3) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente norte cruce 2: este → oeste                 fin=(-15,3,0,08,28,9) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente norte cruce 2: oeste → este                 fin=(4,0,0,08,29,3) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente centro-norte cruce 1: este → oeste          fin=(-4,7,0,08,4,3) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente centro-norte cruce 1: oeste → este          fin=(12,2,0,08,13,7) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente centro-norte cruce 2: este → oeste          fin=(-4,7,0,08,4,3) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente centro-norte cruce 2: oeste → este          fin=(12,2,0,08,13,7) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente centro-sur cruce 1: este → oeste            fin=(-9,5,0,08,-6,1) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente centro-sur cruce 1: oeste → este            fin=(5,8,0,08,-17,8) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente centro-sur cruce 2: este → oeste            fin=(-9,5,0,08,-6,1) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente centro-sur cruce 2: oeste → este            fin=(5,8,0,08,-17,8) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente sur cruce 1: este → oeste                   fin=(-4,1,0,08,-35,7) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente sur cruce 1: oeste → este                   fin=(12,9,0,08,-26,4) y∈[0,07,1,09]  | altura mínima y=0,07
+[PASA] llegó Puente sur cruce 2: este → oeste                   fin=(-4,1,0,08,-35,7) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente sur cruce 2: oeste → este                   fin=(12,9,0,08,-26,4) y∈[0,07,1,09]  | altura mínima y=0,07
+-- Cruzar el río fuera de los puentes (debe frenar en la barrera) --
+  (omitido: punto 0,06 del cauce, extremos fuera del mapa)
+[PASA] bloqueado Cruzar el río: punto 0,54 del cauce                fin=(6,6,-0,07,-5,9) y∈[-0,07,0,08] bloqueado a 10,5 m del objetivo 0 | se detiene a 2,5 m del eje
+[PASA] bloqueado Cruzar el río: junto a Puente norte (+4,5 m)       fin=(-2,7,-0,10,26,7) y∈[-0,10,0,11] bloqueado a 11,1 m del objetivo 0 | se detiene a 2,7 m del eje
+[PASA] bloqueado Cruzar el río: junto a Puente norte (−4,5 m)       fin=(-2,7,-0,09,31,6) y∈[-0,09,0,39] bloqueado a 11,2 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: junto a Puente centro-norte (+4,5 m) fin=(8,5,-0,07,4,3) y∈[-0,08,0,08] bloqueado a 10,0 m del objetivo 0 | se detiene a 2,5 m del eje
+[PASA] bloqueado Cruzar el río: junto a Puente centro-norte (−4,5 m) fin=(3,1,-0,07,14,8) y∈[-0,07,0,19] bloqueado a 10,3 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: junto a Puente centro-sur (+4,5 m)  fin=(-0,8,-0,11,-15,8) y∈[-0,12,0,08] bloqueado a 11,3 m del objetivo 0 | se detiene a 2,7 m del eje
+[PASA] bloqueado Cruzar el río: junto a Puente centro-sur (−4,5 m)  fin=(3,0,-0,08,-10,5) y∈[-0,08,0,45] bloqueado a 11,0 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: junto a Puente sur (+4,5 m)         fin=(6,9,-0,06,-42,6) y∈[-0,10,0,14] bloqueado a 8,2 m del objetivo 0 | se detiene a 2,4 m del eje
+[PASA] bloqueado Cruzar el río: junto a Puente sur (−4,5 m)         fin=(3,2,-0,10,-24,5) y∈[-0,12,0,08] bloqueado a 10,3 m del objetivo 0 | se detiene a 2,7 m del eje
+-- Casas sólidas, puertas libres y límites del mapa --
+[PASA] bloqueado Atravesar AlphabetHouse                            fin=(-18,3,0,08,14,0) y∈[0,08,0,08] bloqueado a 3,7 m del objetivo 0 | se detiene a 0,38 m de la fachada
+[PASA] AlphabetHouse: puerta y 10 m de acceso sin objetos ni colliders (0 puntos bloqueados)
+[PASA] bloqueado Atravesar NumbersHouse                             fin=(-17,9,0,08,-14,0) y∈[0,08,0,08] bloqueado a 4,1 m del objetivo 0 | se detiene a 0,38 m de la fachada
+[PASA] NumbersHouse: puerta y 10 m de acceso sin objetos ni colliders (0 puntos bloqueados)
+[PASA] bloqueado Atravesar MonthsHouse                              fin=(18,7,0,08,14,0) y∈[0,08,0,08] bloqueado a 3,3 m del objetivo 0 | se detiene a 0,38 m de la fachada
+[PASA] MonthsHouse: puerta y 10 m de acceso sin objetos ni colliders (0 puntos bloqueados)
+[PASA] bloqueado Atravesar GreetingsHouse                           fin=(18,7,0,08,-14,0) y∈[0,08,0,08] bloqueado a 3,3 m del objetivo 0 | se detiene a 0,38 m de la fachada
+[PASA] GreetingsHouse: puerta y 10 m de acceso sin objetos ni colliders (0 puntos bloqueados)
+[PASA] bloqueado Salir del mapa hacia (60,5)                        fin=(44,6,0,08,5,0) y∈[0,08,0,08] bloqueado a 15,4 m del objetivo 0
+[PASA] bloqueado Salir del mapa hacia (-60,-5)                      fin=(-44,6,0,18,-5,0) y∈[-0,13,0,18] bloqueado a 15,4 m del objetivo 0
+[PASA] bloqueado Salir del mapa hacia (8,60)                        fin=(8,0,0,06,44,6) y∈[0,01,0,06] bloqueado a 15,4 m del objetivo 0
+[PASA] bloqueado Salir del mapa hacia (-8,-60)                      fin=(-8,0,-0,05,-44,6) y∈[-0,14,-0,05] bloqueado a 15,4 m del objetivo 0
+-- Pendientes --
+[PASA] llegó Loma noreste hasta la cima                         fin=(33,8,1,78,30,8) y∈[0,04,1,78]  | cima y esperada=1,71
+[PASA] llegó Loma suroeste (≈22°) hasta la cima                 fin=(-33,8,2,88,-32,7) y∈[0,65,2,88]  | cima y esperada=2,82
+-- Suelo continuo --
+[PASA] 300 caídas al azar (incl. orillas): por debajo del suelo en 0; dif. mínima 0,035 m, mediana 0,080 m, p95 0,102 m (máx 1,118: caídas sobre objetos)
+[PASA] colliders sin renderer: Limites_Mundo (invisible), Player, Rio_Barrera (invisible) (solo los esperados)
+-- Jugador, spawn y Sena --
+[PASA] Sena a 8,5 m del spawn, a 5° del eje (campo ±45°), línea de visión libre
+[PASA] spawn sin solapamiento con geometría (solo toca el suelo)
+[PASA] spawn dentro de la plaza común, en suelo llano
+[PASA] primera persona: CharacterController y FirstPersonController activos, cámara principal y un solo AudioListener
+  ángulos de los puentes respecto al eje de la cámara en el spawn: Puente norte 73°, Puente centro-norte 31°, Puente centro-sur 35°, Puente sur 55° (campo horizontal ±45°)
+  ángulos de las plazas temáticas en el spawn: Noroeste 91°, Suroeste 91°, Noreste 41°, Sureste 35°
+Malla visible: MeshRenderers=277, triángulos=108188
+Colliders activos: BoxCollider=43, CapsuleCollider=74, CharacterController=1, MeshCollider=6 | triángulos en MeshColliders=24856
+
+RESUMEN: 137 pruebas pasan, 0 fallan

@@ -1,0 +1,4 @@
+[R623-IDEMPOTENCIA]
+Objetos por nombre en toda la escena: 297 nombres distintos, 865 objetos; mallas R623: 36 y 36
+Huella de posiciones/escala/rotación del paisajismo: A1C37E39F0A713C1 y A1C37E39F0A713C1 (iguales)
+Segunda construcción IDÉNTICA
