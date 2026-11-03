@@ -24,13 +24,15 @@ namespace Lumina.UI
         [SerializeField] private TMP_Text countdownLabel;
         [SerializeField] private StatCardUI scoreCard;
         [SerializeField] private StatCardUI starsCard;
-        [Tooltip("Secuencias capturadas de las señas de este nivel (GreetingLandmarkTemplates.asset: saludos y meses).")]
+        [Tooltip("Nivel de la casa: decide qué reconocedor se usa (Números: MediaPipeNumberSignRecognizer; Meses y Saludos: MediaPipeGreetingSignRecognizer).")]
+        [SerializeField] private LevelKind kind = LevelKind.Months;
+        [Tooltip("Capturas de las señas de este nivel (NumberLandmarkTemplates.asset o GreetingLandmarkTemplates.asset).")]
         [SerializeField] private AlphabetLandmarkTemplateSet templates;
         [SerializeField] private int countdownSeconds = 3;
         [Tooltip("Tiempo máximo de un intento, después de la cuenta atrás.")]
         [SerializeField] private float attemptSeconds = 25f;
 
-        private MediaPipeGreetingSignRecognizer _recognizer;
+        private ISignRecognizer _recognizer;
         private SignEntry _sign;
         private Coroutine _routine;
         private float _bestSimilarity;
@@ -50,10 +52,21 @@ namespace Lumina.UI
         {
             if (templates != null)
             {
-                _recognizer = gameObject.AddComponent<MediaPipeGreetingSignRecognizer>();
-                _recognizer.Configure(templates, cameraFeed);
+                if (kind == LevelKind.Numbers)
+                {
+                    var numbers = gameObject.AddComponent<MediaPipeNumberSignRecognizer>();
+                    numbers.Configure(templates, cameraFeed);
+                    numbers.StatusUpdated += OnStatus;
+                    _recognizer = numbers;
+                }
+                else
+                {
+                    var greetings = gameObject.AddComponent<MediaPipeGreetingSignRecognizer>();
+                    greetings.Configure(templates, cameraFeed);
+                    greetings.StatusUpdated += OnStatus;
+                    _recognizer = greetings;
+                }
                 _recognizer.Completed += OnCompleted;
-                _recognizer.StatusUpdated += OnStatus;
             }
             if (countdownLabel != null) countdownLabel.text = string.Empty;
         }
@@ -62,7 +75,8 @@ namespace Lumina.UI
         {
             if (_recognizer == null) return;
             _recognizer.Completed -= OnCompleted;
-            _recognizer.StatusUpdated -= OnStatus;
+            if (_recognizer is MediaPipeNumberSignRecognizer numbers) numbers.StatusUpdated -= OnStatus;
+            else if (_recognizer is MediaPipeGreetingSignRecognizer greetings) greetings.StatusUpdated -= OnStatus;
         }
 
         /// <summary>El panel se abrió: la cámara del jugador sigue apagada hasta que pulse EMPEZAR.</summary>
