@@ -150,6 +150,18 @@ namespace Lumina.UI
                 _greetingRecognizer = gameObject.AddComponent<MediaPipeGreetingSignRecognizer>();
                 _greetingRecognizer.Configure(greetingTemplates, cameraFeed);
             }
+            else if (PracticeSession.ReturnScene == LearningLevels.GreetingsScene && greetingTemplates != null)
+            {
+                var greetingRecognizer = gameObject.AddComponent<MediaPipeGreetingSignRecognizer>();
+                greetingRecognizer.Configure(greetingTemplates, cameraFeed);
+                SetRecognizer(greetingRecognizer);
+            }
+            else if (PracticeSession.ReturnScene == LearningLevels.MonthsScene && greetingTemplates != null)
+            {
+                var monthRecognizer = gameObject.AddComponent<MediaPipeGreetingSignRecognizer>();
+                monthRecognizer.Configure(greetingTemplates, cameraFeed);
+                SetRecognizer(monthRecognizer);
+            }
 
             _category = catalog != null && catalog.categories.Length > 0 ? catalog.categories[0] : null;
             if (PracticeSession.StartAtLearning && PracticeSession.Sign != null)
