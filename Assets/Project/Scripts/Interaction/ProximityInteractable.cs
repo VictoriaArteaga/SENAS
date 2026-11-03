@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -19,7 +20,34 @@ namespace Lumina.Interaction
         public UnityEvent onPlayerExit;
         public UnityEvent onInteract;
 
+        private static readonly List<ProximityInteractable> Active = new List<ProximityInteractable>();
+
         private Transform _player;
+
+        private void OnEnable() => Active.Add(this);
+        private void OnDisable() => Active.Remove(this);
+
+        /// <summary>
+        /// Si hay varios a la vez en rango (p. ej. Sena y la puerta de salida), E solo responde al que el jugador tiene más de frente:
+        /// así hablar con Sena no activa también la salida que queda a su espalda.
+        /// </summary>
+        private bool IsMostInFront()
+        {
+            var cam = Camera.main;
+            Vector3 look = cam != null ? cam.transform.forward : _player.forward;
+            look.y = 0f;
+            ProximityInteractable winner = null;
+            float best = float.MaxValue;
+            foreach (var other in Active)
+            {
+                if (other == null || !other.PlayerInRange) continue;
+                Vector3 to = other.transform.position - _player.position;
+                to.y = 0f;
+                float angle = to.sqrMagnitude < 0.01f ? 0f : Vector3.Angle(look, to);
+                if (angle < best) { best = angle; winner = other; }
+            }
+            return winner == this;
+        }
 
         public bool PlayerInRange { get; private set; }
         public Transform Player => _player;
@@ -45,7 +73,7 @@ namespace Lumina.Interaction
             }
 
             var keyboard = Keyboard.current;
-            if (PlayerInRange && keyboard != null && keyboard.eKey.wasPressedThisFrame)
+            if (PlayerInRange && keyboard != null && keyboard.eKey.wasPressedThisFrame && IsMostInFront())
                 onInteract.Invoke();
         }
 

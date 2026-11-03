@@ -91,66 +91,61 @@ namespace Lumina.EditorTools
 
         // ------------------------------------------------------------------ Datos
 
-        private const string GenericText = "Observa cómo se realiza la seña.";
+        private const string AlphabetPath = DataDir + "LscAlphabet.asset";
+        private const string NumberTemplatesPath = DataDir + "NumberLandmarkTemplates.asset";
 
-        private static string NumberEs(string n) => $"Es la seña del número {n}. Fíjate en qué dedos se usan y cómo se colocan.";
-        private static string NumberEn(string n) => $"This is the sign for the number {n}. Notice which fingers are used and how they are placed.";
-        private static string ColorEs(string c) => $"Es la seña del color {c}. Observa dónde se coloca la mano y cómo se mueve.";
-        private static string ColorEn(string c) => $"This is the sign for the color {c}. Notice where the hand is placed and how it moves.";
-
+        /// <summary>
+        /// Catálogo de Practice: los cuatro niveles con el contenido ya establecido en cada casa de aprendizaje (abecedario del
+        /// asset LscAlphabet, y los números, meses y saludos de <see cref="LearningLevels"/>). Se reescribe entero cada vez: el
+        /// asset no guarda contenido propio, solo refleja esas fuentes.
+        /// </summary>
         private static void EnsureSignCatalog()
         {
-            var defaults = ScriptableObject.CreateInstance<SignCatalog>();
-            defaults.categories = new[]
-            {
-                Category("saludos", "Saludos",
-                    ("Hola", "Es la seña para saludar. Observa con calma cómo se mueve la mano.", "This is the sign for greeting. Watch carefully how the hand moves."),
-                    ("Gracias", "Es la seña para agradecer. Fíjate en la mano y en hacia dónde se mueve.", "This is the sign for saying thank you. Notice the hand and where it moves."),
-                    ("Por favor", "Es la seña para pedir algo con cortesía. Observa la forma y el movimiento de la mano.", "This is the sign for asking politely. Watch the shape and movement of the hand."),
-                    ("Adiós", "Es la seña para despedirte. Observa cómo se mueve la mano.", "This is the sign for saying goodbye. Watch how the hand moves.")),
-                Category("numeros", "Números",
-                    ("Uno", NumberEs("1"), NumberEn("1")), ("Dos", NumberEs("2"), NumberEn("2")),
-                    ("Tres", NumberEs("3"), NumberEn("3")), ("Cuatro", NumberEs("4"), NumberEn("4"))),
-                Category("colores", "Colores",
-                    ("Rojo", ColorEs("rojo"), ColorEn("red")), ("Azul", ColorEs("azul"), ColorEn("blue")),
-                    ("Verde", ColorEs("verde"), ColorEn("green")), ("Amarillo", ColorEs("amarillo"), ColorEn("yellow"))),
-                Category("personas", "Personas",
-                    ("Yo", "Es la seña para hablar de ti. Observa dónde se coloca la mano.", "This is the sign for talking about yourself. Notice where the hand is placed."),
-                    ("Tú", "Es la seña para referirte a otra persona. Observa dónde se coloca la mano.", "This is the sign for referring to another person. Notice where the hand is placed."),
-                    ("Amigo", "Es la seña para hablar de un amigo. Observa las manos y su movimiento.", "This is the sign for talking about a friend. Watch both hands and their movement."),
-                    ("Familia", "Es la seña para hablar de tu familia. Observa las manos y su movimiento.", "This is the sign for talking about your family. Watch both hands and their movement.")),
-            };
-
             var catalog = AssetDatabase.LoadAssetAtPath<SignCatalog>(SignCatalogPath);
-            if (catalog == null)
+            bool isNew = catalog == null;
+            if (isNew) catalog = ScriptableObject.CreateInstance<SignCatalog>();
+            catalog.categories = new[]
             {
-                AssetDatabase.CreateAsset(defaults, SignCatalogPath);
-                return;
-            }
-
-            // Solo se rellenan los textos vacíos o genéricos: lo escrito a mano en el asset no se pisa.
-            foreach (var category in catalog.categories)
-                foreach (var sign in category.signs)
-                    foreach (var d in defaults.categories)
-                        foreach (var ds in d.signs)
-                        {
-                            if (ds.id != sign.id) continue;
-                            if (string.IsNullOrWhiteSpace(sign.instruction) || sign.instruction == GenericText) sign.instruction = ds.instruction;
-                            if (string.IsNullOrWhiteSpace(sign.instructionEn)) sign.instructionEn = ds.instructionEn;
-                        }
-            EditorUtility.SetDirty(catalog);
-            Object.DestroyImmediate(defaults);
+                AlphabetCategory(),
+                LevelCategory("numeros", "Números", LearningLevels.Numbers),
+                LevelCategory("meses", "Meses", LearningLevels.Months),
+                LevelCategory("saludos", "Saludos y frases", LearningLevels.Greetings),
+            };
+            if (isNew) AssetDatabase.CreateAsset(catalog, SignCatalogPath);
+            else EditorUtility.SetDirty(catalog);
         }
 
-        private static SignCategory Category(string id, string name, params (string name, string es, string en)[] signs)
+        private static SignCategory AlphabetCategory()
         {
-            var entries = new SignEntry[signs.Length];
-            for (int i = 0; i < signs.Length; i++)
+            var alphabet = AssetDatabase.LoadAssetAtPath<Lumina.Alphabet.LscAlphabet>(AlphabetPath);
+            if (alphabet == null || alphabet.letters == null)
+                Debug.LogWarning("[Lumina] No se encontró " + AlphabetPath + ": la categoría Abecedario de Practice queda vacía.");
+            var letters = alphabet != null && alphabet.letters != null ? alphabet.letters : new Lumina.Alphabet.LetterEntry[0];
+
+            var entries = new SignEntry[letters.Length];
+            for (int i = 0; i < letters.Length; i++)
+            {
+                string code = Lumina.Api.SignCodes.ForLetter(letters[i].letter);
                 entries[i] = new SignEntry
                 {
-                    id = id + "." + signs[i].name.ToLowerInvariant().Replace(' ', '_'), displayName = signs[i].name,
-                    instruction = signs[i].es, instructionEn = signs[i].en
+                    id = code, displayName = code, displayNameEn = code,
+                    instruction = string.IsNullOrWhiteSpace(letters[i].instruction)
+                        ? $"Es la seña de la letra {code}. Observa la forma y la posición de la mano."
+                        : letters[i].instruction,
+                    instructionEn = $"This is the sign for the letter {code}. Notice the shape and position of the hand."
                 };
+            }
+            return new SignCategory { id = "alfabeto", displayName = "Abecedario", signs = entries };
+        }
+
+        private static SignCategory LevelCategory(string id, string name, LevelDefinition level)
+        {
+            var entries = new SignEntry[level.items.Length];
+            for (int i = 0; i < entries.Length; i++)
+            {
+                entries[i] = level.ToSignEntry(level.items[i]);
+                entries[i].displayName = level.items[i].es; // fijo en español; GetName() elige el inglés en ejecución
+            }
             return new SignCategory { id = id, displayName = name, signs = entries };
         }
 
@@ -217,85 +212,203 @@ namespace Lumina.EditorTools
 
         // ------------------------------------------------------------------ Practice
 
+        // Zona de las tarjetas a la derecha (la seña/Sena queda a la izquierda). Todo en proporciones de pantalla, no en píxeles.
+        private static readonly Vector2 SideCardMin = new Vector2(0.43f, 0.07f), SideCardMax = new Vector2(0.955f, 0.80f);
+        private static readonly Vector2 WideCardMin = new Vector2(0.03f, 0.07f), WideCardMax = new Vector2(0.97f, 0.80f);
+
+        /// <summary>Tarjeta que se estira entre dos anclas: se adapta a cualquier relación de aspecto. Devuelve el interior.</summary>
+        internal static RectTransform ResponsiveCard(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, out RectTransform outer)
+        {
+            var inner = Ui.Card(parent, name, Vector2.zero, out outer);
+            outer.anchorMin = anchorMin; outer.anchorMax = anchorMax; outer.pivot = Mid;
+            outer.offsetMin = outer.offsetMax = Vector2.zero;
+            return inner;
+        }
+
+        internal static LayoutElement Elem(Component target, float minW = -1f, float minH = -1f, float prefW = -1f, float prefH = -1f, float flexW = -1f, float flexH = -1f)
+        {
+            var e = target.GetComponent<LayoutElement>();
+            if (e == null) e = target.gameObject.AddComponent<LayoutElement>();
+            e.minWidth = minW; e.minHeight = minH; e.preferredWidth = prefW; e.preferredHeight = prefH; e.flexibleWidth = flexW; e.flexibleHeight = flexH;
+            return e;
+        }
+
+        internal static VerticalLayoutGroup VStack(Component target, float spacing, RectOffset padding, TextAnchor align = TextAnchor.UpperCenter)
+        {
+            var g = target.gameObject.AddComponent<VerticalLayoutGroup>();
+            g.spacing = spacing; g.padding = padding; g.childAlignment = align;
+            g.childControlWidth = g.childControlHeight = true;
+            g.childForceExpandWidth = true; g.childForceExpandHeight = false;
+            return g;
+        }
+
+        internal static HorizontalLayoutGroup HStack(Component target, float spacing, RectOffset padding, TextAnchor align, bool expandWidth, bool expandHeight)
+        {
+            var g = target.gameObject.AddComponent<HorizontalLayoutGroup>();
+            g.spacing = spacing; g.padding = padding; g.childAlignment = align;
+            g.childControlWidth = g.childControlHeight = true;
+            g.childForceExpandWidth = expandWidth; g.childForceExpandHeight = expandHeight;
+            return g;
+        }
+
+        /// <summary>El texto se reduce hasta <paramref name="min"/> para caber en su caja (con o sin saltos de línea) en lugar de desbordarla.</summary>
+        internal static void FitText(TMP_Text text, float min, bool wrap)
+        {
+            text.enableAutoSizing = true;
+            text.fontSizeMax = text.fontSize;
+            text.fontSizeMin = Mathf.Min(min, text.fontSize);
+            text.enableWordWrapping = wrap;
+            text.overflowMode = TextOverflowModes.Ellipsis;
+        }
+
+        /// <summary>Botón con etiqueta autoajustable y alto fijo; el ancho lo reparte el layout padre.</summary>
+        internal static Button FlexButton(Transform parent, string name, string text, Color face, Color shadow, Color textColor,
+            float height, float fontSize, float minLabel, float minWidth = 110f, float prefWidth = -1f, float flexWidth = 1f)
+        {
+            var button = Ui.MakeButton(parent, name, text, face, shadow, textColor, new Vector2(prefWidth > 0f ? prefWidth : 200f, height), fontSize, 8f, 2f);
+            FitText(button.GetComponentInChildren<TMP_Text>(true), minLabel, true);
+            Elem(button, minWidth, height, prefWidth, height, flexWidth, -1f);
+            return button;
+        }
+
+        /// <summary>Zona con scroll vertical (barra delgada a la derecha). <paramref name="content"/> es donde se colocan los elementos.</summary>
+        private static RectTransform BuildScroll(Transform parent, string name, out RectTransform content)
+        {
+            var root = Ui.Rect(name, parent);
+            var catcher = root.gameObject.AddComponent<Image>(); // recibe la rueda del ratón también entre botones
+            catcher.color = new Color(1f, 1f, 1f, 0f);
+
+            var viewport = Ui.Rect("Viewport", root);
+            Ui.Stretch(viewport, 0f, 0f, 24f, 0f);
+            viewport.gameObject.AddComponent<RectMask2D>();
+
+            content = Ui.Rect("Signs", viewport);
+            content.anchorMin = new Vector2(0f, 1f); content.anchorMax = new Vector2(1f, 1f); content.pivot = new Vector2(0.5f, 1f);
+            content.anchoredPosition = Vector2.zero; content.sizeDelta = Vector2.zero;
+            content.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            var track = Ui.Panel(root, "Scrollbar", Ui.Sand);
+            track.raycastTarget = true;
+            Ui.Place(track.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(1f, 0.5f), Vector2.zero, new Vector2(14f, 0f));
+            var handle = Ui.Panel(track.transform, "Handle", Ui.TurquoiseDark);
+            handle.raycastTarget = true;
+            Ui.Stretch(handle.rectTransform);
+            var bar = track.gameObject.AddComponent<Scrollbar>();
+            bar.handleRect = handle.rectTransform; bar.targetGraphic = handle; bar.direction = Scrollbar.Direction.BottomToTop;
+
+            var scroll = root.gameObject.AddComponent<ScrollRect>();
+            scroll.viewport = viewport; scroll.content = content;
+            scroll.horizontal = false; scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+            scroll.scrollSensitivity = 45f;
+            scroll.verticalScrollbar = bar;
+            scroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+            return root;
+        }
+
         private static void BuildPractice()
         {
             var world = BeginScene("PRÁCTICA", "VOLVER", out var header, out var canvas);
             var sena = PlaceSena(world);
             var catalog = AssetDatabase.LoadAssetAtPath<SignCatalog>(SignCatalogPath); // Tras NewScene: la escena nueva descarga los assets sin usar.
+            var numberTemplates = AssetDatabase.LoadAssetAtPath<Senas.AI.MediaPipe.AlphabetLandmarkTemplateSet>(NumberTemplatesPath);
+            var pad = new RectOffset(36, 36, 32, 32);
 
-            // --- Selección
-            var selection = SideCard(canvas.transform, "SelectionPanel", new Vector2(1000f, 780f), out var selectionOuter);
+            // --- Selección: pestañas de los 4 niveles, cuadrícula de señas con scroll y botón de practicar
+            var selection = ResponsiveCard(canvas.transform, "SelectionPanel", SideCardMin, SideCardMax, out var selectionOuter);
+            VStack(selection, 22f, pad);
+
             var tabs = Ui.Rect("Categories", selection);
-            Ui.Place(tabs, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -40f), new Vector2(-80f, 84f));
-            var tabsLayout = tabs.gameObject.AddComponent<HorizontalLayoutGroup>();
-            tabsLayout.spacing = 14f; tabsLayout.childAlignment = TextAnchor.MiddleCenter;
-            tabsLayout.childControlWidth = tabsLayout.childControlHeight = false;
-            tabsLayout.childForceExpandWidth = tabsLayout.childForceExpandHeight = false;
+            Elem(tabs, prefH: 84f, minH: 76f);
+            HStack(tabs, 12f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, true, true);
+            var tabTemplate = FlexButton(tabs, "CategoryTemplate", "", Ui.CreamWarm, Ui.SandDark, Ui.Ink, 84f, 24f, 14f, 110f, 200f);
 
-            var grid = Ui.Rect("Signs", selection);
-            Ui.Stretch(grid, 40f, 170f, 40f, 160f);
+            var scrollRoot = BuildScroll(selection, "SignsScroll", out var grid);
+            Elem(scrollRoot, minH: 240f, prefH: 420f, flexH: 1f);
             var gridLayout = grid.gameObject.AddComponent<GridLayoutGroup>();
-            gridLayout.cellSize = new Vector2(280f, 100f); gridLayout.spacing = new Vector2(20f, 24f);
-            gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount; gridLayout.constraintCount = 3;
+            gridLayout.cellSize = new Vector2(210f, 92f); gridLayout.spacing = new Vector2(16f, 16f);
+            gridLayout.padding = new RectOffset(4, 4, 4, 8);
+            gridLayout.constraint = GridLayoutGroup.Constraint.Flexible;
             gridLayout.childAlignment = TextAnchor.UpperCenter;
+            var signTemplate = Ui.MakeButton(grid, "SignTemplate", "", Ui.Turquoise, Ui.TurquoiseDark, Ui.Ink, new Vector2(210f, 92f), 30f, 8f, 2f);
+            FitText(signTemplate.GetComponentInChildren<TMP_Text>(true), 16f, true);
 
-            var tabTemplate = Ui.MakeButton(tabs, "CategoryTemplate", "", Ui.CreamWarm, Ui.SandDark, Ui.Ink, new Vector2(200f, 76f), 24f, 6f, 2f);
-            var signTemplate = Ui.MakeButton(grid, "SignTemplate", "", Ui.Turquoise, Ui.TurquoiseDark, Ui.Ink, new Vector2(280f, 100f), 32f, 8f, 2f);
-            var empty = Ui.Label(selection, "EmptyLabel", "", 34f, TextSoft);
-            Ui.Stretch(empty.rectTransform, 60f, 170f, 60f, 160f);
+            var empty = Ui.Label(scrollRoot, "EmptyLabel", "", 34f, TextSoft);
+            Ui.Stretch(empty.rectTransform, 24f, 24f, 24f, 24f);
+            FitText(empty, 18f, true);
+
             var practice = Ui.MakeButton(selection, "PracticeButton", "ELIGE UNA SEÑA", Ui.Coral, Ui.CoralDark, Ui.Cream, new Vector2(620f, 104f), 36f, 10f, 3f);
-            Ui.Place((RectTransform)practice.transform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 40f), new Vector2(620f, 104f));
+            FitText(practice.GetComponentInChildren<TMP_Text>(true), 20f, false);
+            Elem(practice, minH: 88f, prefH: 104f);
 
             // --- Aprendizaje
-            var learning = SideCard(canvas.transform, "LearningPanel", new Vector2(1000f, 780f), out var learningOuter);
+            var learning = ResponsiveCard(canvas.transform, "LearningPanel", SideCardMin, SideCardMax, out var learningOuter);
+            VStack(learning, 20f, new RectOffset(48, 48, 40, 40));
             var signName = Ui.Label(learning, "SignName", "", 120f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
-            Ui.TopCenter(signName.rectTransform, 60f, 900f, 150f);
+            FitText(signName, 44f, false);
+            Elem(signName, minH: 90f, prefH: 150f);
             var instruction = Ui.Label(learning, "Instruction", "", 40f, Ui.Ink);
-            Ui.TopCenter(instruction.rectTransform, 240f, 760f, 140f);
+            FitText(instruction, 22f, true);
+            Elem(instruction, minH: 110f, prefH: 150f, flexH: 1f);
             var demoNotice = Ui.Label(learning, "DemoNotice", "La demostración animada llegará pronto.", 28f, Ui.TurquoiseDark);
-            Ui.TopCenter(demoNotice.rectTransform, 400f, 760f, 60f);
-            var stack = Ui.Rect("Actions", learning);
-            Ui.Place(stack, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 50f), new Vector2(620f, 260f));
-            var stackLayout = stack.gameObject.AddComponent<VerticalLayoutGroup>();
-            stackLayout.spacing = 26f; stackLayout.childAlignment = TextAnchor.LowerCenter;
-            stackLayout.childControlWidth = stackLayout.childControlHeight = false;
-            stackLayout.childForceExpandWidth = stackLayout.childForceExpandHeight = false;
-            var replay = Ui.MakeButton(stack, "ReplayButton", "VER DE NUEVO", Ui.Turquoise, Ui.TurquoiseDark, Ui.Ink, new Vector2(620f, 96f), 34f, 8f, 3f);
-            var myTurn = Ui.MakeButton(stack, "MyTurnButton", "AHORA ES MI TURNO", Ui.Coral, Ui.CoralDark, Ui.Cream, new Vector2(620f, 118f), 38f, 10f, 3f);
+            FitText(demoNotice, 16f, true);
+            Elem(demoNotice, minH: 40f, prefH: 56f);
+            var actions = Ui.Rect("Actions", learning);
+            VStack(actions, 22f, new RectOffset(40, 40, 0, 0), TextAnchor.LowerCenter);
+            var replay = Ui.MakeButton(actions, "ReplayButton", "VER DE NUEVO", Ui.Turquoise, Ui.TurquoiseDark, Ui.Ink, new Vector2(620f, 96f), 34f, 8f, 3f);
+            var myTurn = Ui.MakeButton(actions, "MyTurnButton", "AHORA ES MI TURNO", Ui.Coral, Ui.CoralDark, Ui.Cream, new Vector2(620f, 118f), 38f, 10f, 3f);
+            FitText(replay.GetComponentInChildren<TMP_Text>(true), 20f, false);
+            FitText(myTurn.GetComponentInChildren<TMP_Text>(true), 20f, false);
+            Elem(replay, minH: 80f, prefH: 96f);
+            Elem(myTurn, minH: 92f, prefH: 118f);
 
-            // --- Preparación / práctica (tarjeta ancha y centrada: la cámara necesita espacio)
-            var session = Ui.Card(canvas.transform, "SessionPanel", new Vector2(1440f, 780f), out var sessionOuter);
-            Ui.Place(sessionOuter, Mid, Mid, Mid, new Vector2(0f, -60f), new Vector2(1440f, 780f));
+            // --- Preparación / práctica: tarjeta ancha; la cámara ocupa el espacio sobrante y el panel de texto tiene un ancho mínimo
+            var session = ResponsiveCard(canvas.transform, "SessionPanel", WideCardMin, WideCardMax, out var sessionOuter);
+            HStack(session, 40f, new RectOffset(40, 40, 40, 40), TextAnchor.MiddleCenter, false, true);
 
             var cameraFrame = Ui.Panel(session, "CameraFrame", Ui.Ink);
-            Ui.Place(cameraFrame.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(40f, 0f), new Vector2(830f, 470f));
+            Elem(cameraFrame, minW: 360f, prefW: 760f, flexW: 1.7f);
+            var aspect = Ui.Rect("Aspect", cameraFrame.transform);
+            Ui.Stretch(aspect);
+            var fitter = aspect.gameObject.AddComponent<AspectRatioFitter>();
+            fitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent; fitter.aspectRatio = 16f / 9f;
             var view = new GameObject("CameraView", typeof(RectTransform), typeof(RawImage)).GetComponent<RawImage>();
-            view.transform.SetParent(cameraFrame.transform, false);
-            Ui.Stretch(view.rectTransform, 16f, 16f, 16f, 16f);
+            view.transform.SetParent(aspect, false);
+            Ui.Stretch(view.rectTransform, 12f, 12f, 12f, 12f);
             view.color = new Color(0f, 0f, 0f, 0.25f); view.raycastTarget = false;
             var cameraStatus = Ui.Label(cameraFrame.transform, "CameraStatus", "", 30f, Ui.Cream);
-            Ui.Stretch(cameraStatus.rectTransform, 30f, 30f, 30f, 30f);
+            Ui.Stretch(cameraStatus.rectTransform, 28f, 28f, 28f, 28f);
+            FitText(cameraStatus, 16f, true);
             var feed = cameraFrame.gameObject.AddComponent<CameraFeedUI>();
             Ui.Set(feed, "view", view);
             Ui.Set(feed, "status", cameraStatus);
 
             var column = Ui.Rect("Column", session);
-            Ui.Place(column, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-40f, 0f), new Vector2(480f, 680f));
+            Elem(column, minW: 320f, prefW: 460f, flexW: 1f);
+            VStack(column, 16f, new RectOffset(0, 0, 0, 0));
             var sessionSign = Ui.Label(column, "SignName", "", 96f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 3f);
-            Ui.TopCenter(sessionSign.rectTransform, 0f, 480f, 120f);
+            FitText(sessionSign, 36f, false);
+            Elem(sessionSign, minH: 70f, prefH: 110f);
             var sessionText = Ui.Label(column, "Instruction", "", 32f, Ui.Ink);
-            Ui.TopCenter(sessionText.rectTransform, 130f, 460f, 140f);
+            FitText(sessionText, 18f, true);
+            Elem(sessionText, minH: 100f, prefH: 150f);
             var countdown = Ui.Label(column, "Countdown", "", 170f, Ui.Coral);
-            Ui.Place(countdown.rectTransform, Mid, Mid, Mid, new Vector2(0f, -20f), new Vector2(300f, 200f));
+            FitText(countdown, 60f, false);
+            Elem(countdown, minH: 110f, prefH: 190f, flexH: 1f);
             var status = Ui.Label(column, "Status", "", 32f, Ui.TurquoiseDark);
-            Ui.Place(status.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 150f), new Vector2(480f, 90f));
+            FitText(status, 16f, true);
+            Elem(status, minH: 70f, prefH: 120f);
             var start = Ui.MakeButton(column, "StartButton", "COMENZAR", Ui.Coral, Ui.CoralDark, Ui.Cream, new Vector2(440f, 108f), 40f, 10f, 3f);
             var finish = Ui.MakeButton(column, "FinishButton", "TERMINAR", Ui.Coral, Ui.CoralDark, Ui.Cream, new Vector2(440f, 108f), 40f, 10f, 3f);
             foreach (var b in new[] { start, finish })
-                Ui.Place((RectTransform)b.transform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), Vector2.zero, new Vector2(440f, 108f));
+            {
+                FitText(b.GetComponentInChildren<TMP_Text>(true), 20f, false);
+                Elem(b, minH: 88f, prefH: 108f);
+            }
 
             var controller = canvas.gameObject.AddComponent<PracticeController>();
             Ui.Set(controller, "catalog", catalog);
+            Ui.Set(controller, "numberTemplates", numberTemplates);
             Ui.Set(controller, "header", header);
             Ui.Set(controller, "selectionPanel", selectionOuter.gameObject);
             Ui.Set(controller, "categoryContainer", tabs);
@@ -408,7 +521,7 @@ namespace Lumina.EditorTools
             return bar;
         }
 
-        private static StatCardUI BuildStatCard(Transform parent, string name)
+        internal static StatCardUI BuildStatCard(Transform parent, string name)
         {
             var frame = Ui.Panel(parent, name, Ui.TurquoiseSoft);
             var inner = Ui.Panel(frame.transform, "Inner", Ui.CreamWarm);

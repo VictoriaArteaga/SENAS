@@ -9,8 +9,13 @@ namespace Lumina.Signs
     {
         public string id;
         public string displayName;
+        public string displayNameEn;
         [TextArea(1, 3)] public string instruction = "Observa cómo se realiza la seña.";
         [TextArea(1, 3)] public string instructionEn = "";
+
+        /// <summary>Nombre en el idioma activo; si falta el inglés se usa el español.</summary>
+        public string GetName() =>
+            Loc.Current == GameLanguage.English && !string.IsNullOrWhiteSpace(displayNameEn) ? displayNameEn : displayName;
 
         /// <summary>Descripción en el idioma activo; si falta la inglesa se usa la española.</summary>
         public string GetInstruction()

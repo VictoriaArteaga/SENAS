@@ -32,10 +32,10 @@ namespace Lumina.Core
             ("title.results", "RESULTADOS", "RESULTS"),
 
             // ---- Practice
-            ("cat.saludos", "Saludos", "Greetings"),
+            ("cat.alfabeto", "Abecedario", "Alphabet"),
             ("cat.numeros", "Números", "Numbers"),
-            ("cat.colores", "Colores", "Colors"),
-            ("cat.personas", "Personas", "People"),
+            ("cat.meses", "Meses", "Months"),
+            ("cat.saludos", "Saludos y frases", "Greetings & phrases"),
             ("practice.choose", "ELIGE UNA SEÑA", "CHOOSE A SIGN"),
             ("practice.go", "PRACTICAR", "PRACTICE"),
             ("practice.replay", "VER DE NUEVO", "WATCH AGAIN"),
@@ -175,6 +175,7 @@ namespace Lumina.Core
             ("svc.noEmail", "Simulación: no se envió ningún correo.", "Simulation: no email was sent."),
 
             // ---- Niveles de aprendizaje (Números, Meses, Saludos y frases)
+            ("title.alphabet", "ABECEDARIO", "ALPHABET"),
             ("title.numbers", "NÚMEROS", "NUMBERS"),
             ("title.months", "MESES", "MONTHS"),
             ("title.greetings", "SALUDOS Y FRASES", "GREETINGS & PHRASES"),
@@ -195,6 +196,15 @@ namespace Lumina.Core
             ("levels.enterNumbers", "Entrar a la Casa de los Números", "Enter the Numbers House"),
             ("levels.enterMonths", "Entrar a la Casa de los Meses", "Enter the Months House"),
             ("levels.enterGreetings", "Entrar a la Casa de los Saludos", "Enter the Greetings House"),
+            ("levels.start", "EMPEZAR", "START"),
+            ("levels.cancel", "CANCELAR", "CANCEL"),
+            ("levels.watchTv", "Mira el televisor y pulsa EMPEZAR: haz la seña frente a tu cámara.", "Watch the TV, press START and do the sign in front of your camera."),
+            ("levels.scoreCaption", "COINCIDENCIA", "MATCH"),
+            ("levels.starsCaption", "ESTRELLAS", "STARS"),
+            ("levels.saved", "¡Guardado! +{0} XP", "Saved! +{0} XP"),
+            ("levels.timeout", "Se acabó el tiempo. Inténtalo otra vez.", "Time is up. Try again."),
+            ("levels.cameraStarting", "Encendiendo la cámara…", "Starting the camera…"),
+            ("levels.getReady", "Prepárate…", "Get ready…"),
             ("levels.comingSoon", "PRÓXIMAMENTE", "COMING SOON"),
             ("levels.signLocked", "BLOQUEADA", "LOCKED"),
             ("levels.levelLocked", "Este nivel está bloqueado. Sigue ganando XP (te faltan {0}).", "This level is locked. Keep earning XP ({0} to go)."),

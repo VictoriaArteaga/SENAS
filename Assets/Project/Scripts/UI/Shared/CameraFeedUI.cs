@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +18,7 @@ namespace Lumina.UI
 
         private WebCamTexture _texture;
         private string _statusKey;
+        private Coroutine _watchdog;
 
         public bool IsRunning => _texture != null && _texture.isPlaying;
         public Texture Texture => _texture;
@@ -41,10 +44,39 @@ namespace Lumina.UI
             view.color = Color.white;
             _texture.Play();
             SetStatus(null);
+            if (isActiveAndEnabled) _watchdog = StartCoroutine(FallBackIfNoImage(chosen));
+        }
+
+        /// <summary>
+        /// Si la cámara elegida no arranca (p. ej. un visor de realidad virtual que aparece como cámara y no entrega imagen), prueba
+        /// con las demás hasta encontrar una que sí.
+        /// </summary>
+        private IEnumerator FallBackIfNoImage(string first)
+        {
+            var tried = new HashSet<string> { first };
+            while (true)
+            {
+                yield return new WaitForSecondsRealtime(1.5f);
+                if (_texture == null) yield break;
+                if (_texture.isPlaying && _texture.width > 16) yield break;
+
+                string next = null;
+                foreach (var device in WebCamTexture.devices)
+                    if (!tried.Contains(device.name)) { next = device.name; break; }
+                if (next == null) { SetStatus("camera.none"); yield break; }
+
+                tried.Add(next);
+                _texture.Stop();
+                Destroy(_texture);
+                _texture = new WebCamTexture(next);
+                view.texture = _texture;
+                _texture.Play();
+            }
         }
 
         public void Stop()
         {
+            if (_watchdog != null) { StopCoroutine(_watchdog); _watchdog = null; }
             if (_texture != null)
             {
                 _texture.Stop();

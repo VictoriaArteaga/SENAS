@@ -5,15 +5,17 @@ using Lumina.Core;
 
 namespace Lumina.UI
 {
-    /// <summary>Accesos de Practice a las casas de aprendizaje (Números, Meses, Saludos y frases). Usa la navegación existente (ScreenFader).</summary>
+    /// <summary>Accesos de Practice a las cuatro casas de aprendizaje (Abecedario, Números, Meses, Saludos y frases). Usa la navegación existente (ScreenFader).</summary>
     public class LevelShortcutsUI : MonoBehaviour
     {
+        [SerializeField] private Button alphabetButton;
         [SerializeField] private Button numbersButton;
         [SerializeField] private Button monthsButton;
         [SerializeField] private Button greetingsButton;
 
         private void Awake()
         {
+            if (alphabetButton != null) alphabetButton.onClick.AddListener(() => Enter(SceneNames.Alphabet));
             numbersButton.onClick.AddListener(() => Enter(SceneNames.Numbers));
             monthsButton.onClick.AddListener(() => Enter(SceneNames.Months));
             greetingsButton.onClick.AddListener(() => Enter(SceneNames.Greetings));

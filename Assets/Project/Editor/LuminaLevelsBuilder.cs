@@ -134,9 +134,197 @@ namespace Lumina.EditorTools
                 default: BuildGreetingsDecor(decor, root, sena); break;
             }
 
+            BuildTelevision(decor, kind);
             BuildPanelAndWire(kind, itemsPrompt.GetComponentInChildren<InteractionPrompt>(true));
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
+        }
+
+        // ------------------------------------------------------------------ Televisor (proyecta el video de cada seña)
+
+        [MenuItem("Lumina/Niveles/Añadir televisores a las tres casas")]
+        public static void AddTelevisions()
+        {
+            var kinds = new[] { LevelKind.Numbers, LevelKind.Months, LevelKind.Greetings };
+            for (int i = 0; i < kinds.Length; i++)
+            {
+                var scene = EditorSceneManager.OpenScene(ScenePaths[i], OpenSceneMode.Single);
+                var decor = GameObject.Find(RootName).transform.Find("Decoracion");
+                DestroyChild(decor, "Televisor");
+                BuildTelevision(decor, kinds[i]);
+                EditorSceneManager.MarkSceneDirty(scene);
+                EditorSceneManager.SaveScene(scene);
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Lumina] Televisores añadidos a las casas de Números, Meses y Saludos.");
+        }
+
+        /// <summary>
+        /// Casa de los Meses: práctica DENTRO de la casa. Sena aparece frente al jugador y saluda; al terminar de hablar con ella se abre el
+        /// panel con el televisor (video de cada seña), el nombre y la descripción del mes, la cámara del jugador, la calificación y las
+        /// estrellas. Reconstruye solo el panel de Meses y deja listo el televisor, los videos y las plantillas. Idempotente.
+        /// </summary>
+        [MenuItem("Lumina/Niveles/Meses: práctica dentro de la casa (Sena, televisor, cámara)")]
+        public static void SetupMonthsInHousePractice()
+        {
+            var scene = EditorSceneManager.OpenScene(ScenePaths[1], OpenSceneMode.Single);
+            var decor = GameObject.Find(RootName).transform.Find("Decoracion");
+            DestroyChild(decor, "Televisor"); // se vuelve a poner frente al jugador
+            BuildTelevision(decor, LevelKind.Months);
+            DestroyRoot("PuntoVistaTelevisor");
+
+            DestroyRoot("LearningHouse");
+            DestroyRoot("LevelPanelCanvas");
+            DestroyRoot("LearningPractice");
+            var promptObject = GameObject.Find("PromptObjetos");
+            if (promptObject == null) throw new System.InvalidOperationException("No se encontró 'PromptObjetos' en MonthsHouse.");
+            BuildPanelAndWire(LevelKind.Months, promptObject.GetComponentInChildren<InteractionPrompt>(true));
+
+            // Sena: de frente al jugador, saludando al entrar; al terminar su presentación se abre la práctica.
+            var player = Object.FindFirstObjectByType<Lumina.Player.FirstPersonController>();
+            var sena = GameObject.Find("Sena");
+            Vector3 forward = player.transform.forward; forward.y = 0f; forward.Normalize();
+            // Delante del jugador y un poco a su izquierda, para que no le tape el televisor que queda de frente.
+            var position = player.transform.position + forward * 2.2f - player.transform.right * 1.1f;
+            position.y = 0f;
+            PlaceSena(sena, position, MonthsWelcome);
+            sena.transform.rotation = Quaternion.LookRotation(-forward);
+
+            // La puerta de salida alcanzaba al jugador en su punto de inicio: ahora hay que acercarse a ella.
+            var exit = GameObject.Find("PuntoSalida");
+            if (exit != null) Ui.SetFloat(exit.GetComponent<ProximityInteractable>(), "interactionRadius", 1f);
+
+            SetBool(sena.GetComponent<Lumina.NPC.SenaPresenter>(), "waveOnStart", true);
+            var welcome = sena.GetComponent<Lumina.NPC.SenaWelcomeInteraction>();
+            var calls = welcome.onWelcomeCompleted;
+            for (int i = calls.GetPersistentEventCount() - 1; i >= 0; i--) UnityEventTools.RemovePersistentListener(calls, i);
+            UnityEventTools.AddVoidPersistentListener(calls, Object.FindFirstObjectByType<LearningLevelController>().OpenPractice);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            Debug.Log("[Lumina] MonthsHouse: práctica dentro de la casa lista (Sena en " + position + ").");
+        }
+
+        private static void SetBool(Object target, string property, bool value)
+        {
+            var so = new SerializedObject(target);
+            so.FindProperty(property).boolValue = value;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // Secuencias capturadas por el equipo de IA para saludos y meses.
+        private const string GreetingTemplatesPath = "Assets/Project/Data/GreetingLandmarkTemplates.asset";
+        private const string MonthsVideosDir = "Assets/video/meses/meses/";
+
+        /// <summary>
+        /// Casa de los Meses: coloca el televisor (si falta) y le asigna al panel del nivel un video por mes, en el orden del nivel.
+        /// Idempotente. Los videos viven en Assets/Project/Videos/Meses/ con el nombre del mes (enero.mp4 …).
+        /// </summary>
+        [MenuItem("Lumina/Niveles/Meses: televisor con los videos de las señas")]
+        public static void SetupMonthsVideos()
+        {
+            var scene = EditorSceneManager.OpenScene(ScenePaths[1], OpenSceneMode.Single);
+            var decor = GameObject.Find(RootName).transform.Find("Decoracion");
+            DestroyChild(decor, "Televisor");
+            BuildTelevision(decor, LevelKind.Months);
+
+            var controller = Object.FindFirstObjectByType<LearningLevelController>();
+            if (controller == null) throw new System.InvalidOperationException("No hay LearningLevelController en MonthsHouse.");
+            WireMonthsVideos(controller);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            Debug.Log("[Lumina] MonthsHouse: televisor con " + LearningLevels.Months.items.Length + " videos.");
+        }
+
+        private static void WireMonthsVideos(LearningLevelController controller)
+        {
+            var television = Object.FindFirstObjectByType<TelevisionScreen>();
+            if (television == null) return;
+            var items = LearningLevels.Months.items;
+            var clips = new UnityEngine.Video.VideoClip[items.Length];
+            for (int i = 0; i < items.Length; i++)
+            {
+                string month = items[i].id.Substring(items[i].id.IndexOf('.') + 1);
+                string file = MonthsVideosDir + month + ".mp4";
+                clips[i] = AssetDatabase.LoadAssetAtPath<UnityEngine.Video.VideoClip>(file);
+                if (clips[i] == null) Debug.LogWarning("[Lumina] Falta el video " + file);
+            }
+            Ui.Set(controller, "television", television);
+            Ui.SetArray(controller, "itemVideos", clips);
+        }
+
+        // Dónde queda el carrito en cada casa: esquina noreste; en Saludos las dos pizarras ocupan toda la pared norte,
+        // así que va junto a la pared este para no tapar las burbujas.
+        private static Vector3 TelevisionSpot(LevelKind kind) => kind switch
+        {
+            LevelKind.Numbers => new Vector3(3.85f, 0f, 7.0f),
+            LevelKind.Months => new Vector3(0f, 0f, 5.6f), // frente al jugador (nace en z 1,4 mirando al norte)
+            _ => new Vector3(3.9f, 0f, 2.8f)
+        };
+
+        /// <summary>
+        /// Televisor sobre un carrito de aula, girado hacia el centro de la sala. La pantalla es un quad con VideoPlayer
+        /// (<see cref="TelevisionScreen"/>): apagada hasta que se le pasa un video.
+        /// </summary>
+        private static void BuildTelevision(Transform decor, LevelKind kind)
+        {
+            var spot = TelevisionSpot(kind);
+            var toCenter = new Vector3(0f, 0f, 3.8f) - spot;
+            var tv = Group(decor, "Televisor");
+            tv.position = spot;
+            tv.rotation = Quaternion.Euler(0f, Mathf.Atan2(toCenter.x, toCenter.z) * Mathf.Rad2Deg, 0f);
+
+            // Local: la pantalla mira hacia +Z.
+            Box(tv, "BasePlaca", new Vector3(0f, 0.09f, 0f), new Vector3(0.95f, 0.05f, 0.62f), M("WoodDark"), true, localSpace: true);
+            foreach (var p in new[] { new Vector2(-0.4f, -0.24f), new Vector2(0.4f, -0.24f), new Vector2(-0.4f, 0.24f), new Vector2(0.4f, 0.24f) })
+                Cyl(tv, "Rueda", tv.TransformPoint(new Vector3(p.x, 0.035f, p.y)), 0.07f, 0.07f, M("Ink"), euler: tv.eulerAngles + new Vector3(0f, 0f, 90f));
+            foreach (float x in new[] { -0.4f, 0.4f })
+                Box(tv, "Poste", new Vector3(x, 0.62f, -0.2f), new Vector3(0.05f, 1.06f, 0.05f), M("WoodDark"), false, localSpace: true);
+            Box(tv, "Repisa", new Vector3(0f, 0.5f, 0f), new Vector3(0.9f, 0.04f, 0.5f), M("WoodMid"), true, localSpace: true);
+            Box(tv, "Reproductor", new Vector3(-0.2f, 0.56f, 0f), new Vector3(0.34f, 0.07f, 0.26f), M("Ink"), false, localSpace: true);
+            Ball(tv, "LuzReproductor", new Vector3(-0.08f, 0.56f, 0.14f), 0.025f, M("Coral"), localSpace: true);
+            Box(tv, "Soporte", new Vector3(0f, 1.2f, -0.17f), new Vector3(0.9f, 0.1f, 0.06f), M("WoodDark"), false, localSpace: true);
+
+            // Marco y pantalla (televisor de ~55": 1,25 × 0,72 m).
+            Box(tv, "Cuerpo", new Vector3(0f, 1.42f, -0.1f), new Vector3(1.25f, 0.72f, 0.09f), M("Ink"), true, localSpace: true);
+            Box(tv, "Barbilla", new Vector3(0f, 1.1f, -0.05f), new Vector3(0.3f, 0.025f, 0.02f), M("Coral"), false, localSpace: true);
+            var screen = Prim(PrimitiveType.Quad, tv, "Pantalla", new Vector3(0f, 1.42f, -0.052f), new Vector3(1.17f, 0.64f, 1f),
+                M("Ink"), false, Quaternion.Euler(0f, 180f, 0f), true);
+
+            var rt = LoadOrCreateRenderTexture(kind);
+            var screenMaterial = LoadOrCreateScreenMaterial(kind, rt);
+            var television = tv.gameObject.AddComponent<TelevisionScreen>();
+            SetRef(television, "screen", screen.GetComponent<Renderer>());
+            SetRef(television, "offMaterial", M("Ink"));
+            SetRef(television, "onMaterial", screenMaterial);
+            SetRef(television, "renderTexture", rt);
+        }
+
+        private static RenderTexture LoadOrCreateRenderTexture(LevelKind kind)
+        {
+            string path = MaterialDir + "TvRT_" + kind + ".renderTexture";
+            var rt = AssetDatabase.LoadAssetAtPath<RenderTexture>(path);
+            if (rt != null) return rt;
+            rt = new RenderTexture(1280, 720, 0, RenderTextureFormat.ARGB32) { name = "Lumina_TvRT_" + kind };
+            AssetDatabase.CreateAsset(rt, path);
+            return rt;
+        }
+
+        private static Material LoadOrCreateScreenMaterial(LevelKind kind, RenderTexture rt)
+        {
+            string path = MaterialDir + "TvScreen_" + kind + ".mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                var shader = Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Unlit/Texture");
+                material = new Material(shader) { name = "Lumina_TvScreen_" + kind };
+                AssetDatabase.CreateAsset(material, path);
+            }
+            material.SetTexture("_BaseMap", rt);
+            material.SetTexture("_MainTex", rt);
+            EditorUtility.SetDirty(material);
+            return material;
         }
 
         private static void DestroyChild(Transform root, string path)
@@ -153,11 +341,8 @@ namespace Lumina.EditorTools
 
         private static void PlaceSena(GameObject sena, Vector3 position, string[] lines)
         {
-            // La burbuja de bienvenida es un objeto aparte (no hijo de Sena): se mueve con ella.
-            var delta = position - sena.transform.position;
+            // La burbuja de bienvenida es hija de Sena: se mueve con ella, sin desplazarla otra vez.
             sena.transform.position = position;
-            var bubble = GameObject.Find("WelcomeBubble");
-            if (bubble != null) bubble.transform.position += delta;
             var so = new SerializedObject(sena.GetComponent<Lumina.NPC.SenaWelcomeInteraction>());
             var array = so.FindProperty("welcomeLines");
             array.arraySize = lines.Length;
@@ -280,14 +465,19 @@ namespace Lumina.EditorTools
 
         // ------------------------------------------------------------------ Casa de los Meses (calendario)
 
+        // Sena aparece de frente al jugador apenas entra (él nace en (0, 1,4) mirando al norte).
+        private static readonly Vector3 MonthsSenaPosition = new Vector3(-1.1f, 0f, 3.6f);
+        private static readonly string[] MonthsWelcome =
+        {
+            "¡Bienvenido a la Casa de los Meses!",
+            "Aquí aprenderás los doce meses del año.",
+            "Mira el televisor: te muestra la seña de cada mes.",
+            "Hazla frente a tu cámara y yo veré qué tan parecida te queda."
+        };
+
         private static void BuildMonthsDecor(Transform decor, Transform root, GameObject sena)
         {
-            PlaceSena(sena, new Vector3(2.9f, 0f, 3.3f), new[]
-            {
-                "¡Bienvenido a la Casa de los Meses!",
-                "Aquí aprenderás los doce meses del año.",
-                "Mira el calendario de la pared: apunta a un mes y pulsa E para ver su seña."
-            });
+            PlaceSena(sena, MonthsSenaPosition, MonthsWelcome);
             Recolor(root, "Zocalo", M("WoodMid"));
             Recolor(root, "Moldura", M("CoralSoft"));
             RecolorRug(root, M("WoodLight"), M("Cream"), M("CoralSoft"), M("CreamDeep"));
@@ -579,106 +769,179 @@ namespace Lumina.EditorTools
 
         // ------------------------------------------------------------------ Panel del elemento (interfaz existente)
 
+        /// <summary>
+        /// Reconstruye solo el panel de cada casa (Números, Meses, Saludos) con el diseño adaptable, sin tocar la decoración ni el resto de la
+        /// escena. Es idempotente: sustituye el panel y el controlador anteriores. El Abecedario se acomoda al iniciar (AlphabetResponsiveLayout).
+        /// </summary>
+        [MenuItem("Lumina/Niveles/Reconstruir paneles de las casas (adaptables)")]
+        public static void RebuildPanels()
+        {
+            var kinds = new[] { LevelKind.Numbers, LevelKind.Months, LevelKind.Greetings };
+            for (int i = 0; i < kinds.Length; i++)
+            {
+                var scene = EditorSceneManager.OpenScene(ScenePaths[i], OpenSceneMode.Single);
+                DestroyRoot("LearningHouse");
+                DestroyRoot("LevelPanelCanvas");
+                var promptObject = GameObject.Find("PromptObjetos");
+                if (promptObject == null) throw new System.InvalidOperationException("No se encontró 'PromptObjetos' en " + ScenePaths[i]);
+                BuildPanelAndWire(kinds[i], promptObject.GetComponentInChildren<InteractionPrompt>(true));
+                EditorSceneManager.MarkSceneDirty(scene);
+                EditorSceneManager.SaveScene(scene);
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Lumina] Paneles de las casas de Números, Meses y Saludos reconstruidos.");
+        }
+
+        // Panel adaptable: la tarjeta se ancla por proporciones de pantalla (derecha) y todo su contenido va en layouts verticales y
+        // horizontales con alturas mínimas/preferidas, así que nada se sobrepone ni se sale y los textos se reducen para caber.
         private static void BuildPanelAndWire(LevelKind kind, InteractionPrompt itemsPrompt)
         {
             var canvas = AuthBuilder.MakeCanvas("LevelPanelCanvas");
             Ui.EnsureEventSystem();
-            var outerSize = new Vector2(840f, 760f);
-            var card = Ui.Card(canvas.transform, "LevelPanel", outerSize, out var outer);
-            Ui.Place(outer, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-60f, 0f), outerSize);
+            var card = Screens.ResponsiveCard(canvas.transform, "LevelPanel", new Vector2(0.52f, 0.08f), new Vector2(0.975f, 0.92f), out var outer);
+            Screens.VStack(card, 12f, new RectOffset(40, 40, 28, 28));
+            if (kind == LevelKind.Months) BuildTelevisionOnCanvas(canvas.transform);
 
-            var bar = Screens.BuildBar(card, 22f, 700f, 44f);
+            var bar = Screens.BuildBar(card, 0f, 0f, 0f);
+            Screens.Elem(bar, minH: 40f, prefH: 48f);
+            Screens.FitText(bar.GetComponentInChildren<TMP_Text>(true), 14f, false);
             var position = Ui.Label(card, "Position", "", 26f, Ui.TurquoiseDark, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
-            Ui.TopCenter(position.rectTransform, 78f, 760f, 38f);
+            Screens.FitText(position, 14f, false);
+            Screens.Elem(position, minH: 28f, prefH: 38f);
 
             TMP_Text big, nameLabel = null, group = null, senaSays = null;
             Image[] dots = new Image[0];
-            float instructionY;
 
             switch (kind)
             {
                 case LevelKind.Numbers:
                     big = Ui.Label(card, "Number", "1", 150f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
-                    Ui.TopCenter(big.rectTransform, 116f, 600f, 170f);
+                    Screens.FitText(big, 60f, false);
+                    Screens.Elem(big, minH: 90f, prefH: 160f);
                     nameLabel = Ui.Label(card, "Word", "", 48f, Ui.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 8f);
-                    Ui.TopCenter(nameLabel.rectTransform, 288f, 700f, 54f);
+                    Screens.FitText(nameLabel, 22f, false);
+                    Screens.Elem(nameLabel, minH: 36f, prefH: 54f);
+                    // 31 puntos (0–30): en una cuadrícula que salta de línea, para que no se salgan del panel.
                     var dotsRow = Ui.Rect("CountDots", card);
-                    Ui.TopCenter(dotsRow, 346f, 520f, 36f);
-                    var dotsLayout = dotsRow.gameObject.AddComponent<HorizontalLayoutGroup>();
-                    dotsLayout.spacing = 10f; dotsLayout.childAlignment = TextAnchor.MiddleCenter;
-                    dotsLayout.childControlWidth = dotsLayout.childControlHeight = false;
-                    dotsLayout.childForceExpandWidth = dotsLayout.childForceExpandHeight = false;
+                    Screens.Elem(dotsRow, minH: 52f, prefH: 76f);
+                    var dotsGrid = dotsRow.gameObject.AddComponent<GridLayoutGroup>();
+                    dotsGrid.cellSize = new Vector2(22f, 22f); dotsGrid.spacing = new Vector2(8f, 8f);
+                    dotsGrid.constraint = GridLayoutGroup.Constraint.Flexible;
+                    dotsGrid.childAlignment = TextAnchor.UpperCenter;
                     var list = new List<Image>();
                     for (int i = 0; i < LearningLevels.Numbers.items.Length; i++)
-                    {
-                        var dot = Ui.Panel(dotsRow, "Dot" + (i + 1), Ui.Sand, Ui.Circle);
-                        dot.rectTransform.sizeDelta = new Vector2(34f, 34f);
-                        list.Add(dot);
-                    }
+                        list.Add(Ui.Panel(dotsRow, "Dot" + (i + 1), Ui.Sand, Ui.Circle));
                     dots = list.ToArray();
-                    instructionY = 394f;
                     break;
 
                 case LevelKind.Months:
-                    var page = Ui.Panel(card, "CalendarPage", Ui.CreamWarm);
-                    Ui.TopCenter(page.rectTransform, 126f, 640f, 214f);
-                    var outline = Ui.Panel(page.transform, "Outline", Ui.SandDark);
-                    Ui.Stretch(outline.rectTransform); outline.transform.SetAsFirstSibling();
-                    var sheet = Ui.Panel(page.transform, "Sheet", Ui.CreamWarm);
-                    Ui.Stretch(sheet.rectTransform, 4f, 4f, 4f, 4f);
-                    var band = Ui.Panel(sheet.transform, "Band", Ui.Coral);
-                    Ui.Place(band.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(0f, 76f));
+                    // Encabezado compacto: el panel comparte la pantalla con el televisor, la cámara y la calificación.
+                    var band = Ui.Panel(card, "MonthBand", Ui.Coral);
+                    Screens.Elem(band, minH: 64f, prefH: 84f);
                     nameLabel = Ui.Label(band.transform, "Month", "", 48f, Ui.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 8f);
-                    Ui.Stretch(nameLabel.rectTransform, 20f, 4f, 20f, 4f);
-                    foreach (float x in new[] { -200f, 200f })
-                    {
-                        var ring = Ui.Panel(page.transform, "Ring", Ui.Ink, Ui.Circle);
-                        Ui.Place(ring.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), Mid, new Vector2(x, -4f), new Vector2(28f, 28f));
-                    }
-                    big = Ui.Label(sheet.transform, "MonthNumber", "01", 100f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
-                    Ui.Place(big.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 1f), Mid, Vector2.zero, Vector2.zero);
-                    big.rectTransform.offsetMin = new Vector2(10f, 6f); big.rectTransform.offsetMax = new Vector2(-10f, -80f);
-                    instructionY = 360f;
+                    Ui.Stretch(nameLabel.rectTransform, 110f, 4f, 110f, 4f);
+                    Screens.FitText(nameLabel, 22f, false);
+                    var numberChip = Ui.Panel(band.transform, "NumberChip", Ui.CreamWarm, Ui.Circle);
+                    Ui.Place(numberChip.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(16f, 0f), new Vector2(60f, 60f));
+                    big = Ui.Label(numberChip.transform, "MonthNumber", "01", 34f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 2f);
+                    Ui.Stretch(big.rectTransform);
+                    Screens.FitText(big, 18f, false);
                     break;
 
                 default:
-                    var chip = Ui.Panel(card, "GroupChip", Ui.TurquoiseSoft);
-                    Ui.TopCenter(chip.rectTransform, 122f, 340f, 42f);
+                    var chipRow = Ui.Rect("GroupRow", card);
+                    Screens.Elem(chipRow, minH: 40f, prefH: 46f);
+                    Screens.HStack(chipRow, 0f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, false, true);
+                    var chip = Ui.Panel(chipRow, "GroupChip", Ui.TurquoiseSoft);
+                    Screens.Elem(chip, minW: 140f, minH: 36f, prefW: 340f, prefH: 42f);
                     group = Ui.Label(chip.transform, "Group", "", 22f, Ui.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
-                    Ui.Stretch(group.rectTransform);
+                    Ui.Stretch(group.rectTransform, 12f, 0f, 12f, 0f);
+                    Screens.FitText(group, 13f, false);
                     var frame = Ui.Panel(card, "PhraseBubble", Ui.Turquoise);
-                    Ui.TopCenter(frame.rectTransform, 172f, 700f, 150f);
+                    Screens.Elem(frame, minH: 110f, prefH: 150f);
                     var inner = Ui.Panel(frame.transform, "Inner", Ui.CreamWarm);
                     Ui.Stretch(inner.rectTransform, 6f, 6f, 6f, 6f);
                     big = Ui.Label(inner.transform, "Phrase", "", 58f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 2f);
                     Ui.Stretch(big.rectTransform, 20f, 6f, 20f, 6f);
+                    Screens.FitText(big, 24f, true);
                     senaSays = Ui.Label(card, "SenaSays", "", 24f, Ui.TurquoiseDark, FontStyles.Bold, TextAlignmentOptions.Center);
-                    Ui.TopCenter(senaSays.rectTransform, 330f, 740f, 40f);
-                    instructionY = 380f;
+                    Screens.FitText(senaSays, 14f, true);
+                    Screens.Elem(senaSays, minH: 30f, prefH: 40f);
                     break;
             }
 
             var instruction = Ui.Label(card, "Instruction", "", 26f, Ui.Ink, FontStyles.Normal, TextAlignmentOptions.Center);
-            Ui.TopCenter(instruction.rectTransform, instructionY, 760f, 80f);
+            Screens.FitText(instruction, 15f, true);
+            Screens.Elem(instruction, minH: 64f, prefH: 96f, flexH: 1f);
             var demoNotice = Ui.Label(card, "DemoNotice", "La demostración animada llegará pronto.", 24f, Ui.TurquoiseDark, FontStyles.Bold);
-            Ui.TopCenter(demoNotice.rectTransform, instructionY + 82f, 760f, 32f);
+            Screens.FitText(demoNotice, 14f, true);
+            Screens.Elem(demoNotice, minH: 28f, prefH: 36f);
 
-            // Dos filas de acciones: VER SEÑA · PRACTICAR  /  ANTERIOR · VOLVER · SIGUIENTE
+            // Meses: práctica dentro de la casa (cámara del jugador, calificación y estrellas).
+            LearningPracticeView practiceView = null;
+            if (kind == LevelKind.Months)
+            {
+                var cameraFrame = Ui.Panel(card, "CameraFrame", Ui.Ink);
+                Screens.Elem(cameraFrame, minH: 150f, prefH: 250f, flexH: 2f);
+                var aspect = Ui.Rect("Aspect", cameraFrame.transform);
+                Ui.Stretch(aspect);
+                var fitter = aspect.gameObject.AddComponent<AspectRatioFitter>();
+                fitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent; fitter.aspectRatio = 16f / 9f;
+                var view = new GameObject("CameraView", typeof(RectTransform), typeof(RawImage)).GetComponent<RawImage>();
+                view.transform.SetParent(aspect, false);
+                Ui.Stretch(view.rectTransform, 8f, 8f, 8f, 8f);
+                view.color = new Color(0f, 0f, 0f, 0.25f); view.raycastTarget = false;
+                var cameraStatus = Ui.Label(cameraFrame.transform, "CameraStatus", "", 26f, Ui.Cream);
+                Ui.Stretch(cameraStatus.rectTransform, 20f, 20f, 20f, 20f);
+                Screens.FitText(cameraStatus, 14f, true);
+                var countdown = Ui.Label(cameraFrame.transform, "Countdown", "", 150f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
+                Ui.Stretch(countdown.rectTransform);
+                countdown.raycastTarget = false;
+                var feed = cameraFrame.gameObject.AddComponent<CameraFeedUI>();
+                Ui.Set(feed, "view", view);
+                Ui.Set(feed, "status", cameraStatus);
+
+                var statsRow = Ui.Rect("Stats", card);
+                Screens.Elem(statsRow, minH: 84f, prefH: 104f);
+                Screens.HStack(statsRow, 16f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, true, true);
+                var scoreCard = Screens.BuildStatCard(statsRow, "ScoreCard");
+                var starsCard = Screens.BuildStatCard(statsRow, "StarsCard");
+                foreach (var c in new[] { scoreCard, starsCard })
+                {
+                    Screens.Elem(c, minW: 120f, minH: 84f, prefH: 104f, flexW: 1f);
+                    // Valor más chico que en Results (76): la tarjeta es baja y la etiqueta de abajo debe leerse.
+                    var value = c.transform.Find("Inner/Value").GetComponent<TMP_Text>();
+                    value.fontSize = 46f;
+                    Screens.FitText(value, 20f, false);
+                }
+
+                var status = Ui.Label(card, "PracticeStatus", "", 26f, Ui.TurquoiseDark, FontStyles.Bold, TextAlignmentOptions.Center);
+                Screens.FitText(status, 14f, true);
+                Screens.Elem(status, minH: 44f, prefH: 64f);
+
+                practiceView = new GameObject("LearningPractice").AddComponent<LearningPracticeView>();
+                Ui.Set(practiceView, "cameraFeed", feed);
+                Ui.Set(practiceView, "cameraView", view);
+                Ui.Set(practiceView, "statusLabel", status);
+                Ui.Set(practiceView, "countdownLabel", countdown);
+                Ui.Set(practiceView, "scoreCard", scoreCard);
+                Ui.Set(practiceView, "starsCard", starsCard);
+                Ui.Set(practiceView, "templates", AssetDatabase.LoadAssetAtPath<Senas.AI.MediaPipe.AlphabetLandmarkTemplateSet>(GreetingTemplatesPath));
+            }
+
+            // Dos filas de acciones: VER SEÑA · PRACTICAR  /  ANTERIOR · VOLVER · SIGUIENTE. Los botones se reparten el ancho.
             var rowA = Ui.Rect("ActionsMain", card);
-            Ui.Place(rowA, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 118f), new Vector2(760f, 92f));
-            var learn = Ui.MakeButton(rowA, "LearnButton", "VER SEÑA", Ui.Turquoise, Ui.TurquoiseDark, Ui.Ink, new Vector2(370f, 88f), 32f, 8f, 3f);
-            Ui.Place((RectTransform)learn.transform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), Vector2.zero, new Vector2(370f, 88f));
-            var practice = Ui.MakeButton(rowA, "PracticeButton", "PRACTICAR", Ui.Coral, Ui.CoralDark, Ui.Cream, new Vector2(370f, 88f), 34f, 8f, 3f);
-            Ui.Place((RectTransform)practice.transform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), Vector2.zero, new Vector2(370f, 88f));
+            Screens.Elem(rowA, minH: 80f, prefH: 92f);
+            Screens.HStack(rowA, 16f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, true, true);
+            var learn = Screens.FlexButton(rowA, "LearnButton", "VER SEÑA", Ui.Turquoise, Ui.TurquoiseDark, Ui.Ink, 88f, 32f, 16f, 120f, 300f);
+            var practice = Screens.FlexButton(rowA, "PracticeButton", kind == LevelKind.Months ? "EMPEZAR" : "PRACTICAR", Ui.Coral, Ui.CoralDark, Ui.Cream, 88f, 34f, 16f, 120f, 300f);
 
             var rowB = Ui.Rect("ActionsNav", card);
-            Ui.Place(rowB, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 14f), new Vector2(760f, 92f));
-            var prev = Ui.MakeButton(rowB, "PreviousButton", "ANTERIOR", Ui.CreamWarm, Ui.SandDark, Ui.Ink, new Vector2(230f, 84f), 26f, 8f, 2f);
-            Ui.Place((RectTransform)prev.transform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), Vector2.zero, new Vector2(230f, 84f));
-            var close = Ui.MakeButton(rowB, "CloseButton", "VOLVER", Ui.Cream, Ui.SandDark, Ui.Ink, new Vector2(230f, 84f), 26f, 8f, 2f);
-            Ui.Place((RectTransform)close.transform, Mid, Mid, Mid, Vector2.zero, new Vector2(230f, 84f));
-            var next = Ui.MakeButton(rowB, "NextButton", "SIGUIENTE", Ui.CreamWarm, Ui.SandDark, Ui.Ink, new Vector2(230f, 84f), 26f, 8f, 2f);
-            Ui.Place((RectTransform)next.transform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), Vector2.zero, new Vector2(230f, 84f));
+            Screens.Elem(rowB, minH: 72f, prefH: 84f);
+            Screens.HStack(rowB, 14f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, true, true);
+            var prev = Screens.FlexButton(rowB, "PreviousButton", "ANTERIOR", Ui.CreamWarm, Ui.SandDark, Ui.Ink, 84f, 26f, 13f, 100f, 200f);
+            var close = Screens.FlexButton(rowB, "CloseButton", "VOLVER", Ui.Cream, Ui.SandDark, Ui.Ink, 84f, 26f, 13f, 100f, 200f);
+            var next = Screens.FlexButton(rowB, "NextButton", "SIGUIENTE", Ui.CreamWarm, Ui.SandDark, Ui.Ink, 84f, 26f, 13f, 100f, 200f);
 
             var houseGo = new GameObject("LearningHouse");
             var controller = houseGo.AddComponent<LearningLevelController>();
@@ -704,6 +967,54 @@ namespace Lumina.EditorTools
             Ui.Set(selector, "level", controller);
             Ui.Set(selector, "prompt", itemsPrompt);
             Ui.Set(selector, "promptLabel", PromptLabel(itemsPrompt));
+            if (kind == LevelKind.Months)
+            {
+                WireMonthsVideos(controller);
+                practiceView.transform.SetParent(houseGo.transform, false);
+                Ui.Set(controller, "practice", practiceView);
+            }
+        }
+
+        /// <summary>
+        /// Pantalla del televisor junto al panel (mitad izquierda del canvas): muestra el mismo video que el televisor 3D, porque comparte su
+        /// RenderTexture, así que se ve siempre aunque el jugador no esté mirando el televisor de la casa.
+        /// </summary>
+        private static void BuildTelevisionOnCanvas(Transform canvas)
+        {
+            var area = Ui.Rect("TelevisionArea", canvas);
+            area.anchorMin = new Vector2(0.03f, 0.27f); area.anchorMax = new Vector2(0.49f, 0.8f); // deja sitio debajo para el pie
+            area.offsetMin = area.offsetMax = Vector2.zero;
+
+            var bezel = Ui.Panel(area, "TelevisionBezel", Ui.Ink);
+            Ui.Stretch(bezel.rectTransform);
+            var fitter = bezel.gameObject.AddComponent<AspectRatioFitter>();
+            fitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent; fitter.aspectRatio = 16f / 9f;
+
+            var screen = new GameObject("TelevisionScreen", typeof(RectTransform), typeof(RawImage)).GetComponent<RawImage>();
+            screen.transform.SetParent(bezel.transform, false);
+            Ui.Stretch(screen.rectTransform, 14f, 14f, 14f, 14f);
+            screen.texture = LoadOrCreateRenderTexture(LevelKind.Months);
+            screen.color = Color.white;
+            screen.raycastTarget = false;
+
+            // Pie del televisor: así se ve entero (marco, pantalla y base), no solo un rectángulo.
+            var neck = Ui.Panel(bezel.transform, "Cuello", new Color(0.36f, 0.24f, 0.16f));
+            Ui.Place(neck.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, 0f), new Vector2(34f, 40f));
+            var foot = Ui.Panel(bezel.transform, "Base", new Color(0.36f, 0.24f, 0.16f));
+            Ui.Place(foot.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, -40f), new Vector2(240f, 16f));
+
+            var chin = Ui.Panel(bezel.transform, "Barbilla", Ui.Coral);
+            Ui.Place(chin.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), new Vector2(0f, 7f), new Vector2(90f, 5f));
+        }
+
+        /// <summary>Punto desde donde el jugador ve el televisor de frente (a 3 m, sobre su eje). Se puede mover a mano en la escena.</summary>
+        private static Transform EnsureViewSpot(Transform television)
+        {
+            var existing = GameObject.Find("PuntoVistaTelevisor");
+            var spot = existing != null ? existing.transform : new GameObject("PuntoVistaTelevisor").transform;
+            Vector3 position = television.position + television.forward * 3f;
+            spot.position = new Vector3(position.x, 0.1f, position.z);
+            return spot;
         }
 
         private static TMP_Text PromptLabel(InteractionPrompt prompt)
@@ -765,7 +1076,10 @@ namespace Lumina.EditorTools
 
         // ------------------------------------------------------------------ Accesos en Practice
 
-        /// <summary>Añade a Practice la fila «CASAS DE APRENDIZAJE». Es idempotente y no reconstruye la escena.</summary>
+        /// <summary>
+        /// Añade a Practice la fila «CASAS DE APRENDIZAJE» con las cuatro casas (Abecedario, Números, Meses, Saludos y frases).
+        /// Es idempotente y no reconstruye la escena. Ocupa una zona de la pantalla (no un tamaño fijo): los botones se reparten el ancho.
+        /// </summary>
         internal static void AddShortcutsToPractice()
         {
             string path = AuthBuilder.ScenesDir + "Practice.unity";
@@ -777,24 +1091,37 @@ namespace Lumina.EditorTools
             var old = canvas.Find("LevelShortcuts");
             if (old != null) Object.DestroyImmediate(old.gameObject);
 
+            // Abajo a la izquierda, bajo Sena y sin llegar a las tarjetas (que empiezan al 43 % del ancho).
             var root = Ui.Rect("LevelShortcuts", canvas);
-            Ui.Place(root, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(48f, 34f), new Vector2(780f, 134f));
-            var plate = Ui.Panel(root, "HeadingPlate", Ui.Ink);
-            Ui.Place(plate.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, new Vector2(500f, 44f));
-            var label = Ui.Label(plate.transform, "Heading", "CASAS DE APRENDIZAJE", 26f, Ui.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
-            Ui.Stretch(label.rectTransform, 10f, 0f, 10f, 0f);
+            root.anchorMin = new Vector2(0.03f, 0.04f); root.anchorMax = new Vector2(0.40f, 0.30f);
+            root.offsetMin = root.offsetMax = Vector2.zero;
+            Screens.VStack(root, 12f, new RectOffset(0, 0, 0, 0), TextAnchor.LowerCenter);
 
-            var row = Ui.Rect("Row", root);
-            Ui.Place(row, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 0f), Vector2.zero, new Vector2(0f, 88f));
-            var layout = row.gameObject.AddComponent<HorizontalLayoutGroup>();
-            layout.spacing = 12f; layout.childAlignment = TextAnchor.LowerLeft;
-            layout.childControlWidth = layout.childControlHeight = false;
-            layout.childForceExpandWidth = layout.childForceExpandHeight = false;
-            var numbers = Ui.MakeButton(row, "NumbersButton", "NÚMEROS", Ui.Turquoise, Ui.TurquoiseDark, Ui.Ink, new Vector2(230f, 80f), 28f, 8f, 2f);
-            var months = Ui.MakeButton(row, "MonthsButton", "MESES", Ui.Coral, Ui.CoralDark, Ui.Cream, new Vector2(200f, 80f), 28f, 8f, 2f);
-            var greetings = Ui.MakeButton(row, "GreetingsButton", "SALUDOS Y FRASES", Ui.CreamWarm, Ui.SandDark, Ui.Ink, new Vector2(320f, 80f), 26f, 8f, 2f);
+            var plate = Ui.Panel(root, "HeadingPlate", Ui.Ink);
+            Screens.Elem(plate, minH: 40f, prefH: 48f);
+            var heading = Ui.Label(plate.transform, "Heading", "CASAS DE APRENDIZAJE", 26f, Ui.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
+            Ui.Stretch(heading.rectTransform, 16f, 0f, 16f, 0f);
+            Screens.FitText(heading, 14f, false);
+            LocalizedText.Bind(heading, "levels.houses");
+
+            var rowA = Ui.Rect("RowA", root);
+            Screens.Elem(rowA, minH: 72f, prefH: 80f);
+            Screens.HStack(rowA, 12f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, true, true);
+            var rowB = Ui.Rect("RowB", root);
+            Screens.Elem(rowB, minH: 72f, prefH: 80f);
+            Screens.HStack(rowB, 12f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, true, true);
+
+            var alphabet = Screens.FlexButton(rowA, "AlphabetButton", "ABECEDARIO", Ui.CreamWarm, Ui.SandDark, Ui.Ink, 80f, 26f, 14f);
+            var numbers = Screens.FlexButton(rowA, "NumbersButton", "NÚMEROS", Ui.Turquoise, Ui.TurquoiseDark, Ui.Ink, 80f, 26f, 14f);
+            var months = Screens.FlexButton(rowB, "MonthsButton", "MESES", Ui.Coral, Ui.CoralDark, Ui.Cream, 80f, 26f, 14f);
+            var greetings = Screens.FlexButton(rowB, "GreetingsButton", "SALUDOS Y FRASES", Ui.CreamWarm, Ui.SandDark, Ui.Ink, 80f, 26f, 14f);
+            LocalizedText.Bind(alphabet.GetComponentInChildren<TMP_Text>(true), "title.alphabet");
+            LocalizedText.Bind(numbers.GetComponentInChildren<TMP_Text>(true), "title.numbers");
+            LocalizedText.Bind(months.GetComponentInChildren<TMP_Text>(true), "title.months");
+            LocalizedText.Bind(greetings.GetComponentInChildren<TMP_Text>(true), "title.greetings");
 
             var component = root.gameObject.AddComponent<LevelShortcutsUI>();
+            Ui.Set(component, "alphabetButton", alphabet);
             Ui.Set(component, "numbersButton", numbers);
             Ui.Set(component, "monthsButton", months);
             Ui.Set(component, "greetingsButton", greetings);

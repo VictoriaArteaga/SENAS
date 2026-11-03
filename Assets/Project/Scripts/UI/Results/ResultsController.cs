@@ -34,7 +34,7 @@ namespace Lumina.UI
             practiceAgainButton.onClick.AddListener(() => ScreenFader.Load(SceneNames.Practice));
 
             var sign = PracticeSession.Sign;
-            signLabel.text = sign != null ? sign.displayName.ToUpperInvariant() : Loc.T("title.practice");
+            signLabel.text = sign != null ? sign.GetName().ToUpperInvariant() : Loc.T("title.practice");
 
             var result = PracticeSession.Result;
             _submission = PracticeSession.Submission;

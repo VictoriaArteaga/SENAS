@@ -30,6 +30,8 @@ namespace Lumina.Interaction
 
             if (LevelAccess.IsBlocked(sceneName)) return;
 
+            // Entrando a una casa desde Lúmina: se recuerda dónde está el jugador para devolverlo ahí al salir.
+            if (WorldReturn.IsHouse(sceneName)) WorldReturn.Remember(transform);
             SceneManager.LoadScene(sceneName);
         }
     }

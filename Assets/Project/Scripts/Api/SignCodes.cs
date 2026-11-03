@@ -77,6 +77,9 @@ namespace Lumina.Api
         public static string DisplayName(string code)
         {
             if (string.IsNullOrEmpty(code)) return string.Empty;
+            if (code.StartsWith("MONTH_", StringComparison.Ordinal))
+                foreach (var month in new[] { "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre" })
+                    if (BackendCodeFor("meses." + month) == code) return char.ToUpperInvariant(month[0]) + month.Substring(1);
             return IsNumber(code) ? code.Substring("numeros.".Length) : code;
         }
 
