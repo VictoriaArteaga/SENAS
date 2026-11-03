@@ -20,8 +20,8 @@ namespace Lumina.UI
     /// moverse entre elementos o PRACTICAR (abre Practice con esa seña). No reconoce señas: el reconocimiento vive en
     /// Practice (<see cref="ISignRecognizer"/>) y la demostración del avatar entra por <see cref="DemonstrationRequested"/>.
     /// "Visto" no significa "aprendido": la barra cuenta lo visto en esta visita, no evalúa nada.
-    /// El estado de cada seña (bloqueada, disponible, superada) lo dice el backend (<see cref="ProgressStore"/>). Solo los
-    /// Números tienen reconocimiento en Unity; Meses y Saludos y frases muestran PRÓXIMAMENTE en lugar de PRACTICAR.
+    /// El estado de cada seña y su disponibilidad para practicar provienen del backend. Números, Saludos y Meses
+    /// cuentan con reconocimiento en Unity y envían sus resultados por el flujo oficial.
     /// </summary>
     public class LearningLevelController : MonoBehaviour
     {
