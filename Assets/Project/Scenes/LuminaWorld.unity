@@ -6625,7 +6625,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 120}
-  m_SizeDelta: {x: 640, y: 108}
+  m_SizeDelta: {x: 720, y: 108}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &160005708
 GameObject:
@@ -10878,9 +10878,9 @@ MonoBehaviour:
   m_fontSize: 38
   m_fontSizeBase: 38
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 28
+  m_fontSizeMax: 38
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 4096
@@ -21299,7 +21299,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 120}
-  m_SizeDelta: {x: 640, y: 108}
+  m_SizeDelta: {x: 720, y: 108}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1001 &507741629
 PrefabInstance:
@@ -23801,9 +23801,9 @@ MonoBehaviour:
   m_fontSize: 38
   m_fontSizeBase: 38
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 28
+  m_fontSizeMax: 38
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 4096
@@ -32446,7 +32446,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 120}
-  m_SizeDelta: {x: 640, y: 108}
+  m_SizeDelta: {x: 720, y: 108}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1001 &761514346
 PrefabInstance:
@@ -39026,7 +39026,7 @@ Transform:
   m_GameObject: {fileID: 942561429}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7071067, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -13.1, y: 0, z: -2.5000002}
+  m_LocalPosition: {x: -13.1, y: 0.18, z: -2.5000002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -39218,7 +39218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48367a3733c49b499159668f44498b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionRadius: 2.2
+  interactionRadius: 3.5
   promptText: Presiona E para hablar
   showPrompt: 0
   onPlayerEnter:
@@ -43077,7 +43077,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48367a3733c49b499159668f44498b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionRadius: 2.2
+  interactionRadius: 3.5
   promptText: Presiona E para hablar
   showPrompt: 0
   onPlayerEnter:
@@ -51898,7 +51898,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 120}
-  m_SizeDelta: {x: 640, y: 108}
+  m_SizeDelta: {x: 720, y: 108}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1001 &1253932038
 PrefabInstance:
@@ -55718,9 +55718,9 @@ MonoBehaviour:
   m_fontSize: 38
   m_fontSizeBase: 38
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 28
+  m_fontSizeMax: 38
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 4096
@@ -67761,9 +67761,9 @@ MonoBehaviour:
   m_fontSize: 38
   m_fontSizeBase: 38
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 28
+  m_fontSizeMax: 38
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 4096
@@ -76660,7 +76660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48367a3733c49b499159668f44498b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionRadius: 2.2
+  interactionRadius: 3.5
   promptText: Presiona E para hablar
   showPrompt: 0
   onPlayerEnter:
@@ -80932,7 +80932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48367a3733c49b499159668f44498b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionRadius: 2.2
+  interactionRadius: 3.5
   promptText: Presiona E para hablar
   showPrompt: 0
   onPlayerEnter:
