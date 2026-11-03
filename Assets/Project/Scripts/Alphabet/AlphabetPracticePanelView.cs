@@ -129,21 +129,15 @@ namespace Lumina.Alphabet
 
             _badge.text = message;
             _badge.color = _ink;
-            _badge.alignment = tone == PracticeBadgeTone.Success
-                ? TextAlignmentOptions.MidlineLeft
-                : TextAlignmentOptions.Center;
-            _badge.fontSize = Mathf.Max(_badge.fontSize, 21f);
+            bool success = tone == PracticeBadgeTone.Success;
+            _badge.alignment = success ? TextAlignmentOptions.MidlineLeft : TextAlignmentOptions.Center;
 
-            float textInsetLeft = tone == PracticeBadgeTone.Success ? 42f : 12f;
-            float textInsetRight = tone == PracticeBadgeTone.Success ? 82f : 12f;
+            // El texto ocupa toda la píldora (que se estira con la tarjeta); con la marca de éxito deja sitio a la izquierda.
             var badgeRect = _badge.rectTransform;
-            badgeRect.anchorMin = Vector2.zero;
-            badgeRect.anchorMax = Vector2.zero;
-            badgeRect.pivot = Vector2.zero;
-            badgeRect.anchoredPosition = new Vector2(24f + textInsetLeft, 32f);
-            badgeRect.sizeDelta = new Vector2(650f - textInsetLeft - textInsetRight, 58f);
+            badgeRect.offsetMin = new Vector2(success ? 52f : 14f, 6f);
+            badgeRect.offsetMax = new Vector2(-14f, -6f);
 
-            if (_successMark != null) _successMark.SetActive(tone == PracticeBadgeTone.Success);
+            if (_successMark != null) _successMark.SetActive(success);
             if (_badgeBackground != null)
             {
                 _badgeBackground.color = tone switch
@@ -154,8 +148,13 @@ namespace Lumina.Alphabet
                     _ => new Color(0.96f, 0.91f, 0.78f)
                 };
             }
-
         }
+
+        /// <summary>
+        /// Acomoda la tarjeta inferior con layouts automáticos: a la izquierda el texto de la letra y, debajo, el estado y el botón de
+        /// practicar; a la derecha la vista de la cámara (solo mientras se practica). Nada tiene posiciones en píxeles: todo se reparte
+        /// el espacio de la tarjeta, que a su vez se ancla por proporciones de pantalla (<see cref="AlphabetResponsiveLayout"/>).
+        /// </summary>
         private void Build(TMP_Text instruction, Button practiceButton)
         {
             var card = instruction.transform.parent as RectTransform;
@@ -167,48 +166,73 @@ namespace Lumina.Alphabet
                     child.name == "PracticeCameraPreview")
                     Object.Destroy(child.gameObject);
             }
+            if (_badgeBackground != null)
+            {
+                for (int i = _badgeBackground.transform.childCount - 1; i >= 0; i--)
+                {
+                    var child = _badgeBackground.transform.GetChild(i);
+                    if (child.name == "PracticeStatusText" || child.name == "SuccessCheck") Object.Destroy(child.gameObject);
+                }
+            }
 
-            card.sizeDelta = new Vector2(card.sizeDelta.x, Mathf.Max(card.sizeDelta.y, 280f));
-            var instructionRect = instruction.rectTransform;
-            instructionRect.anchorMin = new Vector2(0f, 1f);
-            instructionRect.anchorMax = new Vector2(1f, 1f);
-            instructionRect.pivot = new Vector2(0f, 1f);
-            instructionRect.anchoredPosition = new Vector2(24f, -22f);
-            instructionRect.sizeDelta = new Vector2(-270f, 128f);
+            var cardLayout = card.GetComponent<HorizontalLayoutGroup>();
+            if (cardLayout == null) cardLayout = card.gameObject.AddComponent<HorizontalLayoutGroup>();
+            cardLayout.padding = new RectOffset(28, 28, 22, 22);
+            cardLayout.spacing = 22f;
+            cardLayout.childAlignment = TextAnchor.MiddleLeft;
+            cardLayout.childControlWidth = cardLayout.childControlHeight = true;
+            cardLayout.childForceExpandWidth = cardLayout.childForceExpandHeight = false;
+            var ring = card.Find("Aro");
+            if (ring != null) SetElement(ring, ignoreLayout: true);
+
+            var column = new GameObject("PracticeColumn", typeof(RectTransform), typeof(VerticalLayoutGroup));
+            column.transform.SetParent(card, false);
+            var columnLayout = column.GetComponent<VerticalLayoutGroup>();
+            columnLayout.spacing = 12f;
+            columnLayout.childControlWidth = columnLayout.childControlHeight = true;
+            columnLayout.childForceExpandWidth = true; columnLayout.childForceExpandHeight = false;
+            SetElement(column.transform, minW: 200f, flexW: 1f, flexH: 1f);
+
+            instruction.transform.SetParent(column.transform, false);
+            AlphabetResponsiveLayout.Fit(instruction, 18f, true);
+            instruction.alignment = TextAlignmentOptions.TopLeft;
+            SetElement(instruction.transform, minH: 60f, prefH: 120f, flexH: 1f);
+
+            var row = new GameObject("PracticeRow", typeof(RectTransform), typeof(HorizontalLayoutGroup));
+            row.transform.SetParent(column.transform, false);
+            var rowLayout = row.GetComponent<HorizontalLayoutGroup>();
+            rowLayout.spacing = 14f; rowLayout.childAlignment = TextAnchor.MiddleCenter;
+            rowLayout.childControlWidth = rowLayout.childControlHeight = true;
+            rowLayout.childForceExpandWidth = false; rowLayout.childForceExpandHeight = true;
+            SetElement(row.transform, minH: 56f, prefH: 62f);
 
             if (_badge != null)
             {
                 var sourceBadge = _badge;
-                var pillRect = _badgeBackground != null
-                    ? _badgeBackground.rectTransform
-                    : null;
-                if (pillRect != null)
+                Transform pill = _badgeBackground != null ? _badgeBackground.transform : null;
+                if (pill != null)
                 {
-                    pillRect.anchorMin = Vector2.zero;
-                    pillRect.anchorMax = Vector2.zero;
-                    pillRect.pivot = Vector2.zero;
-                    pillRect.anchoredPosition = new Vector2(24f, 32f);
-                    pillRect.sizeDelta = new Vector2(650f, 58f);
+                    pill.SetParent(row.transform, false);
+                    SetElement(pill, minW: 120f, minH: 56f, prefH: 62f, flexW: 1f);
                 }
                 sourceBadge.gameObject.SetActive(false);
+
                 var badgeObject = new GameObject("PracticeStatusText",
                     typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
-                badgeObject.transform.SetParent(card, false);
+                badgeObject.transform.SetParent(pill != null ? pill : row.transform, false);
                 _badge = badgeObject.GetComponent<TextMeshProUGUI>();
                 _badge.font = sourceBadge.font;
-                _badge.fontSize = Mathf.Max(sourceBadge.fontSize, 21f);
+                _badge.fontSize = Mathf.Max(sourceBadge.fontSize, 22f);
                 _badge.fontStyle = sourceBadge.fontStyle;
                 _badge.color = _ink;
                 _badge.raycastTarget = false;
-                _badge.textWrappingMode = TextWrappingModes.NoWrap;
+                _badge.alignment = TextAlignmentOptions.Center;
+                AlphabetResponsiveLayout.Fit(_badge, 13f, true);
                 var badgeRect = _badge.rectTransform;
                 badgeRect.anchorMin = Vector2.zero;
-                badgeRect.anchorMax = Vector2.zero;
-                badgeRect.pivot = Vector2.zero;
-                badgeRect.anchoredPosition = new Vector2(36f, 32f);
-                badgeRect.sizeDelta = new Vector2(626f, 58f);
-                _badge.alignment = TextAlignmentOptions.Center;
-                _badge.fontSize = Mathf.Max(_badge.fontSize, 21f);
+                badgeRect.anchorMax = Vector2.one;
+                badgeRect.pivot = new Vector2(0.5f, 0.5f);
+                if (pill == null) SetElement(badgeObject.transform, minW: 120f, minH: 56f, prefH: 62f, flexW: 1f);
                 if (_badgeBackground != null)
                 {
                     _badgeBackground.color = _turquoiseSoft;
@@ -217,22 +241,15 @@ namespace Lumina.Alphabet
                 }
             }
 
-            var buttonRect = practiceButton.GetComponent<RectTransform>();
-            buttonRect.anchorMin = Vector2.zero;
-            buttonRect.anchorMax = Vector2.zero;
-            buttonRect.pivot = Vector2.zero;
-            buttonRect.anchoredPosition = new Vector2(696f, 30f);
-            buttonRect.sizeDelta = new Vector2(260f, 62f);
+            practiceButton.transform.SetParent(row.transform, false);
+            SetElement(practiceButton.transform, minW: 150f, minH: 56f, prefW: 250f, prefH: 62f);
+            var practiceLabel = practiceButton.GetComponentInChildren<TMP_Text>(true);
+            if (practiceLabel != null) AlphabetResponsiveLayout.Fit(practiceLabel, 14f, false);
 
             _root = new GameObject("PracticeCameraPreview",
                 typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             _root.transform.SetParent(card, false);
-            var rootRect = _root.GetComponent<RectTransform>();
-            rootRect.anchorMin = Vector2.one;
-            rootRect.anchorMax = Vector2.one;
-            rootRect.pivot = Vector2.one;
-            rootRect.anchoredPosition = new Vector2(-64f, -18f);
-            rootRect.sizeDelta = new Vector2(164f, 164f);
+            SetElement(_root.transform, minW: 110f, minH: 110f, prefW: 164f, prefH: 164f);
 
             var background = _root.GetComponent<Image>();
             background.sprite = null;
@@ -271,6 +288,16 @@ namespace Lumina.Alphabet
 
             SetBadge("Referencia provisional · en revisión", PracticeBadgeTone.Neutral);
             SetVisible(false);
+        }
+
+        private static void SetElement(Transform target, float minW = -1f, float minH = -1f, float prefW = -1f, float prefH = -1f,
+            float flexW = -1f, float flexH = -1f, bool ignoreLayout = false)
+        {
+            var e = target.GetComponent<LayoutElement>();
+            if (e == null) e = target.gameObject.AddComponent<LayoutElement>();
+            e.ignoreLayout = ignoreLayout;
+            e.minWidth = minW; e.minHeight = minH; e.preferredWidth = prefW; e.preferredHeight = prefH;
+            e.flexibleWidth = flexW; e.flexibleHeight = flexH;
         }
 
         private void CreateSuccessMark(Transform parent)

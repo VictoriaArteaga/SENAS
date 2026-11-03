@@ -139,6 +139,9 @@ namespace Lumina.Alphabet
             _viewPivot = new Vector3(center.x, _frontPosition.y, center.z);
             if (viewButton != null) viewButton.onClick.AddListener(NextView);
 
+            // Paneles por proporciones de pantalla y con layouts automáticos (nada se sale ni se sobrepone).
+            AlphabetResponsiveLayout.Apply(uiRoot);
+
             _practiceView = AlphabetPracticePanelView.Create(
                 instruction, validationBadge, replayButton, Cream, Ink, Turquoise, TurquoiseSoft);
 
