@@ -1,5 +1,22 @@
 import Joi from 'joi';
 
+/**
+ * Official avatar ids (they match Unity's AvatarCatalog.asset): the four legacy avatars followed by the
+ * six AVATARS2 avatars. It is the default of AVATAR_IDS; the variable can still override it per environment.
+ */
+export const OFFICIAL_AVATAR_IDS = [
+  'luna',
+  'nube',
+  'rio',
+  'sol',
+  'carol',
+  'luna-crimson',
+  'tom',
+  'crimson',
+  'neon',
+  'tensy',
+] as const;
+
 export interface Env {
   NODE_ENV: 'development' | 'production' | 'test';
   PORT: number;
@@ -101,7 +118,7 @@ const envSchema = Joi.object<Env>({
   XP_PER_STAR: Joi.number().integer().min(1).max(10).default(10).messages({
     'number.max': 'cannot exceed 10 (sign_progress.earned_xp has CHECK 0..30)',
   }),
-  AVATAR_IDS: Joi.string().default('luna,nube,rio,sol'),
+  AVATAR_IDS: Joi.string().default(OFFICIAL_AVATAR_IDS.join(',')),
 
   THROTTLE_TTL_MS: Joi.number().integer().min(1).default(60000),
   THROTTLE_LIMIT: Joi.number().integer().min(1).default(100),

@@ -62,7 +62,7 @@ says which. Example values are in [.env.example](.env.example). **`.env` is in
 | `SCORE_TWO_STARS_THRESHOLD` | `74` | 2-star threshold |
 | `SCORE_THREE_STARS_THRESHOLD` | `88` | 3-star threshold |
 | `XP_PER_STAR` | `10` | XP per star (max. 10; the cap per sign is 3×) |
-| `AVATAR_IDS` | `luna,nube,rio,sol` | Valid avatars (match Unity's `AvatarCatalog`) |
+| `AVATAR_IDS` | `luna,nube,rio,sol,carol,luna-crimson,tom,crimson,neon,tensy` | Valid avatars (match Unity's `AvatarCatalog`) |
 | `THROTTLE_TTL_MS` | `60000` | Rate-limit window |
 | `THROTTLE_LIMIT` | `100` | Requests per window, per route and IP |
 | `THROTTLE_AUTH_LIMIT` | `5` | Strict limit for register/login/refresh |

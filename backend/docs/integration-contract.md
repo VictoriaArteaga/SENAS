@@ -82,7 +82,7 @@ the player's sessions** (`401 INVALID_SESSION`).
 ```
 
 `password`: 8–72 characters, at least one letter and one number. `displayName`: 2–40.
-`avatarId` optional (`luna | nube | rio | sol`; defaults to `luna`). The email is stored
+`avatarId` optional (`luna | nube | rio | sol | carol | luna-crimson | tom | crimson | neon | tensy`; defaults to `luna`). The email is stored
 lowercase.
 
 ```json
@@ -354,8 +354,8 @@ everything Unity has not implemented yet, the backend's catalog is the reference
 | `NUMBER_0` … `NUMBER_30` | `numeros.0` … `numeros.30` |
 | `MONTH_*`, `WORD_*`, `PHRASE_*` | unchanged |
 
-Avatars: `AvatarCatalog.asset` defines `luna`, `nube`, `rio`, `sol`; they match the backend's
-`AVATAR_IDS`.
+Avatars: `AvatarCatalog.asset` defines `luna`, `nube`, `rio`, `sol`, `carol`, `luna-crimson`, `tom`, `crimson`,
+`neon`, `tensy`; they match the backend's `AVATAR_IDS`.
 
 ## 8. Error codes
 

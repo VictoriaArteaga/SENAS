@@ -4,6 +4,7 @@ import { LevelSign } from '../../src/levels/entities/level-sign.entity';
 import { Profile } from '../../src/profiles/entities/profile.entity';
 import { SignProgress } from '../../src/progress/entities/sign-progress.entity';
 import type { AppConfig } from '../../src/config/configuration';
+import { OFFICIAL_AVATAR_IDS } from '../../src/config/env.validation';
 
 /** Test configuration with the official rules. */
 export const TEST_CONFIG: AppConfig = {
@@ -35,7 +36,7 @@ export const TEST_CONFIG: AppConfig = {
     threeStars: 88,
     xpPerStar: 10,
   },
-  avatarIds: ['luna', 'nube', 'rio', 'sol'],
+  avatarIds: [...OFFICIAL_AVATAR_IDS],
   throttle: { ttlMs: 60000, limit: 100, authLimit: 5 },
 };
 

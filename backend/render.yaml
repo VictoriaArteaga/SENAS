@@ -57,7 +57,7 @@ services:
       - key: XP_PER_STAR
         value: 10
       - key: AVATAR_IDS
-        value: luna,nube,rio,sol
+        value: luna,nube,rio,sol,carol,luna-crimson,tom,crimson,neon,tensy
       # Throttling
       - key: THROTTLE_TTL_MS
         value: 60000
