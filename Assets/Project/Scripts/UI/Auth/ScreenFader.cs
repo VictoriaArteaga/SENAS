@@ -16,7 +16,8 @@ namespace Lumina.UI
         public const string Profile = "Profile"; // Pantalla «MI PROGRESO».
         public const string Settings = "Settings";
         public const string Results = "Results";
-        // Casas de aprendizaje (niveles de Números, Meses y Saludos y frases).
+        // Casas de aprendizaje (Abecedario, Números, Meses y Saludos y frases).
+        public const string Alphabet = "AlphabetHouse";
         public const string Numbers = "NumbersHouse";
         public const string Months = "MonthsHouse";
         public const string Greetings = "GreetingsHouse";

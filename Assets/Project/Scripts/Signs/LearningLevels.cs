@@ -47,6 +47,7 @@ namespace Lumina.Signs
         {
             id = item.id,
             displayName = item.Name,
+            displayNameEn = item.en,
             instruction = string.Format(hintEs, Arg(item, false)),
             instructionEn = string.Format(hintEn, Arg(item, true))
         };

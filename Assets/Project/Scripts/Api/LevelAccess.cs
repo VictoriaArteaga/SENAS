@@ -11,6 +11,7 @@ namespace Lumina.Api
         {
             switch (sceneName)
             {
+                case SceneNames.Alphabet: return SignCodes.AlphabetLevel;
                 case SceneNames.Numbers: return SignCodes.NumbersLevel;
                 case SceneNames.Months: return SignCodes.MonthsLevel;
                 case SceneNames.Greetings: return SignCodes.GreetingsLevel;
