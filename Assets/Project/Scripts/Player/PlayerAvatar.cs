@@ -38,6 +38,10 @@ namespace Lumina.Player
             // El cuerpo no debe interferir con la física del jugador ni mover al personaje por animación.
             foreach (var collider in Body.GetComponentsInChildren<Collider>(true)) collider.enabled = false;
             foreach (var animator in Body.GetComponentsInChildren<Animator>(true)) animator.applyRootMotion = false;
+
+            // Si el avatar lo pide, se ocultan partes (cabeza, cabello...) que la cámara en primera persona no debe ver; siguen dando sombra.
+            var hiddenParts = Body.GetComponent<FirstPersonHiddenParts>();
+            if (hiddenParts != null) hiddenParts.Apply();
         }
     }
 }

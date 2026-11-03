@@ -25,3 +25,21 @@ MonoBehaviour:
   - id: sol
     displayName: Sol
     prefab: {fileID: 7692019102000394263, guid: ffabd43a64d710746a6f6c84522f24fe, type: 3}
+  - id: carol
+    displayName: Carol
+    prefab: {fileID: 4013038727056660398, guid: f6ae9c178603a0049b2bb90ca7199809, type: 3}
+  - id: luna-crimson
+    displayName: Luna Crimson
+    prefab: {fileID: 4995033157342866914, guid: c8ff014a5e571454fb38fa07df86b2f5, type: 3}
+  - id: tom
+    displayName: Tom
+    prefab: {fileID: 6344095267608985763, guid: 38940ee564c8ad34d9a3a18a50161f9d, type: 3}
+  - id: crimson
+    displayName: Crimson
+    prefab: {fileID: 5022237449352466583, guid: e9a365c6699640547aa00fa9102c550f, type: 3}
+  - id: neon
+    displayName: Neon
+    prefab: {fileID: 2255593015598270275, guid: 189a6502c51891340b050a30e3e10dd5, type: 3}
+  - id: tensy
+    displayName: Tensy
+    prefab: {fileID: 3966284984689456616, guid: 0fc9bc0bb42a2444f9cdc948e1fa8d80, type: 3}
