@@ -5776,6 +5776,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9c4e1f7b2d84e6a8f30c5d1b7e92a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  alphabetButton: {fileID: 0}
   numbersButton: {fileID: 1100692821}
   monthsButton: {fileID: 351379846}
   greetingsButton: {fileID: 671525401}
@@ -6683,6 +6684,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   catalog: {fileID: 11400000, guid: 25c44ae1776256b4da5f50238ab594c2, type: 2}
   numberTemplates: {fileID: 0}
+  greetingTemplates: {fileID: 11400000, guid: c31f9e63d3c74f5dafcc7335c0101b74, type: 2}
   header: {fileID: 710591694}
   selectionPanel: {fileID: 1580539618}
   levelShortcuts: {fileID: 834281202}
