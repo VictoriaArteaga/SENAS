@@ -829,8 +829,11 @@ namespace Lumina.EditorTools
         {
             var canvas = AuthBuilder.MakeCanvas("LevelPanelCanvas");
             Ui.EnsureEventSystem();
-            var card = Screens.ResponsiveCard(canvas.transform, "LevelPanel", new Vector2(0.52f, 0.08f), new Vector2(0.975f, 0.92f), out var outer);
-            Screens.VStack(card, 12f, new RectOffset(40, 40, 28, 28));
+            // Números tiene más contenido (31 puntos, cifra, nombre): el panel es más largo, con más aire entre componentes y respecto a los bordes.
+            bool roomy = kind == LevelKind.Numbers;
+            var card = Screens.ResponsiveCard(canvas.transform, "LevelPanel",
+                roomy ? new Vector2(0.52f, 0.025f) : new Vector2(0.52f, 0.08f), roomy ? new Vector2(0.975f, 0.975f) : new Vector2(0.975f, 0.92f), out var outer);
+            Screens.VStack(card, roomy ? 10f : 12f, roomy ? new RectOffset(56, 56, 34, 76) : new RectOffset(40, 40, 28, 28));
             BuildTelevisionOnCanvas(canvas.transform, kind);
 
             var bar = Screens.BuildBar(card, 0f, 0f, 0f);
@@ -848,7 +851,7 @@ namespace Lumina.EditorTools
                 case LevelKind.Numbers:
                     big = Ui.Label(card, "Number", "1", 150f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
                     Screens.FitText(big, 60f, false);
-                    Screens.Elem(big, minH: 90f, prefH: 160f);
+                    Screens.Elem(big, minH: 70f, prefH: 150f);
                     nameLabel = Ui.Label(card, "Word", "", 48f, Ui.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 8f);
                     Screens.FitText(nameLabel, 22f, false);
                     Screens.Elem(nameLabel, minH: 36f, prefH: 54f);
@@ -859,6 +862,7 @@ namespace Lumina.EditorTools
                     dotsGrid.cellSize = new Vector2(22f, 22f); dotsGrid.spacing = new Vector2(8f, 8f);
                     dotsGrid.constraint = GridLayoutGroup.Constraint.Flexible;
                     dotsGrid.childAlignment = TextAnchor.UpperCenter;
+                    dotsGrid.padding = new RectOffset(18, 18, 8, 8); // los puntos no tocan los bordes
                     var list = new List<Image>();
                     for (int i = 0; i < LearningLevels.Numbers.items.Length; i++)
                         list.Add(Ui.Panel(dotsRow, "Dot" + (i + 1), Ui.Sand, Ui.Circle));
@@ -914,14 +918,15 @@ namespace Lumina.EditorTools
             LearningPracticeView practiceView = null;
             {
                 var cameraFrame = Ui.Panel(card, "CameraFrame", Ui.Ink);
-                Screens.Elem(cameraFrame, minH: 170f, prefH: 440f, flexH: 6f); // la cámara toma todo el espacio sobrante
+                Screens.Elem(cameraFrame, minH: roomy ? 140f : 170f, prefH: roomy ? 560f : 440f, flexH: roomy ? 9f : 6f); // la cámara toma todo el espacio sobrante
                 var aspect = Ui.Rect("Aspect", cameraFrame.transform);
                 Ui.Stretch(aspect);
                 var fitter = aspect.gameObject.AddComponent<AspectRatioFitter>();
                 fitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent; fitter.aspectRatio = 16f / 9f;
                 var view = new GameObject("CameraView", typeof(RectTransform), typeof(RawImage)).GetComponent<RawImage>();
                 view.transform.SetParent(aspect, false);
-                Ui.Stretch(view.rectTransform, 8f, 8f, 8f, 8f);
+                float viewInset = roomy ? 14f : 8f;
+                Ui.Stretch(view.rectTransform, viewInset, viewInset, viewInset, viewInset);
                 view.color = new Color(0f, 0f, 0f, 0.25f); view.raycastTarget = false;
                 var cameraStatus = Ui.Label(cameraFrame.transform, "CameraStatus", "", 26f, Ui.Cream);
                 Ui.Stretch(cameraStatus.rectTransform, 20f, 20f, 20f, 20f);
