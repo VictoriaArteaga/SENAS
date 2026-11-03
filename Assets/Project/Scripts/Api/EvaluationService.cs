@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using Lumina.Core;
 using Lumina.Signs;
 
 namespace Lumina.Api
@@ -63,11 +64,12 @@ namespace Lumina.Api
             if (!string.IsNullOrWhiteSpace(feedback)) body.Add("feedback", feedback.Length > 500 ? feedback.Substring(0, 500) : feedback);
 
             string json = body.ToString();
-            submission.Completion = RunAsync(submission, json);
+            bool alreadyPassed = ProgressStore.StatusOf(signCode) == SignStatusNames.Passed;
+            submission.Completion = RunAsync(submission, json, alreadyPassed);
             return submission;
         }
 
-        private static async Task RunAsync(EvaluationSubmission submission, string json)
+        private static async Task RunAsync(EvaluationSubmission submission, string json, bool alreadyPassed)
         {
             ApiException last = null;
             for (int send = 1; send <= MaxSends; send++)
@@ -79,6 +81,7 @@ namespace Lumina.Api
                     if (response == null) throw new ApiException(ApiErrorKind.Server, 0, string.Empty, "Respuesta vacía.");
                     submission.ProgressRefreshed = RefreshProgressAsync(submission.SignCode);
                     submission.Succeed(response);
+                    if (response.passed) _ = PlayPassedSoundAsync(submission, alreadyPassed);
                     return;
                 }
                 catch (ApiException e)
@@ -95,6 +98,27 @@ namespace Lumina.Api
                 }
             }
             submission.Fail(last ?? new ApiException(ApiErrorKind.Server, 0, string.Empty, "No se pudo enviar el resultado."));
+        }
+
+        /// <summary>
+        /// Seña superada: suena paso-sena; si con ella se completa el nivel (todas sus señas superadas, y esta era la última que faltaba),
+        /// suena paso-nivel en su lugar. Aplica igual a los cuatro niveles porque todos envían sus resultados por aquí.
+        /// </summary>
+        private static async Task PlayPassedSoundAsync(EvaluationSubmission submission, bool alreadyPassed)
+        {
+            bool levelCompleted = false;
+            if (!alreadyPassed)
+            {
+                try
+                {
+                    await submission.ProgressRefreshed;
+                    var level = ProgressStore.GetLevel(SignCodes.LevelFor(submission.SignCode));
+                    levelCompleted = level != null && level.totalSigns > 0 && level.passedSigns >= level.totalSigns;
+                }
+                catch (Exception e) { Debug.LogWarning("[Audio] No se pudo comprobar si el nivel se completó: " + e.Message); }
+            }
+            if (levelCompleted) GameAudio.PlayLevelCompleted();
+            else GameAudio.PlaySignPassed();
         }
 
         private static async Task RefreshProgressAsync(string signCode)
