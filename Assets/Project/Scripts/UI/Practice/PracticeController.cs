@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Lumina.Api;
 using Lumina.Core;
 using Lumina.Signs;
 using Senas.AI.MediaPipe;
@@ -22,6 +23,8 @@ namespace Lumina.UI
         [Header("Datos")]
         [SerializeField] private SignCatalog catalog;
         [SerializeField] private AlphabetLandmarkTemplateSet numberTemplates;
+        [Tooltip("Secuencias capturadas de saludos y meses (GreetingLandmarkTemplates.asset).")]
+        [SerializeField] private AlphabetLandmarkTemplateSet greetingTemplates;
 
         [Header("Cabecera")]
         [SerializeField] private SceneHeaderUI header;
@@ -70,6 +73,8 @@ namespace Lumina.UI
         private SignCategory _category;
         private SignEntry _sign;
         private ISignRecognizer _recognizer;
+        private MediaPipeNumberSignRecognizer _numberRecognizer;
+        private MediaPipeGreetingSignRecognizer _greetingRecognizer;
         private Coroutine _countdown;
 
         /// <summary>Conecta o sustituye el reconocedor activo de esta sesión.</summary>
@@ -78,10 +83,14 @@ namespace Lumina.UI
             if (_recognizer != null) _recognizer.Completed -= OnAttemptCompleted;
             if (_recognizer is MediaPipeNumberSignRecognizer previous)
                 previous.StatusUpdated -= OnRecognizerStatusUpdated;
+            if (_recognizer is MediaPipeGreetingSignRecognizer previousGreeting)
+                previousGreeting.StatusUpdated -= OnRecognizerStatusUpdated;
             _recognizer = recognizer;
             if (_recognizer != null) _recognizer.Completed += OnAttemptCompleted;
             if (_recognizer is MediaPipeNumberSignRecognizer current)
                 current.StatusUpdated += OnRecognizerStatusUpdated;
+            if (_recognizer is MediaPipeGreetingSignRecognizer currentGreeting)
+                currentGreeting.StatusUpdated += OnRecognizerStatusUpdated;
         }
 
         private void OnRecognizerStatusUpdated(string message)
@@ -128,11 +137,18 @@ namespace Lumina.UI
 
         private void Start()
         {
-            if (PracticeSession.ReturnScene == LearningLevels.NumbersScene && numberTemplates != null)
+            // El reconocimiento de números existe para toda la sección (no solo al venir de la casa de números); se activa
+            // solo cuando la seña elegida es un número (ver UseRecognizerFor).
+            if (numberTemplates != null)
             {
-                var numberRecognizer = gameObject.AddComponent<MediaPipeNumberSignRecognizer>();
-                numberRecognizer.Configure(numberTemplates, cameraFeed);
-                SetRecognizer(numberRecognizer);
+                _numberRecognizer = gameObject.AddComponent<MediaPipeNumberSignRecognizer>();
+                _numberRecognizer.Configure(numberTemplates, cameraFeed);
+            }
+
+            if (greetingTemplates != null)
+            {
+                _greetingRecognizer = gameObject.AddComponent<MediaPipeGreetingSignRecognizer>();
+                _greetingRecognizer.Configure(greetingTemplates, cameraFeed);
             }
 
             _category = catalog != null && catalog.categories.Length > 0 ? catalog.categories[0] : null;
@@ -149,6 +165,14 @@ namespace Lumina.UI
         }
 
         private void OnDestroy() => SetRecognizer(null);
+
+        private void UseRecognizerFor(SignEntry sign) =>
+            SetRecognizer(IsGreetingOrMonth(sign?.id) ? _greetingRecognizer
+                : SignCodes.IsNumber(sign?.id) ? _numberRecognizer
+                : null);
+
+        private static bool IsGreetingOrMonth(string id) =>
+            !string.IsNullOrEmpty(id) && (id.StartsWith("saludos.") || id.StartsWith("meses."));
 
         private void Enter(Step step)
         {
@@ -173,7 +197,7 @@ namespace Lumina.UI
                     header.SetTitle("title.learn");
                     if (PracticeSession.ReturnScene != null) header.SetBackHandler(() => ScreenFader.Load(PracticeSession.ReturnScene));
                     else header.SetBackHandler(() => Enter(Step.Selection));
-                    learningSignLabel.text = _sign.displayName.ToUpperInvariant();
+                    learningSignLabel.text = _sign.GetName().ToUpperInvariant();
                     learningInstructionLabel.text = _sign.GetInstruction();
                     demoNotice.gameObject.SetActive(false);
                     Focus(myTurnButton);
@@ -182,7 +206,8 @@ namespace Lumina.UI
                 case Step.Preparation:
                     header.SetTitle("title.practice");
                     header.SetBackHandler(() => Enter(Step.Learning));
-                    sessionSignLabel.text = _sign.displayName.ToUpperInvariant();
+                    sessionSignLabel.text = _sign.GetName().ToUpperInvariant();
+                    UseRecognizerFor(_sign);
                     sessionInstructionLabel.text = Loc.T("practice.prepare");
                     countdownLabel.text = string.Empty;
                     statusLabel.text = string.Empty;
@@ -245,7 +270,7 @@ namespace Lumina.UI
                 foreach (var sign in _category.signs)
                 {
                     var captured = sign;
-                    var button = Spawn(signTemplate, signContainer, sign.displayName.ToUpperInvariant(), sign == _sign);
+                    var button = Spawn(signTemplate, signContainer, ButtonLabel(sign), sign == _sign);
                     button.onClick.AddListener(() => { _sign = captured; PracticeSession.Begin(captured); BuildSelection(true); });
                 }
             }
@@ -253,6 +278,13 @@ namespace Lumina.UI
             practiceButton.interactable = _sign != null;
             practiceButton.GetComponentInChildren<TMP_Text>().text = Loc.T(_sign != null ? "practice.go" : "practice.choose");
             Focus(focusSign ? practiceButton : selectedTab);
+        }
+
+        /// <summary>Texto del botón de una seña: el nombre en mayúsculas; los números llevan además la cifra («7 · SIETE»).</summary>
+        private static string ButtonLabel(SignEntry sign)
+        {
+            string name = sign.GetName().ToUpperInvariant();
+            return SignCodes.IsNumber(sign.id) ? SignCodes.DisplayName(sign.id) + " · " + name : name; // los meses ya se llaman «Enero»…
         }
 
         /// <summary>Crea un botón desde la plantilla. La pestaña elegida se marca con subrayado además del color.</summary>

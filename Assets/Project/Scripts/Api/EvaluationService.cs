@@ -56,7 +56,7 @@ namespace Lumina.Api
             var submission = new EvaluationSubmission(Guid.NewGuid().ToString(), signCode);
             var body = new JsonObject()
                 .Add("attemptId", submission.AttemptId)
-                .Add("signCode", signCode)
+                .Add("signCode", SignCodes.BackendCodeFor(signCode))
                 .Add("precision", ScoreAdapter.ToApiPrecision(precision))
                 .Add("stars", stars)
                 .Add("xp", xp);

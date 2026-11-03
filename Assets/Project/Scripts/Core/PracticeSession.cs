@@ -22,13 +22,17 @@ namespace Lumina.Core
         /// <summary>Escena de nivel a la que vuelve VOLVER desde APRENDE (null = flujo normal de Practice).</summary>
         public static string ReturnScene { get; set; }
 
-        public static void Begin(SignEntry sign) { Sign = sign; Result = null; Submission = null; _attemptStartedAt = -1f; }
+        public static void Begin(SignEntry sign)
+        {
+            Sign = sign; Result = null; Submission = null; _attemptStartedAt = -1f;
+        }
 
         /// <summary>Marca el comienzo del intento (cuando empieza el reconocimiento) para medir durationMs.</summary>
         public static void MarkAttemptStarted() => _attemptStartedAt = Time.realtimeSinceStartup;
 
         /// <summary>Practica una seña elegida en una casa de aprendizaje.</summary>
         public static void BeginFromLevel(SignEntry sign, string levelScene) { Begin(sign); StartAtLearning = true; ReturnScene = levelScene; }
+
         public static void Finish(SignAttemptResult? result)
         {
             Result = result;
