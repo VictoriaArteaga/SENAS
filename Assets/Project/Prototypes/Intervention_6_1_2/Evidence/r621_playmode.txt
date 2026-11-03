@@ -1,0 +1,155 @@
+Play Mode: teclado=Keyboard raton=Mouse; entrada inyectada via Input System (NO son perifericos fisicos)
+Controlador: FirstPersonController enabled=True, CharacterController enabled=True, camara=Main Camera, AudioListeners=1
+Inicio en (-15,5,0,10,-2,5), yaw 90 grados
+  Sena [t=0,8 s (el jugador aparece a ~8 m de Sena)]: estado=Wave normalizedTime=0,21, mano izq. a 0,37 m de la cadera (altura), mano der. 0,37, separacion entre manos 1,45 m (en T-pose ~1,5 m con las manos a la altura de los hombros), animator.enabled=True
+  Sena [t=1,7 s]: estado=Wave normalizedTime=0,44, mano izq. a -0,15 m de la cadera (altura), mano der. 0,59, separacion entre manos 0,90 m (en T-pose ~1,5 m con las manos a la altura de los hombros), animator.enabled=True
+  Sena [t=8 s (el saludo dura 3,8 s: debe haber vuelto a Idle)]: estado=Locomotion (Idle) normalizedTime=2,03, mano izq. a -0,14 m de la cadera (altura), mano der. 0,18, separacion entre manos 0,74 m (en T-pose ~1,5 m con las manos a la altura de los hombros), animator.enabled=True
+  [1/141] centro de la plaza: llego en 0,9s, pos=(-10,8,0,08,-2,1), yaw 85
+  [2/141] Puente centro-norte O-E 1/9: llego en 1,3s, pos=(-6,6,0,08,1,0), yaw 53
+  [3/141] Puente centro-norte O-E 2/9: llego en 0,7s, pos=(-4,8,0,08,3,3), yaw 39
+  [4/141] Puente centro-norte O-E 3/9: llego en 0,7s, pos=(-2,5,0,08,5,2), yaw 50
+  [5/141] Puente centro-norte O-E 4/9: llego en 0,7s, pos=(0,0,0,54,6,8), yaw 58
+  [6/141] Puente centro-norte O-E 5/9: llego en 0,7s, pos=(2,6,0,97,8,3), yaw 60
+  [7/141] Puente centro-norte O-E 6/9: llego en 0,6s, pos=(5,2,0,97,9,8), yaw 61
+  [8/141] Puente centro-norte O-E 7/9: llego en 0,7s, pos=(7,8,0,48,11,3), yaw 61
+  [9/141] Puente centro-norte O-E 8/9: llego en 0,7s, pos=(10,5,0,08,12,7), yaw 61
+  [10/141] Puente centro-norte O-E 9/9: llego en 0,1s, pos=(10,9,0,08,13,0), yaw 61
+  [11/141] a Meses 1/2: llego en 0,0s, pos=(10,9,0,08,13,0), yaw 61
+  [12/141] a Meses 2/2: llego en 0,7s, pos=(13,8,0,08,13,2), yaw 87
+     giro final hacia la fachada: yaw 87 grados
+  [13/141] desde Meses 1/4: llego en 1,2s, pos=(18,4,0,08,13,2), yaw 90
+  [14/141] desde Meses 2/4: llego en 0,0s, pos=(18,4,0,08,13,2), yaw 90
+  [15/141] desde Meses 3/4: llego en 0,8s, pos=(15,4,0,08,13,2), yaw 270
+  [16/141] desde Meses 4/4: llego en 0,7s, pos=(12,4,0,08,13,4), yaw 273
+  [17/141] ribera este 1/13: llego en 0,0s, pos=(12,4,0,08,13,4), yaw 273
+  [18/141] ribera este 2/13: llego en 0,5s, pos=(12,9,0,08,11,5), yaw 166
+  [19/141] ribera este 3/13: llego en 0,7s, pos=(14,1,0,08,8,8), yaw 156
+  [20/141] ribera este 4/13: llego en 0,7s, pos=(14,8,0,08,5,9), yaw 167
+  [21/141] ribera este 5/13: llego en 0,7s, pos=(14,9,0,08,3,0), yaw 177
+  [22/141] ribera este 6/13: llego en 0,7s, pos=(14,7,0,08,0,0), yaw 185
+  [23/141] ribera este 7/13: llego en 0,7s, pos=(14,1,0,08,-3,0), yaw 191
+  [24/141] ribera este 8/13: llego en 0,7s, pos=(13,3,0,08,-5,8), yaw 195
+  [25/141] ribera este 9/13: llego en 0,7s, pos=(12,3,0,08,-8,6), yaw 200
+  [26/141] ribera este 10/13: llego en 0,7s, pos=(10,9,0,08,-11,3), yaw 208
+  [27/141] ribera este 11/13: llego en 0,7s, pos=(9,1,0,08,-13,6), yaw 218
+  [28/141] ribera este 12/13: llego en 0,7s, pos=(7,0,0,08,-15,8), yaw 224
+  [29/141] ribera este 13/13: llego en 0,4s, pos=(5,9,0,08,-16,9), yaw 225
+  [30/141] a Saludos 1/4: llego en 0,0s, pos=(5,9,0,08,-16,9), yaw 225
+  [31/141] a Saludos 2/4: llego en 0,4s, pos=(7,3,0,08,-16,5), yaw 77
+  [32/141] a Saludos 3/4: llego en 0,7s, pos=(10,2,0,08,-15,6), yaw 72
+  [33/141] a Saludos 4/4: llego en 0,7s, pos=(13,1,0,08,-14,9), yaw 78
+     giro final hacia la fachada: yaw 88 grados
+  [34/141] desde Saludos 1/6: llego en 1,3s, pos=(18,4,0,08,-14,8), yaw 88
+  [35/141] desde Saludos 2/6: llego en 0,2s, pos=(17,7,0,08,-14,8), yaw 271
+  [36/141] desde Saludos 3/6: llego en 0,8s, pos=(14,7,0,08,-14,8), yaw 270
+  [37/141] desde Saludos 4/6: llego en 0,7s, pos=(11,7,0,08,-15,2), yaw 261
+  [38/141] desde Saludos 5/6: llego en 0,7s, pos=(8,9,0,08,-16,1), yaw 253
+  [39/141] desde Saludos 6/6: llego en 0,7s, pos=(6,1,0,08,-17,1), yaw 250
+  [40/141] Puente centro-sur E-O 1/8: llego en 0,0s, pos=(6,0,0,08,-17,1), yaw 250
+  [41/141] Puente centro-sur E-O 2/8: llego en 0,4s, pos=(4,7,0,08,-16,7), yaw 290
+  [42/141] Puente centro-sur E-O 3/8: llego en 0,7s, pos=(2,3,0,35,-15,0), yaw 304
+  [43/141] Puente centro-sur E-O 4/8: llego en 0,7s, pos=(-0,2,0,92,-13,2), yaw 307
+  [44/141] Puente centro-sur E-O 5/8: llego en 0,8s, pos=(-2,5,1,00,-11,4), yaw 307
+  [45/141] Puente centro-sur E-O 6/8: llego en 0,6s, pos=(-4,9,0,64,-9,6), yaw 307
+  [46/141] Puente centro-sur E-O 7/8: llego en 0,7s, pos=(-7,1,0,08,-7,6), yaw 312
+  [47/141] Puente centro-sur E-O 8/8: llego en 0,4s, pos=(-6,4,0,08,-6,2), yaw 28
+  [48/141] a Numeros 1/4: llego en 1,0s, pos=(-10,2,0,08,-7,3), yaw 254
+  [49/141] a Numeros 2/4: llego en 0,7s, pos=(-11,7,0,08,-9,6), yaw 213
+  [50/141] a Numeros 3/4: llego en 0,7s, pos=(-11,9,0,08,-12,4), yaw 183
+  [51/141] a Numeros 4/4: llego en 0,6s, pos=(-14,0,0,08,-13,3), yaw 247
+     giro final hacia la fachada: yaw 266 grados
+  [52/141] desde Numeros 1/6: llego en 0,9s, pos=(-17,6,0,08,-13,6), yaw 266
+  [53/141] desde Numeros 2/6: llego en 0,0s, pos=(-17,6,0,08,-13,6), yaw 266
+  [54/141] desde Numeros 3/6: llego en 0,5s, pos=(-15,5,0,08,-13,6), yaw 91
+  [55/141] desde Numeros 4/6: llego en 0,7s, pos=(-12,7,0,08,-13,3), yaw 83
+  [56/141] desde Numeros 5/6: llego en 0,6s, pos=(-12,3,0,08,-11,0), yaw 10
+  [57/141] desde Numeros 6/6: llego en 0,7s, pos=(-11,3,0,08,-8,2), yaw 20
+  [58/141] a Abecedario 1/6: llego en 2,7s, pos=(-11,0,0,08,2,7), yaw 1
+  [59/141] a Abecedario 2/6: llego en 0,7s, pos=(-11,5,0,08,5,6), yaw 350
+  [60/141] a Abecedario 3/6: llego en 0,7s, pos=(-12,1,0,08,8,6), yaw 350
+  [61/141] a Abecedario 4/6: llego en 0,7s, pos=(-12,3,0,08,11,6), yaw 357
+  [62/141] a Abecedario 5/6: llego en 0,7s, pos=(-12,2,0,08,14,6), yaw 2
+  [63/141] a Abecedario 6/6: llego en 0,6s, pos=(-13,9,0,08,16,0), yaw 309
+     giro final hacia la fachada: yaw 276 grados
+  [64/141] a plaza tematica NO 1/4: llego en 0,4s, pos=(-12,6,0,08,16,3), yaw 77
+  [65/141] a plaza tematica NO 2/4: llego en 0,6s, pos=(-12,5,0,08,18,6), yaw 1
+  [66/141] a plaza tematica NO 3/4: llego en 0,7s, pos=(-13,8,0,08,21,2), yaw 334
+  [67/141] a plaza tematica NO 4/4: llego en 0,7s, pos=(-15,5,0,08,23,4), yaw 322
+  [68/141] Puente norte O-E 1/13: llego en 0,0s, pos=(-15,5,0,08,23,4), yaw 322
+  [69/141] Puente norte O-E 2/13: llego en 0,7s, pos=(-14,9,0,08,25,9), yaw 13
+  [70/141] Puente norte O-E 3/13: llego en 0,7s, pos=(-13,0,0,08,28,0), yaw 43
+  [71/141] Puente norte O-E 4/13: llego en 0,7s, pos=(-10,3,0,49,28,8), yaw 74
+  [72/141] Puente norte O-E 5/13: llego en 0,7s, pos=(-7,3,0,94,29,0), yaw 86
+  [73/141] Puente norte O-E 6/13: llego en 0,7s, pos=(-4,3,1,00,29,1), yaw 88
+  [74/141] Puente norte O-E 7/13: llego en 0,7s, pos=(-1,3,0,51,29,2), yaw 89
+  [75/141] Puente norte O-E 8/13: llego en 0,6s, pos=(1,6,0,08,28,8), yaw 98
+  [76/141] Puente norte O-E 9/13: llego en 0,7s, pos=(4,5,0,08,28,1), yaw 104
+  [77/141] Puente norte O-E 10/13: llego en 0,7s, pos=(7,4,0,08,27,1), yaw 109
+  [78/141] Puente norte O-E 11/13: llego en 0,7s, pos=(10,2,0,08,26,0), yaw 112
+  [79/141] Puente norte O-E 12/13: llego en 0,8s, pos=(12,9,0,08,24,9), yaw 112
+  [80/141] Puente norte O-E 13/13: llego en 0,4s, pos=(14,3,0,08,24,3), yaw 112
+  [81/141] Puente norte E-O 1/13: llego en 0,0s, pos=(14,7,0,08,24,1), yaw 112
+  [82/141] Puente norte E-O 2/13: llego en 0,1s, pos=(14,4,0,08,24,2), yaw 293
+  [83/141] Puente norte E-O 3/13: llego en 0,7s, pos=(11,6,0,08,25,4), yaw 293
+  [84/141] Puente norte E-O 4/13: llego en 0,7s, pos=(8,9,0,08,26,5), yaw 293
+  [85/141] Puente norte E-O 5/13: llego en 0,7s, pos=(6,1,0,08,27,6), yaw 291
+  [86/141] Puente norte E-O 6/13: llego en 0,7s, pos=(3,2,0,08,28,5), yaw 287
+  [87/141] Puente norte E-O 7/13: llego en 0,7s, pos=(0,3,0,13,29,0), yaw 281
+  [88/141] Puente norte E-O 8/13: llego en 0,6s, pos=(-2,7,0,83,29,1), yaw 270
+  [89/141] Puente norte E-O 9/13: llego en 0,8s, pos=(-5,7,1,09,29,1), yaw 269
+  [90/141] Puente norte E-O 10/13: llego en 0,8s, pos=(-8,7,0,81,29,0), yaw 269
+  [91/141] Puente norte E-O 11/13: llego en 0,7s, pos=(-11,7,0,09,28,7), yaw 263
+  [92/141] Puente norte E-O 12/13: llego en 0,7s, pos=(-14,0,0,08,27,1), yaw 237
+  [93/141] Puente norte E-O 13/13: llego en 0,7s, pos=(-15,6,0,08,24,7), yaw 212
+  [94/141] desde plaza tematica NO 1/4: llego en 0,0s, pos=(-15,6,0,08,24,7), yaw 212
+  [95/141] desde plaza tematica NO 2/4: llego en 0,6s, pos=(-14,5,0,08,22,6), yaw 153
+  [96/141] desde plaza tematica NO 3/4: llego en 0,7s, pos=(-12,9,0,08,20,1), yaw 148
+  [97/141] desde plaza tematica NO 4/4: llego en 0,7s, pos=(-12,0,0,08,17,2), yaw 162
+  [98/141] regreso a la plaza 1/8: llego en 1,5s, pos=(-18,0,0,08,16,6), yaw 264
+  [99/141] regreso a la plaza 2/8: llego en 0,0s, pos=(-18,0,0,08,16,6), yaw 264
+  [100/141] regreso a la plaza 3/8: llego en 0,7s, pos=(-15,4,0,08,16,5), yaw 91
+  [101/141] regreso a la plaza 4/8: llego en 0,7s, pos=(-12,9,0,08,15,6), yaw 110
+  [102/141] regreso a la plaza 5/8: llego en 0,6s, pos=(-12,4,0,08,13,2), yaw 170
+  [103/141] regreso a la plaza 6/8: llego en 0,7s, pos=(-12,3,0,08,10,2), yaw 177
+  [104/141] regreso a la plaza 7/8: llego en 0,7s, pos=(-11,8,0,08,7,2), yaw 171
+  [105/141] regreso a la plaza 8/8: llego en 0,7s, pos=(-11,2,0,08,4,3), yaw 168
+  [106/141] a Numeros (de paso) 1/3: llego en 2,7s, pos=(-11,0,0,08,-6,7), yaw 179
+  [107/141] a Numeros (de paso) 2/3: llego en 0,7s, pos=(-11,9,0,08,-9,5), yaw 198
+  [108/141] a Numeros (de paso) 3/3: llego en 0,7s, pos=(-11,9,0,08,-12,4), yaw 180
+  [109/141] a plaza tematica SO 1/5: llego en 0,1s, pos=(-11,7,0,08,-12,9), yaw 159
+  [110/141] a plaza tematica SO 2/5: llego en 0,7s, pos=(-11,9,0,08,-15,8), yaw 183
+  [111/141] a plaza tematica SO 3/5: llego en 0,7s, pos=(-12,5,0,08,-18,7), yaw 193
+  [112/141] a plaza tematica SO 4/5: llego en 0,7s, pos=(-13,9,0,08,-21,3), yaw 208
+  [113/141] a plaza tematica SO 5/5: llego en 0,7s, pos=(-15,5,0,08,-23,4), yaw 218
+  [114/141] Puente sur O-E 1/14: llego en 0,0s, pos=(-15,5,0,08,-23,4), yaw 218
+  [115/141] Puente sur O-E 2/14: llego en 0,6s, pos=(-14,1,0,08,-25,2), yaw 144
+  [116/141] Puente sur O-E 3/14: llego en 0,7s, pos=(-11,9,0,08,-27,3), yaw 132
+  [117/141] Puente sur O-E 4/14: llego en 0,7s, pos=(-9,6,0,08,-29,2), yaw 130
+  [118/141] Puente sur O-E 5/14: llego en 0,7s, pos=(-7,2,0,08,-31,0), yaw 127
+  [119/141] Puente sur O-E 6/14: llego en 0,7s, pos=(-4,7,0,08,-32,5), yaw 120
+  [120/141] Puente sur O-E 7/14: llego en 0,7s, pos=(-1,9,0,08,-33,3), yaw 106
+  [121/141] Puente sur O-E 8/14: llego en 0,7s, pos=(0,9,0,65,-32,7), yaw 78
+  [122/141] Puente sur O-E 9/14: llego en 0,6s, pos=(3,6,1,00,-31,5), yaw 62
+  [123/141] Puente sur O-E 10/14: llego en 0,8s, pos=(6,2,0,92,-30,0), yaw 61
+  [124/141] Puente sur O-E 11/14: llego en 0,7s, pos=(8,9,0,36,-28,6), yaw 61
+  [125/141] Puente sur O-E 12/14: llego en 0,7s, pos=(11,4,0,08,-26,9), yaw 57
+  [126/141] Puente sur O-E 13/14: llego en 0,7s, pos=(13,7,0,08,-25,1), yaw 51
+  [127/141] Puente sur O-E 14/14: llego en 0,2s, pos=(14,4,0,08,-24,5), yaw 50
+  [128/141] Puente sur E-O 1/14: llego en 0,0s, pos=(14,8,0,08,-24,2), yaw 50
+  [129/141] Puente sur E-O 2/14: llego en 0,0s, pos=(14,8,0,08,-24,2), yaw 50
+  [130/141] Puente sur E-O 3/14: llego en 0,7s, pos=(12,7,0,08,-26,0), yaw 229
+  [131/141] Puente sur E-O 4/14: llego en 0,7s, pos=(10,2,0,08,-27,7), yaw 235
+  [132/141] Puente sur E-O 5/14: llego en 0,7s, pos=(7,6,0,68,-29,2), yaw 239
+  [133/141] Puente sur E-O 6/14: llego en 0,7s, pos=(5,0,1,04,-30,7), yaw 241
+  [134/141] Puente sur E-O 7/14: llego en 0,7s, pos=(2,4,0,90,-32,2), yaw 241
+  [135/141] Puente sur E-O 8/14: llego en 0,7s, pos=(-0,3,0,31,-33,2), yaw 249
+  [136/141] Puente sur E-O 9/14: llego en 0,6s, pos=(-3,2,0,08,-33,0), yaw 279
+  [137/141] Puente sur E-O 10/14: llego en 0,7s, pos=(-5,9,0,08,-31,8), yaw 294
+  [138/141] Puente sur E-O 11/14: llego en 0,7s, pos=(-8,4,0,08,-30,1), yaw 304
+  [139/141] Puente sur E-O 12/14: llego en 0,7s, pos=(-10,7,0,08,-28,3), yaw 308
+  [140/141] Puente sur E-O 13/14: llego en 0,7s, pos=(-13,1,0,08,-26,4), yaw 309
+  [141/141] Puente sur E-O 14/14: llego en 0,8s, pos=(-15,4,0,08,-24,5), yaw 309
+RUTA COMPLETA (141 puntos)
+Noche: DarkMode=True, luces de farol activas creadas por ThemeLights=12 de 12 faroles
+RESULTADO: PRUEBA COMPLETA
+Altura minima y=0,08, maxima y=1,09; tiempo real 107,7s en 174553 fotogramas; fin en (-15,4,0,08,-24,5)

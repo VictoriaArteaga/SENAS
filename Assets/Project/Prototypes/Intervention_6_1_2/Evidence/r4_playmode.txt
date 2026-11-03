@@ -1,0 +1,92 @@
+Play Mode: teclado=Keyboard raton=Mouse; entrada inyectada via Input System (NO son perifericos fisicos)
+Controlador: FirstPersonController enabled=True, CharacterController enabled=True, camara=Main Camera, AudioListeners=1
+Inicio en (-18,0,0,10,-1,5), yaw 90 grados
+  Sena [t=0,8 s (el jugador aparece a ~8 m de Sena)]: estado=Wave normalizedTime=0,21, mano izq. a 0,37 m de la cadera (altura), mano der. 0,37, separacion entre manos 1,45 m (en T-pose ~1,5 m con las manos a la altura de los hombros), animator.enabled=True
+  Sena [t=1,7 s]: estado=Wave normalizedTime=0,44, mano izq. a -0,15 m de la cadera (altura), mano der. 0,59, separacion entre manos 0,90 m (en T-pose ~1,5 m con las manos a la altura de los hombros), animator.enabled=True
+  Sena [t=8 s (el saludo dura 3,8 s: debe haber vuelto a Idle)]: estado=Locomotion (Idle) normalizedTime=2,03, mano izq. a -0,14 m de la cadera (altura), mano der. 0,18, separacion entre manos 0,74 m (en T-pose ~1,5 m con las manos a la altura de los hombros), animator.enabled=True
+  [1/76] Puente 1 O-E 1/7: llego en 1,6s, pos=(-10,2,0,08,-1,9), yaw 93
+  [2/76] Puente 1 O-E 2/7: llego en 0,7s, pos=(-7,3,0,08,-1,4), yaw 81
+  [3/76] Puente 1 O-E 3/7: llego en 0,8s, pos=(-4,3,0,66,-0,8), yaw 79
+  [4/76] Puente 1 O-E 4/7: llego en 0,7s, pos=(-1,4,1,01,-0,2), yaw 78
+  [5/76] Puente 1 O-E 5/7: llego en 0,6s, pos=(1,5,0,91,0,5), yaw 78
+  [6/76] Puente 1 O-E 6/7: llego en 0,7s, pos=(4,5,0,33,1,1), yaw 78
+  [7/76] Puente 1 O-E 7/7: llego en 0,8s, pos=(7,4,0,08,1,7), yaw 78
+  [8/76] a Months 1/4: llego en 1,0s, pos=(10,3,0,08,4,4), yaw 47
+  [9/76] a Months 2/4: llego en 0,7s, pos=(11,6,0,08,7,0), yaw 28
+  [10/76] a Months 3/4: llego en 0,7s, pos=(12,3,0,08,9,9), yaw 12
+  [11/76] a Months 4/4: llego en 0,7s, pos=(13,1,0,08,12,4), yaw 19
+     giro final hacia la fachada: yaw 82 grados
+  [12/76] desde Months 1/6: llego en 1,3s, pos=(18,4,0,08,13,1), yaw 82
+  [13/76] desde Months 2/6: llego en 0,3s, pos=(17,2,0,08,13,2), yaw 273
+  [14/76] desde Months 3/6: llego en 0,7s, pos=(14,2,0,08,13,2), yaw 270
+  [15/76] desde Months 4/6: llego en 0,6s, pos=(12,9,0,08,11,3), yaw 214
+  [16/76] desde Months 5/6: llego en 0,7s, pos=(12,2,0,08,8,5), yaw 194
+  [17/76] desde Months 6/6: llego en 0,7s, pos=(11,2,0,08,5,7), yaw 201
+  [18/76] a Greetings 1/6: llego en 1,5s, pos=(10,9,0,08,-0,3), yaw 182
+  [19/76] a Greetings 2/6: llego en 0,7s, pos=(11,4,0,08,-3,2), yaw 171
+  [20/76] a Greetings 3/6: llego en 0,7s, pos=(12,0,0,08,-6,2), yaw 169
+  [21/76] a Greetings 4/6: llego en 0,7s, pos=(12,3,0,08,-9,1), yaw 173
+  [22/76] a Greetings 5/6: llego en 0,7s, pos=(12,4,0,08,-12,1), yaw 179
+  [23/76] a Greetings 6/6: llego en 0,6s, pos=(13,8,0,08,-14,1), yaw 145
+     giro final hacia la fachada: yaw 97 grados
+  [24/76] desde Greetings 1/8: llego en 1,2s, pos=(18,4,0,08,-14,7), yaw 97
+  [25/76] desde Greetings 2/8: llego en 0,1s, pos=(18,0,0,08,-14,7), yaw 266
+  [26/76] desde Greetings 3/8: llego en 0,7s, pos=(15,0,0,08,-14,8), yaw 269
+  [27/76] desde Greetings 4/8: llego en 0,6s, pos=(13,1,0,08,-13,4), yaw 305
+  [28/76] desde Greetings 5/8: llego en 0,7s, pos=(12,6,0,08,-10,7), yaw 350
+  [29/76] desde Greetings 6/8: llego en 0,7s, pos=(12,2,0,08,-7,7), yaw 353
+  [30/76] desde Greetings 7/8: llego en 0,7s, pos=(11,7,0,08,-4,8), yaw 350
+  [31/76] desde Greetings 8/8: llego en 0,7s, pos=(11,0,0,08,-1,9), yaw 348
+  [32/76] Puente 1 E-O 1/7: llego en 1,0s, pos=(8,7,0,08,1,2), yaw 323
+  [33/76] Puente 1 E-O 2/7: llego en 0,7s, pos=(6,0,0,08,1,3), yaw 270
+  [34/76] Puente 1 E-O 3/7: llego en 0,7s, pos=(3,1,0,66,0,8), yaw 260
+  [35/76] Puente 1 E-O 4/7: llego en 0,7s, pos=(0,2,1,04,0,2), yaw 258
+  [36/76] Puente 1 E-O 5/7: llego en 0,6s, pos=(-2,8,0,89,-0,5), yaw 258
+  [37/76] Puente 1 E-O 6/7: llego en 0,7s, pos=(-5,7,0,33,-1,1), yaw 258
+  [38/76] Puente 1 E-O 7/7: llego en 0,7s, pos=(-8,6,0,08,-1,7), yaw 258
+  [39/76] a Numbers 1/4: llego en 1,5s, pos=(-13,8,0,08,-5,1), yaw 237
+  [40/76] a Numbers 2/4: llego en 0,6s, pos=(-13,5,0,08,-7,5), yaw 171
+  [41/76] a Numbers 3/4: llego en 0,7s, pos=(-12,5,0,08,-10,3), yaw 162
+  [42/76] a Numbers 4/4: llego en 0,6s, pos=(-12,6,0,08,-12,8), yaw 182
+     giro final hacia la fachada: yaw 262 grados
+  [43/76] desde Numbers 1/6: llego en 1,3s, pos=(-17,6,0,08,-13,5), yaw 262
+  [44/76] desde Numbers 2/6: llego en 0,3s, pos=(-16,4,0,08,-13,6), yaw 93
+  [45/76] desde Numbers 3/6: llego en 0,7s, pos=(-13,4,0,08,-13,6), yaw 90
+  [46/76] desde Numbers 4/6: llego en 0,5s, pos=(-12,6,0,08,-11,8), yaw 25
+  [47/76] desde Numbers 5/6: llego en 0,7s, pos=(-13,2,0,08,-9,0), yaw 348
+  [48/76] desde Numbers 6/6: llego en 0,7s, pos=(-14,2,0,08,-6,2), yaw 339
+  [49/76] a Alphabet 1/5: llego en 3,0s, pos=(-14,3,0,08,4,7), yaw 343
+  [50/76] a Alphabet 2/5: llego en 0,7s, pos=(-13,5,0,08,7,5), yaw 15
+  [51/76] a Alphabet 3/5: llego en 0,7s, pos=(-12,7,0,08,10,4), yaw 15
+  [52/76] a Alphabet 4/5: llego en 0,7s, pos=(-12,2,0,08,13,3), yaw 10
+  [53/76] a Alphabet 5/5: llego en 0,6s, pos=(-13,1,0,08,15,7), yaw 341
+     giro final hacia la fachada: yaw 278 grados
+  [54/76] Puente 2 O-E 1/11: llego en 0,2s, pos=(-12,5,0,08,16,1), yaw 60
+  [55/76] Puente 2 O-E 2/11: llego en 0,6s, pos=(-11,8,0,08,18,5), yaw 16
+  [56/76] Puente 2 O-E 3/11: llego en 0,6s, pos=(-9,4,0,26,19,7), yaw 65
+  [57/76] Puente 2 O-E 4/11: llego en 0,7s, pos=(-6,5,0,87,19,9), yaw 85
+  [58/76] Puente 2 O-E 5/11: llego en 0,7s, pos=(-3,5,1,06,20,0), yaw 89
+  [59/76] Puente 2 O-E 6/11: llego en 0,8s, pos=(-0,5,0,72,20,0), yaw 90
+  [60/76] Puente 2 O-E 7/11: llego en 0,6s, pos=(2,5,0,08,19,8), yaw 94
+  [61/76] Puente 2 O-E 8/11: llego en 0,7s, pos=(5,4,0,08,19,3), yaw 100
+  [62/76] Puente 2 O-E 9/11: llego en 0,7s, pos=(8,3,0,08,18,5), yaw 107
+  [63/76] Puente 2 O-E 10/11: llego en 0,7s, pos=(10,7,0,08,16,9), yaw 123
+  [64/76] Puente 2 O-E 11/11: llego en 0,7s, pos=(11,8,0,08,14,3), yaw 157
+     giro final hacia la fachada: yaw 99 grados
+  [65/76] Puente 2 E-O 1/12: llego en 0,1s, pos=(12,0,0,08,14,0), yaw 161
+  [66/76] Puente 2 E-O 2/12: llego en 0,0s, pos=(12,0,0,08,14,0), yaw 161
+  [67/76] Puente 2 E-O 3/12: llego en 0,4s, pos=(11,6,0,08,15,7), yaw 347
+  [68/76] Puente 2 E-O 4/12: llego en 0,7s, pos=(9,6,0,08,17,7), yaw 315
+  [69/76] Puente 2 E-O 5/12: llego en 0,7s, pos=(6,9,0,08,18,9), yaw 294
+  [70/76] Puente 2 E-O 6/12: llego en 0,7s, pos=(4,1,0,08,19,6), yaw 284
+  [71/76] Puente 2 E-O 7/12: llego en 0,7s, pos=(1,1,0,36,19,9), yaw 276
+  [72/76] Puente 2 E-O 8/12: llego en 0,6s, pos=(-1,9,0,92,20,0), yaw 271
+  [73/76] Puente 2 E-O 9/12: llego en 0,8s, pos=(-4,9,1,00,20,0), yaw 270
+  [74/76] Puente 2 E-O 10/12: llego en 0,7s, pos=(-7,9,0,64,20,0), yaw 270
+  [75/76] Puente 2 E-O 11/12: llego en 0,7s, pos=(-10,8,0,08,19,5), yaw 259
+  [76/76] Puente 2 E-O 12/12: llego en 0,6s, pos=(-11,5,0,08,17,2), yaw 199
+     giro final hacia la fachada: yaw 264 grados
+RUTA COMPLETA (76 puntos)
+Noche: DarkMode=True, luces de farol activas creadas por ThemeLights=8 de 8 faroles
+RESULTADO: PRUEBA COMPLETA
+Altura minima y=0,08, maxima y=1,09; tiempo real 70,8s en 112133 fotogramas; fin en (-11,5,0,08,17,2)

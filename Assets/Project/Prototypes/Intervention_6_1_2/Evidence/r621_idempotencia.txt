@@ -1,0 +1,2 @@
+[R621-IDEMPOTENCIA]
+Objetos por nombre: 177 nombres distintos, 442 objetos; segunda construcción IDÉNTICA

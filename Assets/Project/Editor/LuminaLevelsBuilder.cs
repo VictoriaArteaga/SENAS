@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using Lumina.Core;
 using Lumina.Interaction;
 using Lumina.Signs;
 using Lumina.UI;
@@ -104,7 +105,18 @@ namespace Lumina.EditorTools
 
             // El cielo se ve por el tema: ThemeSkybox cambia día/noche y la luz ambiente igual que en el resto del juego.
             RenderSettings.skybox = AssetDatabase.LoadAssetAtPath<Material>(AuthBuilder.WorldSkyPath);
-            RenderSettings.ambientMode = AmbientMode.Skybox;
+            // Si la plantilla trae ThemeAmbient (ambiente en gradiente por tema), se guarda su aspecto de día en lugar de forzar
+            // Skybox: así la escena generada conserva Trilight y coincide con lo que ThemeAmbient aplica al jugar.
+            var ambient = root.GetComponent<ThemeAmbient>();
+
+            if (ambient != null)
+            {
+                ambient.ApplyTheme(false);
+            }
+            else
+            {
+                RenderSettings.ambientMode = AmbientMode.Skybox;
+            }
             RenderSettings.ambientIntensity = 0.6f;
 
             // Las macetas de la pared norte taparían pizarras y calendario.
@@ -754,7 +766,7 @@ namespace Lumina.EditorTools
         // ------------------------------------------------------------------ Accesos en Practice
 
         /// <summary>Añade a Practice la fila «CASAS DE APRENDIZAJE». Es idempotente y no reconstruye la escena.</summary>
-        private static void AddShortcutsToPractice()
+        internal static void AddShortcutsToPractice()
         {
             string path = AuthBuilder.ScenesDir + "Practice.unity";
             var scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
@@ -766,10 +778,10 @@ namespace Lumina.EditorTools
             if (old != null) Object.DestroyImmediate(old.gameObject);
 
             var root = Ui.Rect("LevelShortcuts", canvas);
-            Ui.Place(root, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(48f, 34f), new Vector2(780f, 130f));
+            Ui.Place(root, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(48f, 34f), new Vector2(780f, 134f));
             var plate = Ui.Panel(root, "HeadingPlate", Ui.Ink);
-            Ui.Place(plate.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, new Vector2(470f, 40f));
-            var label = Ui.Label(plate.transform, "Heading", "CASAS DE APRENDIZAJE", 24f, Ui.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
+            Ui.Place(plate.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, new Vector2(500f, 44f));
+            var label = Ui.Label(plate.transform, "Heading", "CASAS DE APRENDIZAJE", 26f, Ui.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
             Ui.Stretch(label.rectTransform, 10f, 0f, 10f, 0f);
 
             var row = Ui.Rect("Row", root);

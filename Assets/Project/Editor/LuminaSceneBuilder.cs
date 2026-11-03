@@ -3,7 +3,9 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using Lumina.Core;
 using Lumina.Interaction;
 using Lumina.NPC;
 using Lumina.Player;
@@ -65,6 +67,10 @@ namespace Lumina.EditorTools
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
+
+            // Los prefabs de la aldea salen blancos (falta su paleta): se aplican la paleta de las casas y los colores de cada
+            // categoría, de modo que reconstruir LuminaWorld nunca deja las casas monocromas.
+            LuminaMaterialTint.Apply();
             Debug.Log("[Lumina] Escena LuminaWorld construida y guardada.");
         }
 
@@ -80,17 +86,22 @@ namespace Lumina.EditorTools
                 RenderSettings.skybox = AssetDatabase.LoadAssetAtPath<Material>(path);
                 break;
             }
-            RenderSettings.ambientMode = AmbientMode.Skybox;
-            RenderSettings.fog = false;
-
             var sun = Object.FindFirstObjectByType<Light>();
             if (sun != null && sun.type == LightType.Directional)
             {
-                sun.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
+                // Luz lateral (45°, -60°): da volumen a las casas y a Sena sin dejar fachadas en sombra. Elegida entre cuatro
+                // orientaciones comparando capturas; la anterior (50°, -30°) iluminaba desde atrás y aplanaba la escena.
+                sun.transform.rotation = Quaternion.Euler(45f, -60f, 0f);
                 sun.color = new Color(1f, 0.96f, 0.88f);
                 sun.intensity = 1.1f;
                 sun.shadows = LightShadows.Soft;
                 RenderSettings.sun = sun;
+
+                // Ambiente en gradiente y bruma por tema (ThemeSkybox solo escala el ambiente de skybox). En la escena queda
+                // guardado el aspecto de día; ThemeAmbient lo cambia de noche en tiempo de ejecución. Idempotente.
+                var atmosphere = sun.GetComponent<ThemeAmbient>();
+                if (atmosphere == null) atmosphere = sun.gameObject.AddComponent<ThemeAmbient>();
+                atmosphere.ApplyTheme(false);
             }
             DynamicGI.UpdateEnvironment();
         }
@@ -173,6 +184,14 @@ namespace Lumina.EditorTools
             Place(LoadVillage("Crate"), parent, new Vector3(-12.5f, 0f, -9.2f), 5f, 1f, "Crate");
             Place(LoadVillage("Flower Pot"), parent, new Vector3(-6f, 0f, 6f), 0f, 1f, "FlowerPot");
             Place(LoadVillage("Flower Pot"), parent, new Vector3(6f, 0f, 6f), 0f, 1f, "FlowerPot");
+
+            // Luces decorativas nocturnas en los faroles: ThemeLights las crea en tiempo de ejecución (no se guardan en la escena,
+            // así que reconstruir no las duplica) y solo están activas con el tema oscuro.
+            var themeLights = parent.GetComponent<ThemeLights>();
+            if (themeLights == null) themeLights = parent.gameObject.AddComponent<ThemeLights>();
+            var serialized = new SerializedObject(themeLights);
+            serialized.FindProperty("decorativeAnchorPrefix").stringValue = "Lantern";
+            serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
         // ---------- Vegetación ----------
@@ -255,6 +274,9 @@ namespace Lumina.EditorTools
             existingCamera.transform.localPosition = new Vector3(0f, 1.65f, 0f);
             existingCamera.transform.localRotation = Quaternion.identity;
             existingCamera.GetComponent<Camera>().nearClipPlane = 0.1f;
+            // El postprocesado del mundo llega por el pipeline (Lumina_World_PC / Lumina_World_Mobile, ver LuminaPostProcessSetup):
+            // la cámara solo necesita tener «Post Processing» activado. No se añade ningún Volume a la escena.
+            existingCamera.GetComponent<Camera>().GetUniversalAdditionalCameraData().renderPostProcessing = true;
 
             player.AddComponent<FirstPersonController>();
         }

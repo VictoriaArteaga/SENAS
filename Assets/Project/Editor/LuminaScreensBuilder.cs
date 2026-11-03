@@ -29,13 +29,14 @@ namespace Lumina.EditorTools
         };
 
         private static readonly Vector2 Mid = new Vector2(0.5f, 0.5f);
-        private static readonly Color TextSoft = new Color(0.059f, 0.227f, 0.267f, 0.8f);
+        // Tinta con algo de transparencia: se distingue de los títulos sin perder contraste sobre el crema (con 0.8 quedaba flojo).
+        private static readonly Color TextSoft = new Color(0.059f, 0.227f, 0.267f, 0.92f);
 
         [MenuItem("Lumina/Pantallas/Construir todo")]
         public static void BuildAll()
         {
             EnsureSignCatalog();
-            BuildPractice();
+            BuildPracticeWithShortcuts();
             BuildProfile();
             BuildSettings();
             BuildResults();
@@ -43,6 +44,38 @@ namespace Lumina.EditorTools
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("[Lumina] Pantallas Practice, Profile, Settings y Results construidas.");
+        }
+
+        /// <summary>Reconstruye solo Practice y vuelve a añadirle la fila de accesos a las casas. No toca las casas ni LuminaWorld.</summary>
+        [MenuItem("Lumina/Pantallas/Construir solo Practice (con accesos a las casas)")]
+        public static void BuildPracticeOnly()
+        {
+            EnsureSignCatalog();
+            BuildPracticeWithShortcuts();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("[Lumina] Practice reconstruida con sus accesos a las casas.");
+        }
+
+        /// <summary>Reconstruye Profile, Settings y Results sin tocar Practice, las casas ni LuminaWorld.</summary>
+        [MenuItem("Lumina/Pantallas/Construir solo Profile, Settings y Results")]
+        public static void BuildProfileSettingsResults()
+        {
+            EnsureSignCatalog();
+            BuildProfile();
+            BuildSettings();
+            BuildResults();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("[Lumina] Profile, Settings y Results reconstruidas.");
+        }
+
+        // BuildPractice parte de una escena nueva, así que borra la fila «CASAS DE APRENDIZAJE» que añade el builder de Niveles.
+        // AddShortcutsToPractice es idempotente (sustituye la fila anterior), por eso se vuelve a aplicar aquí.
+        private static void BuildPracticeWithShortcuts()
+        {
+            BuildPractice();
+            LuminaLevelsBuilder.AddShortcutsToPractice();
         }
 
         private static void RegisterInBuildSettings()
@@ -383,7 +416,8 @@ namespace Lumina.EditorTools
             var value = Ui.Label(inner.transform, "Value", "", 76f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 2f);
             Ui.Place(value.rectTransform, new Vector2(0f, 0.38f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(-20f, 0f));
             value.rectTransform.offsetMin = new Vector2(10f, 0f); value.rectTransform.offsetMax = new Vector2(-10f, -8f);
-            var caption = Ui.Label(inner.transform, "Caption", "", 20f, Ui.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 2f);
+            var caption = Ui.Label(inner.transform, "Caption", "", 22f, Ui.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 2f);
+            Ui.FitLabel(caption, 18f);
             Ui.Place(caption.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0.38f), Mid, Vector2.zero, Vector2.zero);
             caption.rectTransform.offsetMin = new Vector2(8f, 6f); caption.rectTransform.offsetMax = new Vector2(-8f, 0f);
 
@@ -409,7 +443,8 @@ namespace Lumina.EditorTools
 
             var pill = Ui.Panel(row.transform, "StatusPill", Ui.Sand);
             Ui.Place(pill.rectTransform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-14f, 0f), new Vector2(240f, 42f));
-            var status = Ui.Label(pill.transform, "Status", "", 20f, Ui.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 2f);
+            var status = Ui.Label(pill.transform, "Status", "", 22f, Ui.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 2f);
+            Ui.FitLabel(status, 18f);
             Ui.Stretch(status.rectTransform);
             return row.rectTransform;
         }

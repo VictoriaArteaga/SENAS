@@ -1,0 +1,70 @@
+  material nulo en: Avatar_Male_GEO (SkinnedMeshRenderer)
+  material nulo en: ClothingItem_TracksuitTop (SkinnedMeshRenderer)
+Referencias: GameObjects=327, scripts faltantes=0, materiales nulos=2 (los de Sena son ranuras del paquete de avatares)
+[PASA] sin scripts faltantes
+-- Geometría (sin intersecciones) --
+[PASA] AlphabetHouse (oeste): esquina más cercana al eje del río a 14,7 m
+[PASA] NumbersHouse (oeste): esquina más cercana al eje del río a 19,6 m
+[PASA] MonthsHouse (este): esquina más cercana al eje del río a 21,7 m
+[PASA] GreetingsHouse (este): esquina más cercana al eje del río a 15,7 m
+[PASA] plaza: borde a 5,6 m del eje del río (la orilla acaba a 3,5)
+[PASA] explanada: borde a 5,0 m del eje del río
+[PASA] plaza en la orilla oeste y explanada en la este, a cada lado del puente principal
+[PASA] ningún camino pisa el río fuera de un puente (114 puntos revisados)
+[PASA] ningún camino atraviesa la huella de una casa
+Puentes: centro1=(-0,6,0,0) yaw=78°, centro2=(-4,0,20,0) yaw=90° (perpendiculares al río, desvío 0,0° y 0,0°)
+-- Accesibilidad desde el spawn a las cuatro casas (siguiendo los caminos reales) --
+[PASA] llegó Spawn → AlphabetHouse (por camino)             fin=(-18,3,0,08,13,3) y∈[0,08,0,08]  | termina a 0,4 m de la fachada
+[PASA] llegó Spawn → NumbersHouse (por camino)              fin=(-17,9,0,08,-13,4) y∈[0,08,0,08]  | termina a 0,3 m de la fachada
+[PASA] llegó Spawn → MonthsHouse (por camino y puente 1)    fin=(18,6,0,08,13,6) y∈[0,08,1,09]  | termina a 0,5 m de la fachada
+[PASA] llegó Spawn → GreetingsHouse (por camino y puente 1) fin=(18,5,0,08,-13,4) y∈[0,08,1,09]  | termina a 0,6 m de la fachada
+-- Caminos de extremo a extremo (sin interrupciones) --
+[PASA] llegó Camino_Plaza_Alphabet                          fin=(-18,2,0,08,13,3) y∈[0,08,0,08] 
+[PASA] llegó Camino_Plaza_Numbers                           fin=(-17,9,0,08,-13,5) y∈[0,08,0,08] 
+[PASA] llegó Camino_Explanada_Months                        fin=(18,6,0,08,13,6) y∈[0,08,0,08] 
+[PASA] llegó Camino_Explanada_Greetings                     fin=(18,5,0,08,-13,5) y∈[0,08,0,08] 
+[PASA] llegó Camino_Puente1                                 fin=(4,9,0,21,1,2) y∈[0,08,1,09] 
+[PASA] llegó Camino_Puente2                                 fin=(17,5,0,08,16,4) y∈[0,08,1,09] 
+-- Puentes: dos cruces completos (ida y vuelta) por puente --
+[PASA] llegó Puente 1 cruce 1: este → oeste                 fin=(-10,0,0,08,-2,0) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente 1 cruce 1: oeste → este                 fin=(8,8,0,08,2,0) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente 1 cruce 2: este → oeste                 fin=(-10,0,0,08,-2,0) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente 1 cruce 2: oeste → este                 fin=(8,8,0,08,2,0) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente 2 cruce 1: este → oeste                 fin=(-13,7,0,08,20,0) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente 2 cruce 1: oeste → este                 fin=(5,7,0,08,20,0) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente 2 cruce 2: este → oeste                 fin=(-13,7,0,08,20,0) y∈[0,08,1,09]  | altura mínima y=0,08
+[PASA] llegó Puente 2 cruce 2: oeste → este                 fin=(5,7,0,08,20,0) y∈[0,08,1,09]  | altura mínima y=0,08
+-- Intentos de cruzar el río fuera de los puentes (deben bloquearse en la barrera) --
+[PASA] bloqueado Cruzar el río: punto 0,10 del cauce            fin=(1,0,-0,10,35,9) y∈[-0,10,0,51] bloqueado a 10,6 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: punto 0,20 del cauce            fin=(-1,1,-0,10,26,7) y∈[-0,10,0,46] bloqueado a 10,6 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: punto 0,40 del cauce            fin=(-0,2,-0,08,9,6) y∈[-0,08,0,21] bloqueado a 10,6 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: punto 0,62 del cauce            fin=(4,4,-0,10,-10,8) y∈[-0,32,0,08] bloqueado a 10,6 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: punto 0,80 del cauce            fin=(6,6,-0,09,-27,3) y∈[-0,09,0,11] bloqueado a 10,6 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: punto 0,92 del cauce            fin=(4,3,-0,10,-39,7) y∈[-0,10,0,39] bloqueado a 10,6 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: junto al puente 1 (+4,5 m)      fin=(2,8,-0,09,-3,9) y∈[-0,09,0,08] bloqueado a 10,5 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: junto al puente 1 (−4,5 m)      fin=(0,9,-0,09,5,0) y∈[-0,10,0,08] bloqueado a 10,5 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: junto al puente 2 (+4,5 m)      fin=(-1,3,-0,09,16,2) y∈[-0,09,0,24] bloqueado a 10,7 m del objetivo 0 | se detiene a 2,6 m del eje
+[PASA] bloqueado Cruzar el río: junto al puente 2 (−4,5 m)      fin=(-1,3,-0,09,23,9) y∈[-0,09,0,28] bloqueado a 10,7 m del objetivo 0 | se detiene a 2,6 m del eje
+-- Colisión con las casas (se aproxima de frente y debe detenerse en la fachada) --
+[PASA] bloqueado Atravesar AlphabetHouse                        fin=(-18,3,0,08,14,0) y∈[0,08,0,11] bloqueado a 3,7 m del objetivo 0 | se detiene a 0,38 m de la fachada
+[PASA] bloqueado Atravesar NumbersHouse                         fin=(-17,9,0,08,-14,0) y∈[0,08,0,13] bloqueado a 4,1 m del objetivo 0 | se detiene a 0,38 m de la fachada
+[PASA] bloqueado Atravesar MonthsHouse                          fin=(18,7,0,08,14,0) y∈[0,08,0,08] bloqueado a 3,3 m del objetivo 0 | se detiene a 0,38 m de la fachada
+[PASA] bloqueado Atravesar GreetingsHouse                       fin=(18,7,0,08,-14,0) y∈[0,05,0,08] bloqueado a 3,3 m del objetivo 0 | se detiene a 0,38 m de la fachada
+-- Límites del mapa --
+[PASA] bloqueado Salir del mapa hacia (60,5)                    fin=(44,6,0,08,5,0) y∈[0,08,0,08] bloqueado a 15,4 m del objetivo 0
+[PASA] bloqueado Salir del mapa hacia (-60,-5)                  fin=(-44,6,0,18,-5,0) y∈[-0,13,0,18] bloqueado a 15,4 m del objetivo 0
+[PASA] bloqueado Salir del mapa hacia (10,60)                   fin=(10,0,-0,17,44,6) y∈[-0,17,0,17] bloqueado a 15,4 m del objetivo 0
+[PASA] bloqueado Salir del mapa hacia (10,-60)                  fin=(10,0,0,09,-44,6) y∈[0,09,0,47] bloqueado a 15,4 m del objetivo 0
+-- Pendientes (lomas en las esquinas) --
+[PASA] llegó Loma noreste hasta la cima                     fin=(33,8,1,78,30,8) y∈[0,04,1,78]  | cima y esperada=1,71
+[PASA] llegó Loma suroeste (≈22°) hasta la cima             fin=(-33,8,2,88,-32,7) y∈[0,67,2,88]  | cima y esperada=2,82
+-- Suelo --
+[PASA] 200 caídas al azar: por debajo del suelo en 0; diferencia mínima 0,037 m, mediana |y-H| 0,081 m, p95 0,097 m (máx 0,616: caídas sobre objetos)
+-- Sena y puntos de inicio --
+[PASA] Sena a 8,4 m del spawn, a 26° del eje de la cámara (campo horizontal ±45°), línea de visión libre
+[PASA] puente principal visible desde el spawn (17,5 m, 5° del eje)
+[PASA] spawn dentro de la plaza (suelo llano y seguro)
+Malla visible: MeshRenderers=175, triángulos=107130
+Colliders activos: BoxCollider=30, CapsuleCollider=80, CharacterController=1, MeshCollider=4 | triángulos en MeshColliders=21200
+
+RESUMEN: 52 pruebas pasan, 0 fallan

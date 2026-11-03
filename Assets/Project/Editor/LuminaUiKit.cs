@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.IO;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -27,6 +29,7 @@ namespace Lumina.EditorTools
         public static readonly Color Dim = new Color(0.05f, 0.19f, 0.23f, 0.72f);
 
         private const string SpriteDir = "Assets/Project/UI/Sprites/";
+        private const string TextStyleDir = "Assets/Project/UI/TextStyles/";
         private const string FontPath = "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset";
 
         private static Sprite _round, _circle;
@@ -77,8 +80,90 @@ namespace Lumina.EditorTools
 
         // ---------- Texto ----------
 
+        /// <summary>
+        /// Tratamiento opcional de borde para un texto que se lee mal sobre el fondo (cielo, mundo 3D). Sin él el texto se
+        /// dibuja exactamente igual que antes: se usa solo donde mejora la legibilidad, no de forma global.
+        /// </summary>
+        public readonly struct TextEdge
+        {
+            public readonly bool Underlay;
+            public readonly Color Color;
+            public readonly float Width;       // contorno: grosor; sombra: dilatación (0-1, relativo al borde del glifo)
+            public readonly Vector2 Offset;    // solo sombra (-1..1)
+            public readonly float Softness;    // solo sombra (0-1)
+
+            private TextEdge(bool underlay, Color color, float width, Vector2 offset, float softness)
+            { Underlay = underlay; Color = color; Width = width; Offset = offset; Softness = softness; }
+
+            /// <summary>Contorno discreto alrededor de las letras (0.1-0.2 es sutil; más empasta).</summary>
+            public static TextEdge Outline(Color color, float width = 0.14f) => new TextEdge(false, color, width, Vector2.zero, 0f);
+
+            /// <summary>Sombra suave detrás de las letras (Underlay de TextMeshPro).</summary>
+            public static TextEdge Shadow(Color color, Vector2 offset, float dilate = 0.2f, float softness = 0.3f) => new TextEdge(true, color, dilate, offset, softness);
+
+            internal string Key => Underlay
+                ? string.Format(CultureInfo.InvariantCulture, "Shadow {0} d{1:0.00} o{2:0.00},{3:0.00} s{4:0.00}", ColorUtility.ToHtmlStringRGBA(Color), Width, Offset.x, Offset.y, Softness)
+                : string.Format(CultureInfo.InvariantCulture, "Outline {0} w{1:0.00}", ColorUtility.ToHtmlStringRGBA(Color), Width);
+        }
+
+        // El borde vive en un material de TextMeshPro compartido (uno por combinación de valores) en lugar de crearse al
+        // asignar outlineWidth: en modo editor esa propiedad instancia un material que no se guarda con la escena.
+        private static Material EdgeMaterial(TextEdge edge)
+        {
+            string path = TextStyleDir + "LiberationSans SDF - " + edge.Key + ".mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material != null) return material;
+
+            ShaderUtilities.GetShaderPropertyIDs();
+            Directory.CreateDirectory(Path.GetFullPath(TextStyleDir.TrimEnd('/')));
+            material = new Material(Font.material) { name = Path.GetFileNameWithoutExtension(path) };
+            if (edge.Underlay)
+            {
+                material.EnableKeyword(ShaderUtilities.Keyword_Underlay);
+                material.SetColor(ShaderUtilities.ID_UnderlayColor, edge.Color);
+                material.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, edge.Offset.x);
+                material.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, edge.Offset.y);
+                material.SetFloat(ShaderUtilities.ID_UnderlayDilate, edge.Width);
+                material.SetFloat(ShaderUtilities.ID_UnderlaySoftness, edge.Softness);
+            }
+            else
+            {
+                material.EnableKeyword(ShaderUtilities.Keyword_Outline);
+                material.SetColor(ShaderUtilities.ID_OutlineColor, edge.Color);
+                material.SetFloat(ShaderUtilities.ID_OutlineWidth, edge.Width);
+            }
+            AssetDatabase.CreateAsset(material, path);
+            return material;
+        }
+
+        public static void ApplyEdge(TMP_Text text, TextEdge edge) => text.fontSharedMaterial = EdgeMaterial(edge);
+
+        /// <summary>
+        /// Hace que un texto se reduzca (hasta <paramref name="minSize"/>) en vez de saltar de línea o desbordar su contenedor.
+        /// Se usa en etiquetas cortas con poco espacio, para poder subir su tamaño sin riesgo.
+        /// </summary>
+        public static void FitLabel(TMP_Text text, float minSize)
+        {
+            text.enableAutoSizing = true;
+            text.fontSizeMax = text.fontSize;
+            text.fontSizeMin = Mathf.Min(minSize, text.fontSize);
+            text.enableWordWrapping = false;
+            text.overflowMode = TextOverflowModes.Ellipsis;
+        }
+
+        /// <summary>Texto sobre una píldora redondeada semitransparente (para leerse sobre el cielo o el mundo 3D). Colocar la píldora con <paramref name="plate"/>.</summary>
+        public static TextMeshProUGUI PlateLabel(Transform parent, string name, string text, float size, Color color, Color plateColor,
+            out Image plate, float spacing = 0f, float sidePadding = 28f)
+        {
+            plate = Panel(parent, name + "Plate", plateColor);
+            var label = Label(plate.transform, name, text, size, color, FontStyles.Bold, TextAlignmentOptions.Center, spacing);
+            Stretch(label.rectTransform, sidePadding, 0f, sidePadding, 0f);
+            return label;
+        }
+
         public static TextMeshProUGUI Label(Transform parent, string name, string text, float size, Color color,
-            FontStyles style = FontStyles.Bold, TextAlignmentOptions align = TextAlignmentOptions.Center, float spacing = 0f)
+            FontStyles style = FontStyles.Bold, TextAlignmentOptions align = TextAlignmentOptions.Center, float spacing = 0f,
+            TextEdge? edge = null)
         {
             var rt = Rect(name, parent);
             var t = rt.gameObject.AddComponent<TextMeshProUGUI>();
@@ -92,6 +177,7 @@ namespace Lumina.EditorTools
             t.enableWordWrapping = true;
             t.overflowMode = TextOverflowModes.Overflow;
             t.raycastTarget = false;
+            if (edge.HasValue) ApplyEdge(t, edge.Value);
             return t;
         }
 
@@ -275,12 +361,13 @@ namespace Lumina.EditorTools
             input.characterLimit = 64;
 
             var error = Label(root, "Error", string.Empty, errorHeight * 0.8f, new Color(0.78f, 0.22f, 0.18f), FontStyles.Bold, TextAlignmentOptions.TopLeft);
-            error.margin = new Vector4(8f, 2f, 8f, 0f);
+            // Separación respecto al cuadro de texto y mínimo legible: antes se podía reducir hasta 12 y quedaba ilegible.
+            error.margin = new Vector4(8f, 4f, 8f, 0f);
             error.enableAutoSizing = true;
-            error.fontSizeMin = 12f;
             error.fontSizeMax = errorHeight * 0.8f;
+            error.fontSizeMin = Mathf.Min(18f, error.fontSizeMax);
             error.overflowMode = TextOverflowModes.Ellipsis;
-            FixHeight(error, errorHeight);
+            FixHeight(error, errorHeight + 4f);
 
             var field = root.gameObject.AddComponent<AuthField>();
             Set(field, "input", input);

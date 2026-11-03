@@ -1,0 +1,73 @@
+==================== MODULAR ====================
+  material nulo en: Avatar_Male_GEO (SkinnedMeshRenderer, 6 ranuras)
+  material nulo en: ClothingItem_TracksuitTop (SkinnedMeshRenderer, 1 ranuras)
+Referencias: GameObjects=315, scripts faltantes=0, materiales nulos=2
+-- Acceso a las cuatro zonas (desde el spawn, a pie, 4 m/s) --
+[PASA] OK Spawn → AlphabetHouse                        fin=(0,0,0,08,10,3) y∈[0,08,0,08] 
+[PASA] OK Spawn → NumbersHouse                         fin=(-10,2,0,08,-0,1) y∈[0,08,0,08] 
+[PASA] OK Spawn → MonthsHouse                          fin=(10,2,0,08,-0,1) y∈[0,08,0,08] 
+[PASA] OK Spawn → GreetingsHouse                       fin=(0,0,0,08,-11,0) y∈[0,08,0,08] 
+-- Puentes: ida y vuelta --
+[PASA] OK Puente 1: este → oeste                       fin=(-42,0,0,08,6,6) y∈[0,08,1,09]  | profundidad mínima y=0,08 (el lecho está a -1.2)
+[PASA] OK Puente 1: oeste → este                       fin=(-23,9,0,08,13,4) y∈[0,08,1,09]  | profundidad mínima y=0,08
+[PASA] OK Puente 2: este → oeste                       fin=(-32,1,0,08,-25,4) y∈[0,08,1,09]  | profundidad mínima y=0,08 (el lecho está a -1.2)
+[PASA] OK Puente 2: oeste → este                       fin=(-13,9,0,08,-18,6) y∈[0,08,1,09]  | profundidad mínima y=0,08
+-- El río no se puede atravesar fuera de los puentes --
+[PASA] -- Cruzar el río en (-31,2)                     fin=(-28,0,-0,10,2,6) y∈[-0,10,0,08] bloqueado a 10,6 m del objetivo 0 | distancia al eje al detenerse=2,6 m
+[PASA] -- Cruzar el río en (-27,-11)                   fin=(-24,4,-0,08,-10,1) y∈[-0,08,0,08] bloqueado a 10,6 m del objetivo 0 | distancia al eje al detenerse=2,6 m
+[PASA] -- Cruzar el río en (-36,17)                    fin=(-34,0,-0,10,18,6) y∈[-0,10,0,12] bloqueado a 10,6 m del objetivo 0 | distancia al eje al detenerse=2,6 m
+-- Límites del mapa --
+[PASA] -- Salir del mapa hacia (60,0)                  fin=(44,6,0,29,0,0) y∈[0,19,0,29] bloqueado a 15,4 m del objetivo 0
+[PASA] -- Salir del mapa hacia (0,60)                  fin=(0,0,-0,08,44,6) y∈[-0,08,0,01] bloqueado a 15,4 m del objetivo 0
+[PASA] -- Salir del mapa hacia (30,-60)                fin=(30,0,-0,62,-44,6) y∈[-0,62,-0,36] bloqueado a 15,4 m del objetivo 0
+-- Colisión con las casas --
+[PASA] -- Atravesar la casa norte                      fin=(0,0,0,08,12,9) y∈[0,08,0,08] bloqueado a 7,1 m del objetivo 0 | no debe pasar de la fachada (z≈13.3)
+[PASA] -- Atravesar la casa oeste                      fin=(-11,9,0,08,0,0) y∈[0,08,0,08] bloqueado a 13,1 m del objetivo 0
+[PASA] -- Atravesar la casa este                       fin=(12,4,0,08,0,0) y∈[0,08,0,08] bloqueado a 12,6 m del objetivo 0
+[PASA] -- Atravesar la casa sur                        fin=(0,0,0,08,-12,4) y∈[0,08,0,08] bloqueado a 12,6 m del objetivo 0
+-- Pendientes --
+[PASA] OK Loma noreste (≈11°) hasta la cima            fin=(27,7,2,21,25,8) y∈[-0,54,2,21]  | cima y esperada=2,13
+[PASA] OK Loma sureste (≈22°) hasta la cima            fin=(29,7,3,44,-27,8) y∈[-0,01,3,44]  | cima y esperada=3,40
+[PASA] OK Descenso de la loma sureste                  fin=(18,3,-0,45,-18,2) y∈[-0,46,3,47] 
+[PASA] 200 caídas al azar: por debajo del suelo teórico (>0.25 m) en 0; diferencia mínima 0,041 m; mediana |y-H| 0,081 m; p95 0,095 m; máx 0,875 m (los máximos positivos son caídas sobre rocas, flores o árboles)
+Malla visible: MeshRenderers=165, triángulos=105038
+Colliders activos: BoxCollider=28, CapsuleCollider=78, CharacterController=1, MeshCollider=4 | triángulos en MeshColliders=20984
+Camera.Render 1280x720 en el Editor (batchmode, 40 renders): 3,5 ms/render [orientativo; no es rendimiento de juego ni de móvil]
+
+==================== TERRAIN ====================
+  material nulo en: ClothingItem_TracksuitTop (SkinnedMeshRenderer, 1 ranuras)
+  material nulo en: Avatar_Male_GEO (SkinnedMeshRenderer, 6 ranuras)
+Referencias: GameObjects=307, scripts faltantes=0, materiales nulos=2
+-- Acceso a las cuatro zonas (desde el spawn, a pie, 4 m/s) --
+[PASA] OK Spawn → AlphabetHouse                        fin=(0,0,0,08,10,3) y∈[0,08,0,08] 
+[PASA] OK Spawn → NumbersHouse                         fin=(-10,2,0,08,-0,1) y∈[0,08,0,08] 
+[PASA] OK Spawn → MonthsHouse                          fin=(10,2,0,08,-0,1) y∈[0,08,0,08] 
+[PASA] OK Spawn → GreetingsHouse                       fin=(0,0,0,08,-11,0) y∈[0,08,0,08] 
+-- Puentes: ida y vuelta --
+[PASA] OK Puente 1: este → oeste                       fin=(-42,0,0,08,6,6) y∈[0,08,1,09]  | profundidad mínima y=0,08 (el lecho está a -1.2)
+[PASA] OK Puente 1: oeste → este                       fin=(-23,9,0,08,13,4) y∈[0,08,1,09]  | profundidad mínima y=0,08
+[PASA] OK Puente 2: este → oeste                       fin=(-32,1,0,08,-25,4) y∈[0,08,1,09]  | profundidad mínima y=0,08 (el lecho está a -1.2)
+[PASA] OK Puente 2: oeste → este                       fin=(-13,9,0,08,-18,6) y∈[0,08,1,09]  | profundidad mínima y=0,08
+-- El río no se puede atravesar fuera de los puentes --
+[PASA] -- Cruzar el río en (-31,2)                     fin=(-28,0,-0,10,2,6) y∈[-0,10,0,08] bloqueado a 10,6 m del objetivo 0 | distancia al eje al detenerse=2,6 m
+[PASA] -- Cruzar el río en (-27,-11)                   fin=(-24,4,-0,10,-10,1) y∈[-0,10,0,08] bloqueado a 10,6 m del objetivo 0 | distancia al eje al detenerse=2,6 m
+[PASA] -- Cruzar el río en (-36,17)                    fin=(-34,0,-0,10,18,6) y∈[-0,10,0,11] bloqueado a 10,6 m del objetivo 0 | distancia al eje al detenerse=2,6 m
+-- Límites del mapa --
+[PASA] -- Salir del mapa hacia (60,0)                  fin=(44,6,0,29,0,0) y∈[0,19,0,29] bloqueado a 15,4 m del objetivo 0
+[PASA] -- Salir del mapa hacia (0,60)                  fin=(0,0,-0,08,44,6) y∈[-0,08,0,01] bloqueado a 15,4 m del objetivo 0
+[PASA] -- Salir del mapa hacia (30,-60)                fin=(30,0,-0,62,-44,6) y∈[-0,62,-0,36] bloqueado a 15,4 m del objetivo 0
+-- Colisión con las casas --
+[PASA] -- Atravesar la casa norte                      fin=(0,0,0,08,12,9) y∈[0,08,0,08] bloqueado a 7,1 m del objetivo 0 | no debe pasar de la fachada (z≈13.3)
+[PASA] -- Atravesar la casa oeste                      fin=(-11,9,0,08,0,0) y∈[0,08,0,08] bloqueado a 13,1 m del objetivo 0
+[PASA] -- Atravesar la casa este                       fin=(12,4,0,08,0,0) y∈[0,08,0,08] bloqueado a 12,6 m del objetivo 0
+[PASA] -- Atravesar la casa sur                        fin=(0,0,0,08,-12,4) y∈[0,08,0,08] bloqueado a 12,6 m del objetivo 0
+-- Pendientes --
+[PASA] OK Loma noreste (≈11°) hasta la cima            fin=(27,7,2,22,25,8) y∈[-0,54,2,22]  | cima y esperada=2,13
+[PASA] OK Loma sureste (≈22°) hasta la cima            fin=(29,7,3,47,-27,8) y∈[-0,01,3,47]  | cima y esperada=3,40
+[PASA] OK Descenso de la loma sureste                  fin=(18,3,-0,45,-18,2) y∈[-0,46,3,48] 
+[PASA] 200 caídas al azar: por debajo del suelo teórico (>0.25 m) en 0; diferencia mínima 0,074 m; mediana |y-H| 0,081 m; p95 0,100 m; máx 0,875 m (los máximos positivos son caídas sobre rocas, flores o árboles)
+Malla visible: MeshRenderers=156, triángulos=83342
+Colliders activos: BoxCollider=28, CapsuleCollider=78, CharacterController=1, MeshCollider=3, TerrainCollider=1 | triángulos en MeshColliders=4784
+Terrain: heightmap 257x257 (celda 0,35 m), alphamap 512, capas=4, triángulos a máxima resolución≈131072
+Camera.Render 1280x720 en el Editor (batchmode, 40 renders): 3,3 ms/render [orientativo; no es rendimiento de juego ni de móvil]
+
