@@ -895,15 +895,17 @@ namespace Lumina.EditorTools
                     big = Ui.Label(inner.transform, "Phrase", "", 58f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 2f);
                     Ui.Stretch(big.rectTransform, 20f, 6f, 20f, 6f);
                     Screens.FitText(big, 24f, true);
-                    senaSays = Ui.Label(card, "SenaSays", "", 24f, Ui.TurquoiseDark, FontStyles.Bold, TextAlignmentOptions.Center);
-                    Screens.FitText(senaSays, 14f, true);
-                    Screens.Elem(senaSays, minH: 30f, prefH: 40f);
                     break;
             }
 
-            var instruction = Ui.Label(card, "Instruction", "", 26f, Ui.Ink, FontStyles.Normal, TextAlignmentOptions.Center);
-            Screens.FitText(instruction, 15f, true);
-            Screens.Elem(instruction, minH: 64f, prefH: 96f, flexH: 1f);
+            // Meses y Saludos: sin la descripción («Es la seña para decir…»); el panel solo lleva el nombre, el video y la práctica.
+            TMP_Text instruction = null;
+            if (kind == LevelKind.Numbers)
+            {
+                instruction = Ui.Label(card, "Instruction", "", 26f, Ui.Ink, FontStyles.Normal, TextAlignmentOptions.Center);
+                Screens.FitText(instruction, 15f, true);
+                Screens.Elem(instruction, minH: 56f, prefH: 80f, flexH: 1f);
+            }
             var demoNotice = Ui.Label(card, "DemoNotice", "La demostración animada llegará pronto.", 24f, Ui.TurquoiseDark, FontStyles.Bold);
             Screens.FitText(demoNotice, 14f, true);
             Screens.Elem(demoNotice, minH: 28f, prefH: 36f);
@@ -912,7 +914,7 @@ namespace Lumina.EditorTools
             LearningPracticeView practiceView = null;
             {
                 var cameraFrame = Ui.Panel(card, "CameraFrame", Ui.Ink);
-                Screens.Elem(cameraFrame, minH: 120f, prefH: 250f, flexH: 2f);
+                Screens.Elem(cameraFrame, minH: 170f, prefH: 440f, flexH: 6f); // la cámara toma todo el espacio sobrante
                 var aspect = Ui.Rect("Aspect", cameraFrame.transform);
                 Ui.Stretch(aspect);
                 var fitter = aspect.gameObject.AddComponent<AspectRatioFitter>();
@@ -932,7 +934,7 @@ namespace Lumina.EditorTools
                 Ui.Set(feed, "status", cameraStatus);
 
                 var statsRow = Ui.Rect("Stats", card);
-                Screens.Elem(statsRow, minH: 84f, prefH: 104f);
+                Screens.Elem(statsRow, minH: 72f, prefH: 96f);
                 Screens.HStack(statsRow, 16f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, true, true);
                 var scoreCard = Screens.BuildStatCard(statsRow, "ScoreCard");
                 var starsCard = Screens.BuildStatCard(statsRow, "StarsCard");
@@ -947,7 +949,7 @@ namespace Lumina.EditorTools
 
                 var status = Ui.Label(card, "PracticeStatus", "", 26f, Ui.TurquoiseDark, FontStyles.Bold, TextAlignmentOptions.Center);
                 Screens.FitText(status, 14f, true);
-                Screens.Elem(status, minH: 44f, prefH: 64f);
+                Screens.Elem(status, minH: 36f, prefH: 56f);
 
                 practiceView = new GameObject("LearningPractice").AddComponent<LearningPracticeView>();
                 Ui.Set(practiceView, "cameraFeed", feed);
@@ -983,7 +985,6 @@ namespace Lumina.EditorTools
             Ui.Set(controller, "nameLabel", nameLabel);
             Ui.Set(controller, "positionLabel", position);
             Ui.Set(controller, "groupLabel", group);
-            Ui.Set(controller, "senaSaysLabel", senaSays);
             Ui.Set(controller, "instructionLabel", instruction);
             Ui.Set(controller, "demoNotice", demoNotice);
             Ui.SetArray(controller, "countDots", dots);

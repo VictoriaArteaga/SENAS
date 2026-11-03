@@ -246,7 +246,7 @@ namespace Lumina.UI
                     break;
             }
 
-            instructionLabel.text = _level.Hint(item);
+            if (instructionLabel != null) instructionLabel.text = _level.Hint(item);
             RefreshPracticeButton(item);
             previousButton.interactable = _index > 0;
             nextButton.interactable = _index < total - 1;
