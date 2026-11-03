@@ -95,17 +95,17 @@ namespace Lumina.Signs
             "This is the sign for saying “{0}”. Watch carefully how the hands move.",
             new[]
             {
-                G("hola", "Hola", "Hello", GroupGreetings, "¡Hola, bienvenido a Lúmina!", "Hi, welcome to Lúmina!"),
                 G("buenos_dias", "Buenos días", "Good morning", GroupGreetings, "¡Qué lindo amanecer!", "What a lovely sunrise!"),
                 G("buenas_tardes", "Buenas tardes", "Good afternoon", GroupGreetings, "¡Qué buena tarde!", "What a nice afternoon!"),
                 G("buenas_noches", "Buenas noches", "Good evening", GroupGreetings, "Ya sale la luna…", "The moon is rising…"),
+                G("hola", "Hola", "Hello", GroupGreetings, "¡Hola, bienvenido a Lúmina!", "Hi, welcome to Lúmina!"),
                 G("adios", "Adiós", "Goodbye", GroupGreetings, "¡Hasta pronto!", "See you soon!"),
-                G("como_estas", "¿Cómo estás?", "How are you?", GroupTalk, "Quiero saber de ti.", "I want to know about you."),
-                G("bien", "Bien", "Fine", GroupTalk, "¿Cómo estás?", "How are you?"),
-                G("gracias", "Gracias", "Thank you", GroupTalk, "Toma, esto es para ti.", "Here, this is for you."),
-                G("de_nada", "De nada", "You're welcome", GroupTalk, "¡Muchas gracias!", "Thank you so much!"),
                 G("si", "Sí", "Yes", GroupTalk, "¿Quieres seguir aprendiendo?", "Do you want to keep learning?"),
                 G("no", "No", "No", GroupTalk, "¿Quieres parar ya?", "Do you want to stop now?"),
+                G("como_estas", "¿Cómo estás?", "How are you?", GroupTalk, "Quiero saber de ti.", "I want to know about you."),
+                G("gracias", "Gracias", "Thank you", GroupTalk, "Toma, esto es para ti.", "Here, this is for you."),
+                G("bien", "Bien", "Fine", GroupTalk, "¿Cómo estás?", "How are you?"),
+                G("de_nada", "De nada", "You're welcome", GroupTalk, "¡Muchas gracias!", "Thank you so much!"),
             });
 
         public static LevelDefinition Get(LevelKind kind) =>

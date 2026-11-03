@@ -13,8 +13,8 @@ namespace Lumina.UI
 {
     /// <summary>
     /// Flujo de PRÁCTICA: selección → aprendizaje → preparación → práctica → Results.
-    /// El reconocimiento entra por <see cref="SetRecognizer"/>; el Nivel 2 configura MediaPipe al volver desde la casa
-    /// de números. La demostración del avatar entra por <see cref="DemonstrationRequested"/>.
+    /// El reconocimiento entra por <see cref="SetRecognizer"/>; los niveles de números y saludos configuran MediaPipe al volver desde sus casas.
+    /// La demostración del avatar entra por <see cref="DemonstrationRequested"/>.
     /// </summary>
     public class PracticeController : MonoBehaviour
     {
