@@ -1,0 +1,16 @@
+Play Mode=True. Selector: enabled=True Count=6 puntos=6; AuthSession.AvatarId inicial=''
+[Opción 0] etiqueta='CAROL' modelos activos=1 (carol) altura=1,70 m ancho máx=1,29 m base y=0,00 punto resaltado=1
+   SELECCIONAR -> SelectedId='carol' SelectedName='Carol' AuthSession.AvatarId='carol' [OK]
+[Opción 1] etiqueta='LUNA CRIMSON' modelos activos=1 (luna-crimson) altura=1,70 m ancho máx=0,62 m base y=0,00 punto resaltado=1
+   SELECCIONAR -> SelectedId='luna-crimson' SelectedName='Luna Crimson' AuthSession.AvatarId='luna-crimson' [OK]
+[Opción 2] etiqueta='TOM' modelos activos=1 (tom) altura=1,70 m ancho máx=0,58 m base y=0,00 punto resaltado=1
+   SELECCIONAR -> SelectedId='tom' SelectedName='Tom' AuthSession.AvatarId='tom' [OK]
+[Opción 3] etiqueta='CRIMSON' modelos activos=1 (crimson) altura=1,70 m ancho máx=1,19 m base y=0,00 punto resaltado=1
+   SELECCIONAR -> SelectedId='crimson' SelectedName='Crimson' AuthSession.AvatarId='crimson' [OK]
+[Opción 4] etiqueta='NEON' modelos activos=1 (neon) altura=1,70 m ancho máx=0,73 m base y=0,00 punto resaltado=1
+   SELECCIONAR -> SelectedId='neon' SelectedName='Neon' AuthSession.AvatarId='neon' [OK]
+[Opción 5] etiqueta='TENSY' modelos activos=1 (tensy) altura=1,70 m ancho máx=1,32 m base y=0,00 punto resaltado=1
+   SELECCIONAR -> SelectedId='tensy' SelectedName='Tensy' AuthSession.AvatarId='tensy' [OK]
+[Opción 6] etiqueta='CAROL' modelos activos=1 (carol) altura=1,70 m ancho máx=1,29 m base y=0,00 punto resaltado=1
+Recorrido: carol -> luna-crimson -> tom -> crimson -> neon -> tensy; la opción 6 (tras la última) es la primera otra vez: sí
+RESULTADO: todas las comprobaciones del selector pasan

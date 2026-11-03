@@ -1,0 +1,9 @@
+Jugador 'Player' pos=(-15.50, 0.10, -2.50) rot=(0.0, 90.0, 0.0) | CC h=1,8 r=0,3 centro=(0.00, 0.90, 0.00) | cámara local=(0.00, 1.65, 0.00) fov=60 near=0,1
+[PlayerAvatar] CurrentId=tensy Body='Avatar_tensy' localPos=(0.00, 0.00, -0.20) localRot=(0.0, 0.0, 0.0) localScale=(1.00, 1.00, 1.00)
+  Bounds mundo: min=(-16.10, 0.10, -3.09) max=(-15.53, 1.80, -1.87) tamaño=(0.57, 1.70, 1.22); suelo del jugador y=0,10 (pies del modelo y=0,10)
+  Cámara a la altura 1,65 m; coronilla del modelo 1,70 m; frente del rostro respecto a la cámara (m, + = delante): 0,00 (en local z cuerpo=-0,20)
+  Renderers de la instancia: tensy_body=On
+  Prefab en disco (debe seguir todo On): tensy_body=On
+  Colliders en el cuerpo: 0 (activos: 0); Animators: 0; Rigidbody: 0
+  Movimiento con el CharacterController (20 pasos de 0,1 m hacia delante): sin cuerpo 2,00 m, con cuerpo 2,00 m
+  Sombras: MeshRenderer.shadowCastingMode=On, receiveShadows=True

@@ -1,0 +1,13 @@
+ESCALA factor 0.8954 centro cuerpo -0.002 -0.098 tris originales 362575
+SOLDADURA vertices 217333 -> 181181
+COSTURAS UV: vertices de costura 31686 de 181181
+CABEZA (z >= 1.42): 86951 vertices, 174132 triangulos de 362575
+INTENTO protect_head=0.90 -> 49798 triangulos (limite 49999)
+DECIMADO protect_head elegido=0.90  tris 362575 -> 49798  (cabeza: 174132 -> 30813)
+NORMALES personalizadas: True
+POSE A 35 grados; vertices movidos 1588
+FINAL bbox min [-0.539, -0.196, -0.001] max [0.541, 0.372, 1.7] tamano [1.08, 0.568, 1.701]
+TRIS 362575 -> 49798
+UV rango u[0.000,0.996] v[0.000,0.999]
+FBX export starting... 'C:/Users/MARIAV~1/AppData/Local/Temp/claude/c--Users-MARIA-VICTORIA-Desktop-universidad-SEMESTRES-QUINTO-SEMESTRE-Dise-o-de-interfaces-FINALES-SE-AS/750e936d-b75e-410f-8888-a32b724b5764/scratchpad/conv2/crimson/crimson.fbx'
+EXPORTED C:/Users/MARIAV~1/AppData/Local/Temp/claude/c--Users-MARIA-VICTORIA-Desktop-universidad-SEMESTRES-QUINTO-SEMESTRE-Dise-o-de-interfaces-FINALES-SE-AS/750e936d-b75e-410f-8888-a32b724b5764/scratchpad/conv2/crimson/crimson.fbx

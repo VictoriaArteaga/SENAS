@@ -1,0 +1,22 @@
+[PASA] Roster.Legacy = luna, nube, rio, sol
+[PASA] Roster.Selectable = carol, luna-crimson, tom, crimson, neon, tensy
+[PASA] Roster.Catalog (10) = luna, nube, rio, sol, carol, luna-crimson, tom, crimson, neon, tensy
+[PASA] los 10 prefabs del roster existen
+[PASA] AvatarCatalog.asset real tiene las 10 entradas en orden
+[PASA] a) catálogo completo -> MergeCatalog no cambia nada (idempotente)
+[PASA] b) copia con solo los 4 antiguos
+[PASA] b) MergeCatalog completa a 10 entradas en orden: luna, nube, rio, sol, carol, luna-crimson, tom, crimson, neon, tensy
+[PASA] b) los 4 antiguos conservan exactamente su prefab
+[PASA] b) segunda ejecución: sin cambios y sin duplicados
+[PASA] c) catálogo vacío -> 10 entradas en orden
+[PASA] d) una entrada desconocida se conserva (11) y no se reordena
+[PASA] e) un prefab vacío de 'luna' se rellena y el resto queda igual
+[PASA] la escena generada es nueva y sin ruta (no sobrescribe RegisterScene.unity)
+[PASA] selector generado: 6 opciones aprobadas (ningún antiguo), 6 puntos 370..570, 4 antiguos desactivados, 10 hijos únicos
+[PASA] selector generado: 6 opciones aprobadas (ningún antiguo), 6 puntos 370..570, 4 antiguos desactivados, 10 hijos únicos
+[PASA] idempotencia: dos construcciones en memoria producen exactamente la misma estructura
+SELECTOR opciones=carol,luna-crimson,tom,crimson,neon,tensy nombres=Carol|Luna Crimson|Tom|Crimson|Neon|Tensy
+SELECTOR cada opción es instancia del prefab aprobado (Avatar_<id> en PlayerAvatars) y está activa: True
+SELECTOR puntos=6 x=[370,410,450,490,530,570] y=184
+SELECTOR pivote: 10 hijos = luna(oculto),nube(oculto),rio(oculto),sol(oculto),carol(activo),luna-crimson(activo),tom(activo),crimson(activo),neon(activo),tensy(activo); antiguos presentes y desactivados: True; nombres únicos: True
+RESUMEN: todo correcto

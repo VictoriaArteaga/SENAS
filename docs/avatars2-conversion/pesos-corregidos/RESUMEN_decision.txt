@@ -1,0 +1,11 @@
+Pipeline v2 (pesos de proteccion corregidos). Convencion: protect_* 1.0 = proteger geometria. Presupuesto objetivo 49.800 triangulos (limite 50.000).
+Error medio por pixel contra el GLB (encuadre identico, textura plana; menor = mas fiel). A = FBX anterior (45 k, pesos invertidos), B = nuevo.
+
+avatar         tris A -> B       cabeza(z>=1.42) A -> B     MAE frontal A -> B   MAE 3/4 A -> B
+luna-crimson   44998 -> 49800     5050 -> 24979             3.092 -> 0.882       2.626 -> 0.820
+crimson        44996 -> 49798    10906 -> 30813             2.709 -> 1.841       2.413 -> 1.470
+neon           44997 -> 49800     5587 -> 17217             6.804 -> 4.837       6.522 -> 4.955   (encuadre de rostro mas bajo; la mejora esta en ojos/cabello)
+tensy          44990 -> 49799     5564 -> 19683             3.988 -> 2.450       3.615 -> 1.995
+
+Regresion: con head_z=1.45 el pipeline v2 reproduce el FBX aprobado de Tom (hash de posiciones y UV identicos, 49.800 triangulos).
+Regresion: v2 reproduce exactamente la propuesta de Luna comparada (hash identico).

@@ -1,0 +1,12 @@
+Play Mode: Application.isPlaying=True; jugador='Player' pos=(-15.50, 0.10, -2.50); cámara fov=60 altura local=1,65
+[Catálogo real] 'AvatarCatalog' Find('tensy') -> Avatar_tensy (Assets/Project/Prefabs/PlayerAvatars/Avatar_tensy.prefab)
+[PlayerAvatar] Body='Avatar_tensy' id=tensy localPos=(0.00, 0.00, -0.20) escala=(1.00, 1.00, 1.00)
+   tensy_body       shadowCastingMode=On           enabled=True activeInHierarchy=True
+Prefab en disco (no debe haber cambiado): tensy_body=On
+Cuerpo instanciado: altura=1,70 m ancho=0,57/1,22 pies y=0,08 (suelo y=0,08); coincide con el prefab del catálogo: True
+Colliders en el cuerpo: 0; Rigidbody: 0; Animators: 0
+[Mirada] pitch real=0,0° (objetivo 0)
+[Mirada] pitch real=55,0° (objetivo 55)
+[Mirada] pitch real=80,0° (objetivo 80)
+[Movimiento con cuerpo] 6,00 m en 1,50 s = 3,99 m/s (moveSpeed=4); y=0,08; collisionFlags=Below; fotogramas=1123; tiempo medio de fotograma=1,3 ms
+[Movimiento sin cuerpo] 6,00 m en 1,50 s = 4,00 m/s (moveSpeed=4); y=0,08; collisionFlags=Below; fotogramas=1486; tiempo medio de fotograma=1,0 ms

@@ -1,0 +1,34 @@
+Selector en 'AuthCanvas/AvatarSelectorUI' activo=True
+  pivot = AvatarPivot
+  baseYaw = 165
+  autoSpinDegreesPerSecond = 14
+  dragSensitivity = 0,4
+  previousButton = PreviousButton
+  nextButton = NextButton
+  selectButton = SelectButton
+  selectLabel = Label
+  nameLabel = Label
+  selectedBadge = SelectedBadge
+  dotActive = RGBA(1.000, 0.369, 0.302, 1.000)
+  dotInactive = RGBA(0.560, 0.890, 0.850, 1.000)
+options.Length = 4
+  [0] id=luna nombre=Luna modelo='--- REGISTER WORLD ---/ExhibitionStage/AvatarPivot/luna' prefab=Assets/Project/Prefabs/Avatars/Avatar_luna.prefab activo=True
+       localPos=(0.000, 0.000, 0.000) localRot=(0.0, 0.0, 0.0) localScale=(1.000, 1.000, 1.000) overrides=0 componentes=Transform,AvatarCustomization
+  [1] id=nube nombre=Nube modelo='--- REGISTER WORLD ---/ExhibitionStage/AvatarPivot/nube' prefab=Assets/Project/Prefabs/Avatars/Avatar_nube.prefab activo=True
+       localPos=(0.000, 0.000, 0.000) localRot=(0.0, 0.0, 0.0) localScale=(1.000, 1.000, 1.000) overrides=0 componentes=Transform,AvatarCustomization
+  [2] id=rio nombre=Río modelo='--- REGISTER WORLD ---/ExhibitionStage/AvatarPivot/rio' prefab=Assets/Project/Prefabs/Avatars/Avatar_rio.prefab activo=True
+       localPos=(0.000, 0.000, 0.000) localRot=(0.0, 0.0, 0.0) localScale=(1.000, 1.000, 1.000) overrides=0 componentes=Transform,AvatarCustomization
+  [3] id=sol nombre=Sol modelo='--- REGISTER WORLD ---/ExhibitionStage/AvatarPivot/sol' prefab=Assets/Project/Prefabs/Avatars/Avatar_sol.prefab activo=True
+       localPos=(0.000, 0.000, 0.000) localRot=(0.0, 0.0, 0.0) localScale=(1.000, 1.000, 1.000) overrides=0 componentes=Transform,AvatarCustomization
+dots.Length = 4
+  dot[0] 'AuthCanvas/AvatarSelectorUI/Dot1' anchorMin=(0.00, 0.00) anchoredPos=(410.00, 184.00) size=(20.00, 20.00) sprite=Circle
+  dot[1] 'AuthCanvas/AvatarSelectorUI/Dot2' anchorMin=(0.00, 0.00) anchoredPos=(450.00, 184.00) size=(20.00, 20.00) sprite=Circle
+  dot[2] 'AuthCanvas/AvatarSelectorUI/Dot3' anchorMin=(0.00, 0.00) anchoredPos=(490.00, 184.00) size=(20.00, 20.00) sprite=Circle
+  dot[3] 'AuthCanvas/AvatarSelectorUI/Dot4' anchorMin=(0.00, 0.00) anchoredPos=(530.00, 184.00) size=(20.00, 20.00) sprite=Circle
+Pivote: '--- REGISTER WORLD ---/ExhibitionStage/AvatarPivot' pos=(-1.650, 0.240, 0.000) hijos=4: luna(activo), nube(activo), rio(activo), sol(activo)
+Padre del pivote: '--- REGISTER WORLD ---/ExhibitionStage' hijos: RingCoral, RingCream, Top, StageSpot, AvatarPivot
+  objeto antiguo: --- REGISTER WORLD ---/ExhibitionStage/AvatarPivot/sol
+  objeto antiguo: --- REGISTER WORLD ---/ExhibitionStage/AvatarPivot/rio
+  objeto antiguo: --- REGISTER WORLD ---/ExhibitionStage/AvatarPivot/luna
+  objeto antiguo: --- REGISTER WORLD ---/ExhibitionStage/AvatarPivot/nube
+Escena sucia tras abrir: False

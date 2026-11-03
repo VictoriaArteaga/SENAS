@@ -1,0 +1,12 @@
+ESCALA factor 0.8951 centro cuerpo -0.046 0.001 tris originales 264522
+SOLDADURA vertices 154978 -> 132253
+COSTURAS UV: vertices de costura 20648 de 132253
+CABEZA (z >= 1.42): 34043 vertices, 68122 triangulos de 264522
+INTENTO protect_head=0.90 -> 49800 triangulos (limite 49999)
+DECIMADO protect_head elegido=0.90  tris 264522 -> 49800  (cabeza: 68122 -> 24979)
+NORMALES personalizadas: True
+FINAL bbox min [-0.213, -0.243, -0.001] max [0.295, 0.246, 1.7] tamano [0.508, 0.489, 1.701]
+TRIS 264522 -> 49800
+UV rango u[0.000,0.995] v[0.000,1.000]
+FBX export starting... 'C:/Users/MARIAV~1/AppData/Local/Temp/claude/c--Users-MARIA-VICTORIA-Desktop-universidad-SEMESTRES-QUINTO-SEMESTRE-Dise-o-de-interfaces-FINALES-SE-AS/750e936d-b75e-410f-8888-a32b724b5764/scratchpad/conv2/luna-crimson/luna-crimson.fbx'
+EXPORTED C:/Users/MARIAV~1/AppData/Local/Temp/claude/c--Users-MARIA-VICTORIA-Desktop-universidad-SEMESTRES-QUINTO-SEMESTRE-Dise-o-de-interfaces-FINALES-SE-AS/750e936d-b75e-410f-8888-a32b724b5764/scratchpad/conv2/luna-crimson/luna-crimson.fbx

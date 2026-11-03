@@ -1,0 +1,10 @@
+Play Mode: Application.isPlaying=True; jugador='Player' pos=(-15.50, 0.10, -2.50); cámara fov=60 altura local=1,65
+[PlayerAvatar] Body='Avatar_crimson' id=crimson localPos=(0.00, 0.00, -0.20) escala=(1.00, 1.00, 1.00)
+   crimson_body     shadowCastingMode=On           enabled=True activeInHierarchy=True
+Prefab en disco (no debe haber cambiado): crimson_body=On
+Colliders en el cuerpo: 0; Rigidbody: 0; Animators: 0
+[Mirada] pitch real=0,0° (objetivo 0)
+[Mirada] pitch real=55,0° (objetivo 55)
+[Mirada] pitch real=80,0° (objetivo 80)
+[Movimiento con cuerpo] 6,00 m en 1,50 s = 4,00 m/s (moveSpeed=4); y=0,08; collisionFlags=Below; fotogramas=2351; tiempo medio de fotograma=0,6 ms
+[Movimiento sin cuerpo] 6,00 m en 1,50 s = 4,00 m/s (moveSpeed=4); y=0,08; collisionFlags=Below; fotogramas=2627; tiempo medio de fotograma=0,6 ms

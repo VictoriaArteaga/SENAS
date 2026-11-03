@@ -1,0 +1,10 @@
+ESCALA factor 0.85 centro cuerpo 0.018 -0.002 tris originales 205312
+SOLDADURA vertices 115929 -> 102650
+COSTURAS UV: vertices de costura 12589 de 102650
+DECIMADO ratio 0.2192 tris 205312 -> 45000
+NORMALES personalizadas: True
+FINAL bbox min [-0.264, -0.18, 0.0] max [0.234, 0.184, 1.702] tamano [0.498, 0.364, 1.702]
+TRIS 205312 -> 45000
+UV rango u[0.000,1.000] v[0.000,1.000]
+FBX export starting... 'C:/Users/MARIAV~1/AppData/Local/Temp/claude/c--Users-MARIA-VICTORIA-Desktop-universidad-SEMESTRES-QUINTO-SEMESTRE-Dise-o-de-interfaces-FINALES-SE-AS/750e936d-b75e-410f-8888-a32b724b5764/scratchpad/conv/tom/tom.fbx'
+EXPORTED

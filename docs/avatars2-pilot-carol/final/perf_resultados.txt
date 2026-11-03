@@ -1,0 +1,30 @@
+Renderers=10 materiales=9 triángulos=64551 vértices=50901 (submeshes=10)
+Texturas importadas (formato, mipmaps, memoria de ejecución):
+  carol_body         _BaseMap           4096x4096 DXT1 mips=13 21,3 MB
+  carol_body         _BumpMap           1024x1024 DXT5 mips=11 2,7 MB
+  carol_body         _MetallicGlossMap  2048x2048 DXT5 mips=12 10,7 MB
+  carol_cap          _BaseMap           4096x4096 DXT1 mips=13 21,3 MB
+  carol_cap          _BumpMap           1024x1024 DXT5 mips=11 2,7 MB
+  carol_cap          _MetallicGlossMap  2048x2048 DXT5 mips=12 10,7 MB
+  carol_hair         _BaseMap           4096x4096 DXT1 mips=13 21,3 MB
+  carol_hair         _BumpMap           1024x1024 DXT5 mips=11 2,7 MB
+  carol_hair         _MetallicGlossMap  2048x2048 DXT5 mips=12 10,7 MB
+  carol_head         _BaseMap           2048x2048 DXT5 mips=12 10,7 MB
+  carol_head         _BumpMap           2048x2048 DXT5 mips=12 10,7 MB
+  carol_head         _MetallicGlossMap  2048x2048 DXT5 mips=12 10,7 MB
+  carol_shirt        _BaseMap           4096x4096 DXT1 mips=13 21,3 MB
+  carol_shirt        _BumpMap           1024x1024 DXT5 mips=11 2,7 MB
+  carol_shirt        _MetallicGlossMap  2048x2048 DXT5 mips=12 10,7 MB
+  carol_skirt        _BaseMap           2048x2048 DXT5 mips=12 10,7 MB
+  carol_skirt        _BumpMap           2048x2048 DXT5 mips=12 10,7 MB
+  carol_skirt        _MetallicGlossMap  2048x2048 DXT5 mips=12 10,7 MB
+  carol_sneakers     _BaseMap           4096x4096 DXT1 mips=13 21,3 MB
+  carol_sneakers     _BumpMap           1024x1024 DXT5 mips=11 2,7 MB
+  carol_sneakers     _MetallicGlossMap  2048x2048 DXT5 mips=12 10,7 MB
+  carol_socks        _BaseMap           4096x4096 DXT1 mips=13 21,3 MB
+  carol_socks        _BumpMap           1024x1024 DXT5 mips=11 2,7 MB
+  carol_socks        _MetallicGlossMap  2048x2048 DXT5 mips=12 10,7 MB
+  carol_th1          _BaseMap           4096x4096 DXT1 mips=13 21,3 MB
+  carol_th1          _BumpMap           1024x1024 DXT5 mips=11 2,7 MB
+  carol_th1          _MetallicGlossMap  2048x2048 DXT5 mips=12 10,7 MB
+MEMORIA TEXTURAS TOTAL = 306,7 MB; mallas = 5,4 MB
