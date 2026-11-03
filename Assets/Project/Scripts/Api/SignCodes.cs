@@ -5,8 +5,8 @@ namespace Lumina.Api
 {
     /// <summary>
     /// Códigos de seña y de nivel del backend (backend/docs/integration-contract.md, sección 7). Para lo que Unity ya
-    /// implementa se usan los ids de Unity: la letra suelta (A…Z, Ñ) y <c>numeros.N</c>. Meses y saludos no están
-    /// implementados en Unity: su referencia es el catálogo del backend (MONTH_*, WORD_*, PHRASE_*).
+    /// implementa se usan los ids de Unity para letras y números. Los saludos conservan sus ids locales para la IA y
+    /// se convierten aquí a los códigos oficiales WORD_*/PHRASE_* del backend.
     /// </summary>
     public static class SignCodes
     {
@@ -24,10 +24,43 @@ namespace Lumina.Api
         /// <summary>True si el id es un número de Unity (<c>numeros.0</c> … <c>numeros.30</c>), que es también el código del backend.</summary>
         public static bool IsNumber(string signId) => !string.IsNullOrEmpty(signId) && NumberPattern.IsMatch(signId);
 
+        /// <summary>Convierte los ids internos de saludos al código canónico que recibe la API.</summary>
+        public static string BackendCodeFor(string signId)
+        {
+            switch (signId)
+            {
+                case "saludos.buenos_dias": return "PHRASE_GOOD_MORNING";
+                case "saludos.buenas_tardes": return "PHRASE_GOOD_AFTERNOON";
+                case "saludos.buenas_noches": return "PHRASE_GOOD_EVENING";
+                case "saludos.hola": return "WORD_HELLO";
+                case "saludos.adios": return "WORD_GOODBYE";
+                case "saludos.si": return "WORD_YES";
+                case "saludos.no": return "WORD_NO";
+                case "saludos.como_estas": return "PHRASE_HOW_ARE_YOU";
+                case "saludos.gracias": return "WORD_THANK_YOU";
+                case "saludos.bien": return "PHRASE_FINE_THANK_YOU";
+                case "saludos.de_nada": return "PHRASE_YOU_ARE_WELCOME";
+                case "meses.enero": return "MONTH_JANUARY";
+                case "meses.febrero": return "MONTH_FEBRUARY";
+                case "meses.marzo": return "MONTH_MARCH";
+                case "meses.abril": return "MONTH_APRIL";
+                case "meses.mayo": return "MONTH_MAY";
+                case "meses.junio": return "MONTH_JUNE";
+                case "meses.julio": return "MONTH_JULY";
+                case "meses.agosto": return "MONTH_AUGUST";
+                case "meses.septiembre": return "MONTH_SEPTEMBER";
+                case "meses.octubre": return "MONTH_OCTOBER";
+                case "meses.noviembre": return "MONTH_NOVEMBER";
+                case "meses.diciembre": return "MONTH_DECEMBER";
+                default: return signId;
+            }
+        }
+
         /// <summary>Nivel del backend al que pertenece un código de seña.</summary>
         public static string LevelFor(string code)
         {
             if (string.IsNullOrEmpty(code)) return null;
+            code = BackendCodeFor(code);
             if (IsNumber(code)) return NumbersLevel;
             if (code.StartsWith("MONTH_", StringComparison.Ordinal)) return MonthsLevel;
             if (code.StartsWith("WORD_", StringComparison.Ordinal) || code.StartsWith("PHRASE_", StringComparison.Ordinal)) return GreetingsLevel;
@@ -35,10 +68,10 @@ namespace Lumina.Api
         }
 
         /// <summary>
-        /// Contenido que Unity ya tiene para practicar y enviar al backend (abecedario y números). Meses y saludos y frases se
-        /// muestran como «próximamente» hasta que Unity los implemente.
+        /// Contenido implementado en Unity y listo para evaluación en el backend.
         /// </summary>
-        public static bool IsImplementedInUnity(string levelCode) => levelCode == AlphabetLevel || levelCode == NumbersLevel;
+        public static bool IsImplementedInUnity(string levelCode) =>
+            levelCode == AlphabetLevel || levelCode == NumbersLevel || levelCode == GreetingsLevel || levelCode == MonthsLevel;
 
         /// <summary>Texto corto para mostrar un código de seña: la letra, o el número de «numeros.N».</summary>
         public static string DisplayName(string code)
