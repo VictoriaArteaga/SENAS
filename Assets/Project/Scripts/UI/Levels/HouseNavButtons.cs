@@ -100,9 +100,10 @@ namespace Lumina.UI
             var go = new GameObject(objectName, typeof(RectTransform), typeof(Image), typeof(Button));
             go.transform.SetParent(transform, false);
             var rect = (RectTransform)go.transform;
-            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0f, 1f);
+            // Arriba al centro: la esquina superior izquierda la ocupan los avisos de tecla de la casa (Practicar / Siguiente nivel).
+            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 1f);
             rect.sizeDelta = new Vector2(300f, 64f);
-            rect.anchoredPosition = new Vector2(32f, -32f - slot * 80f);
+            rect.anchoredPosition = new Vector2(0f, -32f - slot * 80f);
             var image = go.GetComponent<Image>();
             image.color = Ink;
             if (_styleImage != null)
