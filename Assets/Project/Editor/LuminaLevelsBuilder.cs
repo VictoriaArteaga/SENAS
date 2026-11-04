@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using Lumina.Api;
 using Lumina.Core;
 using Lumina.Interaction;
 using Lumina.Signs;
@@ -270,6 +271,7 @@ namespace Lumina.EditorTools
 
             var levelController = Object.FindFirstObjectByType<LearningLevelController>();
             BuildResumePrompt(levelController);
+            BuildNextLevelPrompt(levelController, "PromptObjetos", kind == LevelKind.Numbers ? SignCodes.NumbersLevel : kind == LevelKind.Months ? SignCodes.MonthsLevel : SignCodes.GreetingsLevel, NextSceneOf(kind));
             // Números y Saludos: la música suena en la casa hasta que empieza la práctica; entonces se pausa (los videos traen su propio sonido).
             SetBool(levelController, "muteMusicWhileOpen", kind != LevelKind.Months);
 
@@ -303,25 +305,52 @@ namespace Lumina.EditorTools
         /// </summary>
         private static void BuildResumePrompt(MonoBehaviour controller, string templateName = "PromptObjetos")
         {
-            DestroyRoot("PromptPractica");
+            var copy = BuildCornerPrompt("PromptPractica", templateName, "P", "Continúa practicando", "levels.continuePractice", -40f);
+            var resume = copy.AddComponent<PracticeResumePrompt>();
+            Ui.Set(resume, "level", controller);
+            Ui.Set(resume, "prompt", copy.GetComponentInChildren<InteractionPrompt>(true));
+        }
+
+        /// <summary>
+        /// Indicador «N — Ir al siguiente nivel» (debajo del de la P): aparece cuando el nivel de la casa está completado. Abecedario → Números →
+        /// Meses → Saludos; Saludos es el último y no lo lleva.
+        /// </summary>
+        private static void BuildNextLevelPrompt(MonoBehaviour controller, string templateName, string levelCode, string nextScene)
+        {
+            DestroyRoot("PromptSiguienteNivel");
+            if (string.IsNullOrEmpty(nextScene)) return;
+            var copy = BuildCornerPrompt("PromptSiguienteNivel", templateName, "N", "Ir al siguiente nivel", "levels.nextLevel", -160f);
+            var next = copy.AddComponent<NextLevelPrompt>();
+            Ui.Set(next, "level", controller);
+            Ui.Set(next, "prompt", copy.GetComponentInChildren<InteractionPrompt>(true));
+            var so = new SerializedObject(next);
+            so.FindProperty("levelCode").stringValue = levelCode;
+            so.FindProperty("nextScene").stringValue = nextScene;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static string NextSceneOf(LevelKind kind) =>
+            kind == LevelKind.Numbers ? SceneNames.Months : kind == LevelKind.Months ? SceneNames.Greetings : null;
+
+        /// <summary>Copia del indicador de la E con otra tecla y otro texto, arriba a la izquierda (a <paramref name="top"/> px del borde) para no montarse con los demás.</summary>
+        private static GameObject BuildCornerPrompt(string objectName, string templateName, string key, string text, string locKey, float top)
+        {
+            DestroyRoot(objectName);
             var template = GameObject.Find(templateName);
             var copy = Object.Instantiate(template);
-            copy.name = "PromptPractica";
+            copy.name = objectName;
             var prompt = copy.GetComponentInChildren<InteractionPrompt>(true);
 
             var rect = (RectTransform)prompt.transform;
             rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
             rect.pivot = new Vector2(0f, 1f);
-            rect.anchoredPosition = new Vector2(40f, -40f);
+            rect.anchoredPosition = new Vector2(40f, top);
 
             var label = PromptLabel(prompt);
-            label.text = "Continúa practicando";
-            LocalizedText.Bind(label, "levels.continuePractice");
-            foreach (var text in prompt.GetComponentsInChildren<TMP_Text>(true)) if (text.name == "KeyLabel") text.text = "P";
-
-            var resume = copy.AddComponent<PracticeResumePrompt>();
-            Ui.Set(resume, "level", controller);
-            Ui.Set(resume, "prompt", prompt);
+            label.text = text;
+            LocalizedText.Bind(label, locKey);
+            foreach (var t in prompt.GetComponentsInChildren<TMP_Text>(true)) if (t.name == "KeyLabel") t.text = key;
+            return copy;
         }
 
         /// <summary>
@@ -360,6 +389,13 @@ namespace Lumina.EditorTools
             if (exit != null) Ui.SetFloat(exit.GetComponent<ProximityInteractable>(), "interactionRadius", 1f);
 
             BuildResumePrompt(controller, "PromptAbecedario");
+            BuildNextLevelPrompt(controller, "PromptAbecedario", SignCodes.AlphabetLevel, SceneNames.Numbers);
+
+            // Vistas de la mano: solo FRENTE y PERFIL (se quita DORSO).
+            var views = new SerializedObject(controller);
+            var yaws = views.FindProperty("viewYaws"); yaws.arraySize = 2; yaws.GetArrayElementAtIndex(0).floatValue = 0f; yaws.GetArrayElementAtIndex(1).floatValue = -90f;
+            var viewNames = views.FindProperty("viewNames"); viewNames.arraySize = 2; viewNames.GetArrayElementAtIndex(0).stringValue = "FRENTE"; viewNames.GetArrayElementAtIndex(1).stringValue = "PERFIL";
+            views.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);

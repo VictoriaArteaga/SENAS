@@ -46,8 +46,8 @@ namespace Lumina.Alphabet
         [SerializeField] private Button viewButton;
         [SerializeField] private TMP_Text viewLabel;
         [Tooltip("Giro de la cámara (grados) alrededor de la mano, en el eje vertical. 0 = vista frontal original.")]
-        [SerializeField] private float[] viewYaws = { 0f, -90f, 180f };
-        [SerializeField] private string[] viewNames = { "FRENTE", "PERFIL", "DORSO" };
+        [SerializeField] private float[] viewYaws = { 0f, -90f };
+        [SerializeField] private string[] viewNames = { "FRENTE", "PERFIL" };
         [Tooltip("Las vistas distintas de la frontal se acercan a la mano multiplicando la distancia por este valor.")]
         [SerializeField] private float sideViewDistanceScale = 0.75f;
         [Tooltip("Panel liso que se coloca detrás de la mano en las vistas laterales para que no se vea la habitación.")]
@@ -153,6 +153,7 @@ namespace Lumina.Alphabet
 
             uiRoot.SetActive(false);
             learningCamera.enabled = false;
+            hand.enabled = false; // la mano 3D solo se mueve mientras el nivel está abierto
         }
 
         public void Open()
@@ -161,6 +162,8 @@ namespace Lumina.Alphabet
 
             _open = true;
             WasOpened = true;
+            hand.Initialize();
+            hand.enabled = true;
             uiRoot.SetActive(true);
             if (playerCamera != null) playerCamera.enabled = false;
             learningCamera.enabled = true;
@@ -289,6 +292,7 @@ namespace Lumina.Alphabet
 
             _open = false;
             StopPractice();
+            hand.enabled = false; // al salir de la práctica la mano 3D se detiene
             SetView(0);
             uiRoot.SetActive(false);
             learningCamera.enabled = false;
