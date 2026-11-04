@@ -375,10 +375,6 @@ namespace Lumina.EditorTools
             var register = LuminaUiKit.MakeButton(inner, "RegisterButton", "CREAR CUENTA", LuminaUiKit.Turquoise, LuminaUiKit.TurquoiseDark, LuminaUiKit.Ink, new Vector2(620f, 80f), 30f, 8f, 4f);
             LuminaUiKit.TopCenter((RectTransform)register.transform, 756f, 620f, 80f);
 
-            var footer = LuminaUiKit.Label(inner, "Footer", "Modo de prueba · todavía no hay cuentas reales", 24f, LuminaUiKit.Ink, FontStyles.Normal, TextAlignmentOptions.Center);
-            LuminaUiKit.TopCenter(footer.rectTransform, 850f, 620f, 30f);
-            footer.color = new Color(LuminaUiKit.Ink.r, LuminaUiKit.Ink.g, LuminaUiKit.Ink.b, 0.55f);
-
             var controller = new GameObject("LoginController").AddComponent<LoginUIController>();
             LuminaUiKit.Set(controller, "emailField", email);
             LuminaUiKit.Set(controller, "passwordField", password);

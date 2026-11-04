@@ -57,6 +57,9 @@ namespace Lumina.UI
             _cts = new CancellationTokenSource();
             _loginLabelText = loginLabel != null ? loginLabel.text : string.Empty;
 
+            emailField.SetCharacterLimit(AuthValidation.MaxEmailLength, $"¡Llegaste al máximo de {AuthValidation.MaxEmailLength} caracteres!");
+            passwordField.SetCharacterLimit(AuthValidation.MaxPasswordLength, $"¡Llegaste al máximo de {AuthValidation.MaxPasswordLength} caracteres!");
+
             loginButton.onClick.AddListener(OnLoginClicked);
             registerButton.onClick.AddListener(OnRegisterClicked);
             forgotButton.onClick.AddListener(OnForgotClicked);
@@ -68,18 +71,15 @@ namespace Lumina.UI
         }
 
         /// <summary>Con cuentas reales no tiene sentido «Recordar sesión» (los tokens solo viven en memoria) ni el aviso de modo de prueba.</summary>
-        private void HideMockOnlyElements()
+        private void ConfigureSessionOptions()
         {
-            if (AuthServices.Current is AuthenticationMockService) return;
-            if (rememberToggle != null) rememberToggle.gameObject.SetActive(false);
-            string testMode = Loc.T("auth.testMode");
-            foreach (var label in transform.root.GetComponentsInChildren<TMP_Text>(true))
-                if (label.text == testMode) label.gameObject.SetActive(false);
+            if (!(AuthServices.Current is AuthenticationMockService) && rememberToggle != null)
+                rememberToggle.gameObject.SetActive(false);
         }
 
         private void Start()
         {
-            HideMockOnlyElements();
+            ConfigureSessionOptions();
             panelGroup.alpha = 0f;
             StartCoroutine(Intro());
             sena?.Say(MsgWelcome);
@@ -204,14 +204,14 @@ namespace Lumina.UI
                 if (this == null) return;
                 if (reset.Succeeded)
                 {
-                    status.Info("Función de prueba: aún no se envía ningún correo real.");
-                    sena?.Say("Pronto podrás recuperar tu contraseña desde aquí.");
+                    status.Info(reset.Message ?? Loc.T("auth.resetUnavailable"));
+                    sena?.Say(Loc.T("auth.forgotSoon"));
                 }
                 else
                 {
                     // El backend todavía no ofrece recuperación de contraseña: se dice la verdad.
                     status.Info(reset.Message ?? Loc.T("auth.resetUnavailable"));
-                    sena?.Say("Pronto podrás recuperar tu contraseña desde aquí.");
+                    sena?.Say(Loc.T("auth.forgotSoon"));
                 }
             }
             catch (OperationCanceledException) { }

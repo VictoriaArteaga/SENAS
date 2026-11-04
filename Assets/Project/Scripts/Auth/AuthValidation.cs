@@ -8,6 +8,7 @@ namespace Lumina.Auth
         // Reglas del backend (POST /auth/register): contraseña de 8 a 72 caracteres con al menos una letra y un número; nombre de 2 a 40.
         public const int MinPasswordLength = 8;
         public const int MaxPasswordLength = 72;
+        public const int MaxEmailLength = 254;
         public const int MinDisplayNameLength = 2;
         public const int MaxDisplayNameLength = 40;
         public const int MinUsernameLength = 3;
@@ -20,6 +21,7 @@ namespace Lumina.Auth
         public static string Email(string value)
         {
             if (string.IsNullOrWhiteSpace(value)) return "Escribe tu correo electrónico.";
+            if (value.Trim().Length > MaxEmailLength) return $"¡Llegaste al máximo de {MaxEmailLength} caracteres!";
             string email = value.Trim();
             if (email.IndexOf('@') < 0) return "El correo debe tener un @.";
             return EmailPattern.IsMatch(email) ? null : "Revisa el formato: nombre@correo.com";
@@ -30,7 +32,7 @@ namespace Lumina.Auth
         {
             if (string.IsNullOrEmpty(value)) return "Escribe tu contraseña.";
             if (value.Length < MinPasswordLength) return $"Usa al menos {MinPasswordLength} caracteres.";
-            if (value.Length > MaxPasswordLength) return $"Usa máximo {MaxPasswordLength} caracteres.";
+            if (value.Length > MaxPasswordLength) return $"¡Llegaste al máximo de {MaxPasswordLength} caracteres!";
             bool hasLetter = false, hasDigit = false;
             foreach (char c in value)
             {
@@ -45,7 +47,7 @@ namespace Lumina.Auth
         public static string LoginPassword(string value)
         {
             if (string.IsNullOrEmpty(value)) return "Escribe tu contraseña.";
-            return value.Length <= MaxPasswordLength ? null : $"Usa máximo {MaxPasswordLength} caracteres.";
+            return value.Length <= MaxPasswordLength ? null : $"¡Llegaste al máximo de {MaxPasswordLength} caracteres!";
         }
 
         /// <summary>Nombre visible (registro): 2–40 caracteres.</summary>
@@ -54,7 +56,7 @@ namespace Lumina.Auth
             string v = value?.Trim();
             if (string.IsNullOrEmpty(v)) return "Escribe tu nombre.";
             if (v.Length < MinDisplayNameLength) return $"Usa al menos {MinDisplayNameLength} caracteres.";
-            return v.Length <= MaxDisplayNameLength ? null : $"Usa máximo {MaxDisplayNameLength} caracteres.";
+            return v.Length <= MaxDisplayNameLength ? null : $"¡Llegaste al máximo de {MaxDisplayNameLength} caracteres!";
         }
 
         public static string Required(string value, string fieldDescription)
@@ -67,7 +69,7 @@ namespace Lumina.Auth
             if (string.IsNullOrWhiteSpace(value)) return "Elige un nombre de usuario.";
             string v = value.Trim();
             if (v.Length < MinUsernameLength) return $"Usa al menos {MinUsernameLength} caracteres.";
-            if (v.Length > MaxUsernameLength) return $"Usa máximo {MaxUsernameLength} caracteres.";
+            if (v.Length > MaxUsernameLength) return $"¡Llegaste al máximo de {MaxUsernameLength} caracteres!";
             return UsernamePattern.IsMatch(v) ? null : "Solo letras, números, punto y guion bajo.";
         }
 
