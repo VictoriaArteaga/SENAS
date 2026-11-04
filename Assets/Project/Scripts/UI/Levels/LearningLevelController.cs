@@ -38,7 +38,8 @@ namespace Lumina.UI
         [SerializeField] private TMP_Text senaSaysLabel;   // lo que dice Sena (solo Saludos)
         [SerializeField] private TMP_Text instructionLabel;
         [SerializeField] private TMP_Text demoNotice;
-        [SerializeField] private Image[] countDots;        // solo Números: un punto por unidad
+        [Tooltip("Solo Números: un botón por número (0–30). Al pulsarlo se salta a ese número, salvo que el backend lo marque bloqueado.")]
+        [SerializeField] private Button[] numberButtons;
 
         [Header("Acción y progreso")]
         [SerializeField] private Button previousButton;
@@ -54,12 +55,23 @@ namespace Lumina.UI
         [Tooltip("Un video por elemento, en el mismo orden del nivel (Meses: enero … diciembre). Vacío = sin video.")]
         [SerializeField] private VideoClip[] itemVideos;
 
+        [Header("Música")]
+        [Tooltip("Pausa la música de fondo mientras el panel de la lección está abierto (sus videos traen sonido propio). Al cerrarlo, vuelve.")]
+        [SerializeField] private bool muteMusicWhileOpen;
+
         [Header("Práctica dentro de la casa (opcional)")]
         [Tooltip("Si se asigna, PRACTICAR/EMPEZAR practica aquí mismo (cámara, calificación y estrellas) en vez de abrir la escena Practice.")]
         [SerializeField] private LearningPracticeView practice;
-        [Tooltip("Dónde se coloca el jugador para ver el televisor al abrir la práctica (opcional).")]
-        [SerializeField] private Transform viewSpot;
-        [SerializeField] private float viewSpotMinDistance = 4f;
+        [Tooltip("Distancia (m) delante de la cámara a la que se coloca el televisor durante la práctica.")]
+        [SerializeField] private float tvDistance = 2.6f;
+        [Tooltip("Dónde queda el televisor en la pantalla durante la práctica: −1 izquierda … 1 derecha. −0,5 lo deja en el cuarto izquierdo, junto al panel.")]
+        [SerializeField] private float tvScreenX = -0.5f;
+        [Tooltip("Cuánto se agranda el televisor (con sus patas) durante la práctica. Con distancia 3,4 m, 1,27 entra completo, base incluida, sin tocar lo que cuelga del techo.")]
+        [SerializeField, Range(1f, 2.5f)] private float tvScale = 1.6f;
+        [Tooltip("Cuánto más abajo (m) que los ojos queda el centro de la pantalla; así no roza lo que cuelga del techo.")]
+        [SerializeField] private float tvBelowEyes = 0.17f;
+        [Tooltip("Objetos que se ocultan mientras el panel está abierto (p. ej. el modelo de Sena, para que no se vea de fondo).")]
+        [SerializeField] private GameObject[] hideWhileOpen;
 
         /// <summary>Se lanza al pulsar VER SEÑA. TODO(avatar): conectar la animación de la seña en el personaje.</summary>
         public UnityEvent DemonstrationRequested = new UnityEvent();
@@ -69,8 +81,14 @@ namespace Lumina.UI
 
         public bool IsOpen { get; private set; }
 
+        /// <summary>True si el panel ya se abrió al menos una vez en esta visita (para ofrecer «Continúa practicando»).</summary>
+        public bool WasOpened { get; private set; }
+
         private static readonly Color Coral = new Color(1f, 0.369f, 0.302f);
         private static readonly Color Sand = new Color(0.98f, 0.89f, 0.74f);
+        private static readonly Color Turquoise = new Color(0.0f, 0.8f, 0.75f);
+        private static readonly Color Ink = new Color(0.059f, 0.227f, 0.267f);
+        private static readonly Color Cream = new Color(1f, 0.976f, 0.925f);
 
         private LevelDefinition _level;
         private string _levelCode;
@@ -92,12 +110,19 @@ namespace Lumina.UI
             learnButton.onClick.AddListener(OnLearn);
             practiceButton.onClick.AddListener(OnPractice);
             closeButton.onClick.AddListener(Close);
+            if (numberButtons != null)
+                for (int i = 0; i < numberButtons.Length; i++)
+                {
+                    int target = i;
+                    if (numberButtons[i] != null) numberButtons[i].onClick.AddListener(() => GoTo(target));
+                }
             if (practice != null) { practice.RunningChanged += OnPracticeRunningChanged; practice.SignPassed += OnSignPassed; }
             panelRoot.SetActive(false);
         }
 
         private void OnDestroy()
         {
+            if (muteMusicWhileOpen) GameAudio.SetMusicSuppressed(false);
             if (practice == null) return;
             practice.RunningChanged -= OnPracticeRunningChanged;
             practice.SignPassed -= OnSignPassed;
@@ -140,9 +165,13 @@ namespace Lumina.UI
         public void Open(int index)
         {
             IsOpen = true;
+            WasOpened = true;
+            if (muteMusicWhileOpen) GameAudio.SetMusicSuppressed(true);
             panelRoot.SetActive(true);
-            if (player != null) { player.enabled = false; player.SetCursorLocked(false); FaceTelevision(); }
+            if (player != null) { player.enabled = false; player.SetCursorLocked(false); }
+            BringTelevision();
             if (practice != null) practice.Begin();
+            SetHidden(true);
             Select(index);
             if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(learnButton.gameObject);
         }
@@ -151,11 +180,20 @@ namespace Lumina.UI
         {
             if (!IsOpen) return;
             IsOpen = false;
+            if (muteMusicWhileOpen) GameAudio.SetMusicSuppressed(false);
             if (practice != null) practice.End();
             if (television != null) television.Stop(); // al salir del panel el video deja de reproducirse
+            SetHidden(false);
+            RestoreTelevision();
             panelRoot.SetActive(false);
             foreach (var target in _targets) if (target != null) target.SetHighlighted(false);
             if (player != null) { player.enabled = true; player.SetCursorLocked(true); }
+        }
+
+        private void SetHidden(bool hidden)
+        {
+            if (hideWhileOpen == null) return;
+            foreach (var go in hideWhileOpen) if (go != null) go.SetActive(!hidden);
         }
 
         /// <summary>Abre la práctica en la primera seña que aún no está superada (o en la primera). Es lo que llama Sena al terminar.</summary>
@@ -167,21 +205,95 @@ namespace Lumina.UI
             Open(first);
         }
 
+        private Vector3 _tvHomePosition;
+        private Quaternion _tvHomeRotation;
+        private bool _tvHomeSaved;
+        private Vector3 _tvHomeScale = Vector3.one;
+
+        // Partes del carrito que se esconden SOLO durante la práctica: queda únicamente la pantalla del televisor (marco, pantalla y barbilla).
+        private static readonly string[] TvStand = { "BasePlaca", "Rueda", "Poste", "Repisa", "Reproductor", "LuzReproductor", "Soporte" };
+
         /// <summary>
-        /// Deja el televisor a la vista en la mitad izquierda de la pantalla (el panel ocupa la derecha). Si el jugador está lejos
-        /// y hay un punto de observación, lo coloca ahí.
+        /// Durante la práctica el televisor de la casa es EL televisor de la lección, pero solo su pantalla (sin carrito ni patas): más grande
+        /// (<see cref="tvScale"/>), recta y de frente a la cámara, a la altura de los ojos y en el cuarto izquierdo de la pantalla (el panel ocupa la
+        /// derecha). La mirada del jugador queda a nivel. Al cerrar el panel el televisor vuelve a su sitio, con su carrito, tal como estaba.
         /// </summary>
-        private void FaceTelevision()
+        private void BringTelevision()
         {
-            if (television == null) return;
-            if (viewSpot != null && Vector3.Distance(player.transform.position, television.transform.position) > viewSpotMinDistance)
-                player.TeleportTo(viewSpot.position);
-            player.LookTowards(television.transform.position + Vector3.up * 1.42f, -0.5f);
+            var cam = Camera.main;
+            if (television == null || cam == null) return;
+            var tv = television.transform;
+            if (!_tvHomeSaved) { _tvHomePosition = tv.position; _tvHomeRotation = tv.rotation; _tvHomeScale = tv.localScale; _tvHomeSaved = true; }
+
+            Vector3 forward = cam.transform.forward; forward.y = 0f; forward.Normalize();
+            Vector3 eye = cam.transform.position;
+            Vector3 position = eye + forward * tvDistance;
+            // El centro de la pantalla está 1,42 m por encima de la base del televisor (a escala 1): queda a la altura de los ojos.
+            position.y = eye.y - 1.42f * _tvHomeScale.y * tvScale - tvBelowEyes;
+
+            // Mirada a nivel y desplazada hacia la derecha lo justo para dejar el televisor en el cuarto izquierdo.
+            if (player != null) player.LookTowards(new Vector3(position.x, eye.y, position.z), tvScreenX);
+
+            // Recto y de frente: la pantalla es perpendicular a la vista y no se inclina hacia ningún lado.
+            Vector3 view = cam.transform.forward; view.y = 0f;
+            tv.SetPositionAndRotation(position, Quaternion.LookRotation(-view.normalized));
+            tv.localScale = _tvHomeScale * tvScale;
+            SetStandVisible(false);
+        }
+
+        private void RestoreTelevision()
+        {
+            if (television == null || !_tvHomeSaved) return;
+            var tv = television.transform;
+            SetStandVisible(true);
+            tv.SetPositionAndRotation(_tvHomePosition, _tvHomeRotation);
+            tv.localScale = _tvHomeScale;
+            var cam = Camera.main;
+            if (player != null && cam != null)
+            {
+                Vector3 forward = cam.transform.forward; forward.y = 0f;
+                player.LookTowards(cam.transform.position + forward.normalized); // mirada otra vez a nivel
+            }
+        }
+
+        private void SetStandVisible(bool visible)
+        {
+            foreach (Transform child in television.transform)
+                if (System.Array.IndexOf(TvStand, child.name) >= 0) child.gameObject.SetActive(visible);
         }
 
         private void OnPracticeRunningChanged()
         {
             if (IsOpen && _level != null) RefreshPracticeButton(_level.items[_index]);
+        }
+
+        /// <summary>Salta al elemento elegido en la cuadrícula de números (si el backend no lo tiene bloqueado).</summary>
+        private void GoTo(int index)
+        {
+            if (!IsOpen || _level == null || index < 0 || index >= _level.items.Length) return;
+            if (ProgressStore.StatusOf(_level.items[index].id) == SignStatusNames.Locked) return;
+            Select(index);
+        }
+
+        /// <summary>
+        /// Pinta la cuadrícula de números: el actual en coral, los superados en turquesa, el resto en arena y los bloqueados atenuados y sin
+        /// pulsar. Un estado desconocido (sin sesión o sin conexión) no bloquea, igual que EMPEZAR.
+        /// </summary>
+        private void RefreshNumberButtons()
+        {
+            if (numberButtons == null) return;
+            for (int i = 0; i < numberButtons.Length && i < _level.items.Length; i++)
+            {
+                var button = numberButtons[i];
+                if (button == null) continue;
+                string status = ProgressStore.StatusOf(_level.items[i].id);
+                bool current = i == _index;
+                button.interactable = status != SignStatusNames.Locked;
+                if (button.targetGraphic != null)
+                    ThemedGraphic.Set(button.targetGraphic, current ? Coral : status == SignStatusNames.Passed ? Turquoise : Sand);
+                var label = button.GetComponentInChildren<TMP_Text>(true);
+                if (label != null) ThemedGraphic.Set(label, current ? Cream : Ink);
+            }
         }
 
         private void Move(int step)
@@ -224,14 +336,7 @@ namespace Lumina.UI
                     bigLabel.text = number.ToString();
                     nameLabel.text = item.Name.ToUpperInvariant();
                     positionLabel.text = Loc.T("levels.numberOf", _index + 1, total);
-                    if (countDots != null && countDots.Length > 0)
-                    {
-                        bool showCount = number <= countDots.Length;
-                        if (countDots[0] != null) countDots[0].transform.parent.gameObject.SetActive(showCount);
-                        if (showCount)
-                            for (int i = 0; i < countDots.Length; i++)
-                                if (countDots[i] != null) ThemedGraphic.Set(countDots[i], i < number ? Coral : Sand);
-                    }
+                    RefreshNumberButtons();
                     break;
                 case LevelKind.Months:
                     bigLabel.text = (_index + 1).ToString("00");
@@ -246,7 +351,7 @@ namespace Lumina.UI
                     break;
             }
 
-            instructionLabel.text = _level.Hint(item);
+            if (instructionLabel != null) instructionLabel.text = _level.Hint(item);
             RefreshPracticeButton(item);
             previousButton.interactable = _index > 0;
             nextButton.interactable = _index < total - 1;

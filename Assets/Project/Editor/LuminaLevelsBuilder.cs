@@ -159,40 +159,132 @@ namespace Lumina.EditorTools
             Debug.Log("[Lumina] Televisores añadidos a las casas de Números, Meses y Saludos.");
         }
 
-        /// <summary>
-        /// Casa de los Meses: práctica DENTRO de la casa. Sena aparece frente al jugador y saluda; al terminar de hablar con ella se abre el
-        /// panel con el televisor (video de cada seña), el nombre y la descripción del mes, la cámara del jugador, la calificación y las
-        /// estrellas. Reconstruye solo el panel de Meses y deja listo el televisor, los videos y las plantillas. Idempotente.
-        /// </summary>
-        [MenuItem("Lumina/Niveles/Meses: práctica dentro de la casa (Sena, televisor, cámara)")]
-        public static void SetupMonthsInHousePractice()
+        // Reconocimiento: el equipo de IA captura los números en NumberLandmarkTemplates y los saludos y meses en GreetingLandmarkTemplates.
+        private const string GreetingTemplatesPath = "Assets/Project/Data/GreetingLandmarkTemplates.asset";
+        private const string NumberTemplatesPath = "Assets/Project/Data/NumberLandmarkTemplates.asset";
+
+        private static string TemplatesPathFor(LevelKind kind) => kind == LevelKind.Numbers ? NumberTemplatesPath : GreetingTemplatesPath;
+
+        private static string HouseName(LevelKind kind) => kind == LevelKind.Numbers ? "NumbersHouse" : kind == LevelKind.Months ? "MonthsHouse" : "GreetingsHouse";
+
+        private static int SceneIndex(LevelKind kind) => kind == LevelKind.Numbers ? 0 : kind == LevelKind.Months ? 1 : 2;
+
+        private static readonly string[] NumbersWelcome =
         {
-            var scene = EditorSceneManager.OpenScene(ScenePaths[1], OpenSceneMode.Single);
+            "¡Bienvenido a la Casa de los Números!",
+            "Aquí aprenderás los números del 0 al 30.",
+            "Mira el televisor: te muestra la seña de cada número.",
+            "Hazla frente a tu cámara y yo veré qué tan parecida te queda."
+        };
+
+        private static readonly string[] GreetingsWelcome =
+        {
+            "¡Bienvenido a la Casa de los Saludos!",
+            "Aquí aprenderás los saludos y frases más usadas.",
+            "Mira el televisor: te muestra la seña de cada saludo.",
+            "Hazla frente a tu cámara y yo veré qué tan parecida te queda."
+        };
+
+        /// <summary>Video de un elemento del nivel: Assets/video/meses/meses/enero.mp4, Numbers/Numbers/5.mp4, saludos/saludos/buenosDias.mp4.</summary>
+        private static string VideoPathFor(LevelKind kind, string itemId)
+        {
+            string key = itemId.Substring(itemId.IndexOf('.') + 1);
+            switch (kind)
+            {
+                case LevelKind.Numbers: return "Assets/video/Numbers/Numbers/" + key + ".mp4";
+                case LevelKind.Months: return "Assets/video/meses/meses/" + key + ".mp4";
+                default:
+                    var parts = key.Split('_');
+                    for (int i = 1; i < parts.Length; i++) parts[i] = char.ToUpperInvariant(parts[i][0]) + parts[i].Substring(1);
+                    return "Assets/video/saludos/saludos/" + string.Concat(parts) + ".mp4";
+            }
+        }
+
+        [MenuItem("Lumina/Niveles/Meses: práctica dentro de la casa (Sena, televisor, cámara)")]
+        public static void SetupMonthsInHousePractice() => SetupInHousePractice(LevelKind.Months);
+
+        [MenuItem("Lumina/Niveles/Números: práctica dentro de la casa (Sena, televisor, cámara)")]
+        public static void SetupNumbersInHousePractice() => SetupInHousePractice(LevelKind.Numbers);
+
+        [MenuItem("Lumina/Niveles/Saludos: práctica dentro de la casa (Sena, televisor, cámara)")]
+        public static void SetupGreetingsInHousePractice() => SetupInHousePractice(LevelKind.Greetings);
+
+        [MenuItem("Lumina/Niveles/Las tres casas: práctica dentro de la casa")]
+        public static void SetupAllInHousePractice()
+        {
+            SetupInHousePractice(LevelKind.Numbers);
+            SetupInHousePractice(LevelKind.Months);
+            SetupInHousePractice(LevelKind.Greetings);
+        }
+
+        /// <summary>
+        /// Práctica DENTRO de la casa (Números, Meses o Saludos). Sena aparece frente al jugador y saluda; al terminar de hablar con ella se abre
+        /// el panel con el televisor (video de cada seña), el nombre y la descripción, la cámara del jugador, la calificación y las estrellas.
+        /// Reconstruye solo el panel de esa casa y deja listo el televisor, los videos y las plantillas. Idempotente.
+        /// </summary>
+        private static void SetupInHousePractice(LevelKind kind)
+        {
+            var scene = EditorSceneManager.OpenScene(ScenePaths[SceneIndex(kind)], OpenSceneMode.Single);
             var decor = GameObject.Find(RootName).transform.Find("Decoracion");
             DestroyChild(decor, "Televisor"); // se vuelve a poner frente al jugador
-            BuildTelevision(decor, LevelKind.Months);
+            BuildTelevision(decor, kind);
             DestroyRoot("PuntoVistaTelevisor");
 
             DestroyRoot("LearningHouse");
             DestroyRoot("LevelPanelCanvas");
             DestroyRoot("LearningPractice");
             var promptObject = GameObject.Find("PromptObjetos");
-            if (promptObject == null) throw new System.InvalidOperationException("No se encontró 'PromptObjetos' en MonthsHouse.");
-            BuildPanelAndWire(LevelKind.Months, promptObject.GetComponentInChildren<InteractionPrompt>(true));
+            if (promptObject == null) throw new System.InvalidOperationException("No se encontró 'PromptObjetos' en " + HouseName(kind) + ".");
+            BuildPanelAndWire(kind, promptObject.GetComponentInChildren<InteractionPrompt>(true));
 
             // Sena: de frente al jugador, saludando al entrar; al terminar su presentación se abre la práctica.
             var player = Object.FindFirstObjectByType<Lumina.Player.FirstPersonController>();
             var sena = GameObject.Find("Sena");
             Vector3 forward = player.transform.forward; forward.y = 0f; forward.Normalize();
             // Delante del jugador y un poco a su izquierda, para que no le tape el televisor que queda de frente.
-            var position = player.transform.position + forward * 2.2f - player.transform.right * 1.1f;
-            position.y = 0f;
-            PlaceSena(sena, position, MonthsWelcome);
+            // A 3,4 m (a menos distancia la cámara le corta los zapatos) en las tres casas; en Números, apenas por encima de la alfombra.
+            bool numbers = kind == LevelKind.Numbers;
+            // En Saludos queda a 3 m: más cerca, para que su burbuja de diálogo salga por delante del televisor de la casa (que está a 5,6 m).
+            float senaDistance = kind == LevelKind.Greetings ? 3f : 3.4f;
+            var position = player.transform.position + forward * senaDistance - player.transform.right * 1.1f;
+            position.y = 0.06f; // sobre la alfombra: más abajo los pies quedan metidos en el piso
+            PlaceSena(sena, position, kind == LevelKind.Numbers ? NumbersWelcome : kind == LevelKind.Months ? MonthsWelcome : GreetingsWelcome);
             sena.transform.rotation = Quaternion.LookRotation(-forward);
+
+            {
+                // Más lejos que el radio de siempre: se amplía para poder hablar con ella desde el punto de inicio.
+                Ui.SetFloat(sena.GetComponent<ProximityInteractable>(), "interactionRadius", senaDistance + 0.8f);
+
+                // La burbuja de diálogo flotaba sobre su cabeza y chocaba con lo que cuelga del techo (en Números, los cubos): pasa a un costado
+                // (hacia el centro de la sala), más baja y más chica en pantalla.
+                var bubble = sena.transform.Find("WelcomeBubble");
+                if (bubble != null)
+                {
+                    bubble.position = position + new Vector3(1.05f, 1.15f, 0f);
+                    // Más chica en pantalla (el tamaño sale de la distancia a la cámara dividida por esta referencia): así no sube hasta los cubos.
+                    var so = new SerializedObject(bubble.GetComponent<DialogueBubble>());
+                    so.FindProperty("referenceDistance").floatValue = 4.6f;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                }
+            }
+
+            var levelController = Object.FindFirstObjectByType<LearningLevelController>();
+            BuildResumePrompt(levelController);
+            // Números y Saludos: la música suena en la casa hasta que empieza la práctica; entonces se pausa (los videos traen su propio sonido).
+            SetBool(levelController, "muteMusicWhileOpen", kind != LevelKind.Months);
 
             // La puerta de salida alcanzaba al jugador en su punto de inicio: ahora hay que acercarse a ella.
             var exit = GameObject.Find("PuntoSalida");
             if (exit != null) Ui.SetFloat(exit.GetComponent<ProximityInteractable>(), "interactionRadius", 1f);
+
+            // Durante la lección Sena no se ve de fondo: se oculta su modelo mientras el panel está abierto.
+            var senaModel = sena.transform.Find("Model");
+            // También el indicador «E — Hablar con Sena»: si no, se monta sobre el panel mientras dura la lección.
+            var senaPrompt = GameObject.Find("PromptSena");
+            var hidden = new System.Collections.Generic.List<Object>();
+            if (senaModel != null) hidden.Add(senaModel.gameObject);
+            if (senaPrompt != null) hidden.Add(senaPrompt);
+            Ui.SetArray(Object.FindFirstObjectByType<LearningLevelController>(), "hideWhileOpen", hidden.ToArray());
 
             SetBool(sena.GetComponent<Lumina.NPC.SenaPresenter>(), "waveOnStart", true);
             var welcome = sena.GetComponent<Lumina.NPC.SenaWelcomeInteraction>();
@@ -202,7 +294,34 @@ namespace Lumina.EditorTools
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
-            Debug.Log("[Lumina] MonthsHouse: práctica dentro de la casa lista (Sena en " + position + ").");
+            Debug.Log("[Lumina] " + HouseName(kind) + ": práctica dentro de la casa lista (Sena en " + position + ").");
+        }
+
+        /// <summary>
+        /// Indicador «P — Continúa practicando»: copia del de la E (PromptObjetos), con otra tecla, arriba a la izquierda para no montarse con
+        /// los demás. Aparece al cerrar la práctica y, con P, la vuelve a abrir.
+        /// </summary>
+        private static void BuildResumePrompt(LearningLevelController controller)
+        {
+            DestroyRoot("PromptPractica");
+            var template = GameObject.Find("PromptObjetos");
+            var copy = Object.Instantiate(template);
+            copy.name = "PromptPractica";
+            var prompt = copy.GetComponentInChildren<InteractionPrompt>(true);
+
+            var rect = (RectTransform)prompt.transform;
+            rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
+            rect.pivot = new Vector2(0f, 1f);
+            rect.anchoredPosition = new Vector2(40f, -40f);
+
+            var label = PromptLabel(prompt);
+            label.text = "Continúa practicando";
+            LocalizedText.Bind(label, "levels.continuePractice");
+            foreach (var text in prompt.GetComponentsInChildren<TMP_Text>(true)) if (text.name == "KeyLabel") text.text = "P";
+
+            var resume = copy.AddComponent<PracticeResumePrompt>();
+            Ui.Set(resume, "level", controller);
+            Ui.Set(resume, "prompt", prompt);
         }
 
         private static void SetBool(Object target, string property, bool value)
@@ -212,42 +331,20 @@ namespace Lumina.EditorTools
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        // Secuencias capturadas por el equipo de IA para saludos y meses.
-        private const string GreetingTemplatesPath = "Assets/Project/Data/GreetingLandmarkTemplates.asset";
-        private const string MonthsVideosDir = "Assets/video/meses/meses/";
-
-        /// <summary>
-        /// Casa de los Meses: coloca el televisor (si falta) y le asigna al panel del nivel un video por mes, en el orden del nivel.
-        /// Idempotente. Los videos viven en Assets/Project/Videos/Meses/ con el nombre del mes (enero.mp4 …).
-        /// </summary>
-        [MenuItem("Lumina/Niveles/Meses: televisor con los videos de las señas")]
-        public static void SetupMonthsVideos()
-        {
-            var scene = EditorSceneManager.OpenScene(ScenePaths[1], OpenSceneMode.Single);
-            var decor = GameObject.Find(RootName).transform.Find("Decoracion");
-            DestroyChild(decor, "Televisor");
-            BuildTelevision(decor, LevelKind.Months);
-
-            var controller = Object.FindFirstObjectByType<LearningLevelController>();
-            if (controller == null) throw new System.InvalidOperationException("No hay LearningLevelController en MonthsHouse.");
-            WireMonthsVideos(controller);
-
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene);
-            Debug.Log("[Lumina] MonthsHouse: televisor con " + LearningLevels.Months.items.Length + " videos.");
-        }
-
-        private static void WireMonthsVideos(LearningLevelController controller)
+        /// <summary>Asigna al panel el televisor y un video por elemento del nivel, en el orden del nivel. Si falta un video, ese elemento deja la pantalla apagada.</summary>
+        private static void WireVideos(LevelKind kind, LearningLevelController controller)
         {
             var television = Object.FindFirstObjectByType<TelevisionScreen>();
             if (television == null) return;
-            var items = LearningLevels.Months.items;
+            var items = LearningLevels.Get(kind).items;
             var clips = new UnityEngine.Video.VideoClip[items.Length];
             for (int i = 0; i < items.Length; i++)
             {
-                string month = items[i].id.Substring(items[i].id.IndexOf('.') + 1);
-                string file = MonthsVideosDir + month + ".mp4";
+                string file = VideoPathFor(kind, items[i].id);
                 clips[i] = AssetDatabase.LoadAssetAtPath<UnityEngine.Video.VideoClip>(file);
+                // Los números 21–29 vienen en su propia carpeta (Assets/video/numeros21-29/numeros/N.mp4).
+                if (clips[i] == null && kind == LevelKind.Numbers)
+                    clips[i] = AssetDatabase.LoadAssetAtPath<UnityEngine.Video.VideoClip>("Assets/video/numeros21-29/numeros/" + items[i].id.Substring(items[i].id.IndexOf('.') + 1) + ".mp4");
                 if (clips[i] == null) Debug.LogWarning("[Lumina] Falta el video " + file);
             }
             Ui.Set(controller, "television", television);
@@ -258,9 +355,8 @@ namespace Lumina.EditorTools
         // así que va junto a la pared este para no tapar las burbujas.
         private static Vector3 TelevisionSpot(LevelKind kind) => kind switch
         {
-            LevelKind.Numbers => new Vector3(3.85f, 0f, 7.0f),
-            LevelKind.Months => new Vector3(0f, 0f, 5.6f), // frente al jugador (nace en z 1,4 mirando al norte)
-            _ => new Vector3(3.9f, 0f, 2.8f)
+            // Frente al jugador (nace en z 1,4 mirando al norte) en las tres casas.
+            _ => new Vector3(0f, 0f, 5.6f)
         };
 
         /// <summary>
@@ -798,9 +894,11 @@ namespace Lumina.EditorTools
         {
             var canvas = AuthBuilder.MakeCanvas("LevelPanelCanvas");
             Ui.EnsureEventSystem();
-            var card = Screens.ResponsiveCard(canvas.transform, "LevelPanel", new Vector2(0.52f, 0.08f), new Vector2(0.975f, 0.92f), out var outer);
-            Screens.VStack(card, 12f, new RectOffset(40, 40, 28, 28));
-            if (kind == LevelKind.Months) BuildTelevisionOnCanvas(canvas.transform);
+            // Números tiene más contenido (31 puntos, cifra, nombre): el panel es más largo, con más aire entre componentes y respecto a los bordes.
+            bool roomy = kind == LevelKind.Numbers;
+            var card = Screens.ResponsiveCard(canvas.transform, "LevelPanel",
+                roomy ? new Vector2(0.52f, 0.025f) : new Vector2(0.52f, 0.08f), roomy ? new Vector2(0.975f, 0.975f) : new Vector2(0.975f, 0.92f), out var outer);
+            Screens.VStack(card, roomy ? 10f : 12f, roomy ? new RectOffset(56, 56, 34, 76) : new RectOffset(40, 40, 28, 28));
 
             var bar = Screens.BuildBar(card, 0f, 0f, 0f);
             Screens.Elem(bar, minH: 40f, prefH: 48f);
@@ -810,28 +908,43 @@ namespace Lumina.EditorTools
             Screens.Elem(position, minH: 28f, prefH: 38f);
 
             TMP_Text big, nameLabel = null, group = null, senaSays = null;
-            Image[] dots = new Image[0];
+            Button[] numberButtons = new Button[0];
 
             switch (kind)
             {
                 case LevelKind.Numbers:
                     big = Ui.Label(card, "Number", "1", 150f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
                     Screens.FitText(big, 60f, false);
-                    Screens.Elem(big, minH: 90f, prefH: 160f);
+                    Screens.Elem(big, minH: 70f, prefH: 150f);
                     nameLabel = Ui.Label(card, "Word", "", 48f, Ui.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 8f);
                     Screens.FitText(nameLabel, 22f, false);
                     Screens.Elem(nameLabel, minH: 36f, prefH: 54f);
-                    // 31 puntos (0–30): en una cuadrícula que salta de línea, para que no se salgan del panel.
-                    var dotsRow = Ui.Rect("CountDots", card);
-                    Screens.Elem(dotsRow, minH: 52f, prefH: 76f);
-                    var dotsGrid = dotsRow.gameObject.AddComponent<GridLayoutGroup>();
-                    dotsGrid.cellSize = new Vector2(22f, 22f); dotsGrid.spacing = new Vector2(8f, 8f);
-                    dotsGrid.constraint = GridLayoutGroup.Constraint.Flexible;
-                    dotsGrid.childAlignment = TextAnchor.UpperCenter;
-                    var list = new List<Image>();
+                    // Cuadrícula de 31 botones (0–30) que salta de línea: pulsar uno lleva a ese número (si no está bloqueado).
+                    var gridRow = Ui.Rect("NumberGrid", card);
+                    Screens.Elem(gridRow, minH: 76f, prefH: 88f);
+                    var grid = gridRow.gameObject.AddComponent<GridLayoutGroup>();
+                    grid.cellSize = new Vector2(40f, 34f); grid.spacing = new Vector2(5f, 6f);
+                    grid.constraint = GridLayoutGroup.Constraint.Flexible;
+                    grid.childAlignment = TextAnchor.UpperCenter;
+                    grid.padding = new RectOffset(14, 14, 6, 6); // los botones no tocan los bordes
+                    var buttonList = new List<Button>();
                     for (int i = 0; i < LearningLevels.Numbers.items.Length; i++)
-                        list.Add(Ui.Panel(dotsRow, "Dot" + (i + 1), Ui.Sand, Ui.Circle));
-                    dots = list.ToArray();
+                    {
+                        var face = Ui.Panel(gridRow, "Numero" + i, Ui.Sand, Ui.Round);
+                        var cell = face.gameObject.AddComponent<Button>();
+                        cell.targetGraphic = face;
+                        face.raycastTarget = true; // Ui.Panel crea imágenes que no captan clics: sin esto el ratón atraviesa el botón
+                        var colors = cell.colors;
+                        colors.normalColor = Color.white; colors.highlightedColor = new Color(1f, 1f, 1f, 0.85f);
+                        colors.pressedColor = new Color(0.8f, 0.8f, 0.8f, 1f); colors.disabledColor = new Color(1f, 1f, 1f, 0.45f);
+                        cell.colors = colors;
+                        var numberText = Ui.Label(face.transform, "Label", i.ToString(), 22f, Ui.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 2f);
+                        Ui.Stretch(numberText.rectTransform);
+                        Screens.FitText(numberText, 12f, false);
+                        numberText.raycastTarget = false;
+                        buttonList.Add(cell);
+                    }
+                    numberButtons = buttonList.ToArray();
                     break;
 
                 case LevelKind.Months:
@@ -864,32 +977,28 @@ namespace Lumina.EditorTools
                     big = Ui.Label(inner.transform, "Phrase", "", 58f, Ui.Coral, FontStyles.Bold, TextAlignmentOptions.Center, 2f);
                     Ui.Stretch(big.rectTransform, 20f, 6f, 20f, 6f);
                     Screens.FitText(big, 24f, true);
-                    senaSays = Ui.Label(card, "SenaSays", "", 24f, Ui.TurquoiseDark, FontStyles.Bold, TextAlignmentOptions.Center);
-                    Screens.FitText(senaSays, 14f, true);
-                    Screens.Elem(senaSays, minH: 30f, prefH: 40f);
                     break;
             }
 
-            var instruction = Ui.Label(card, "Instruction", "", 26f, Ui.Ink, FontStyles.Normal, TextAlignmentOptions.Center);
-            Screens.FitText(instruction, 15f, true);
-            Screens.Elem(instruction, minH: 64f, prefH: 96f, flexH: 1f);
+            // Sin la descripción de la seña («Es la seña del número 0…»): el panel solo lleva el nombre, el video y la práctica.
+            TMP_Text instruction = null;
             var demoNotice = Ui.Label(card, "DemoNotice", "La demostración animada llegará pronto.", 24f, Ui.TurquoiseDark, FontStyles.Bold);
             Screens.FitText(demoNotice, 14f, true);
             Screens.Elem(demoNotice, minH: 28f, prefH: 36f);
 
             // Meses: práctica dentro de la casa (cámara del jugador, calificación y estrellas).
             LearningPracticeView practiceView = null;
-            if (kind == LevelKind.Months)
             {
                 var cameraFrame = Ui.Panel(card, "CameraFrame", Ui.Ink);
-                Screens.Elem(cameraFrame, minH: 150f, prefH: 250f, flexH: 2f);
+                Screens.Elem(cameraFrame, minH: roomy ? 140f : 170f, prefH: roomy ? 560f : 440f, flexH: roomy ? 9f : 6f); // la cámara toma todo el espacio sobrante
                 var aspect = Ui.Rect("Aspect", cameraFrame.transform);
                 Ui.Stretch(aspect);
                 var fitter = aspect.gameObject.AddComponent<AspectRatioFitter>();
                 fitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent; fitter.aspectRatio = 16f / 9f;
                 var view = new GameObject("CameraView", typeof(RectTransform), typeof(RawImage)).GetComponent<RawImage>();
                 view.transform.SetParent(aspect, false);
-                Ui.Stretch(view.rectTransform, 8f, 8f, 8f, 8f);
+                float viewInset = roomy ? 14f : 8f;
+                Ui.Stretch(view.rectTransform, viewInset, viewInset, viewInset, viewInset);
                 view.color = new Color(0f, 0f, 0f, 0.25f); view.raycastTarget = false;
                 var cameraStatus = Ui.Label(cameraFrame.transform, "CameraStatus", "", 26f, Ui.Cream);
                 Ui.Stretch(cameraStatus.rectTransform, 20f, 20f, 20f, 20f);
@@ -902,7 +1011,7 @@ namespace Lumina.EditorTools
                 Ui.Set(feed, "status", cameraStatus);
 
                 var statsRow = Ui.Rect("Stats", card);
-                Screens.Elem(statsRow, minH: 84f, prefH: 104f);
+                Screens.Elem(statsRow, minH: 72f, prefH: 96f);
                 Screens.HStack(statsRow, 16f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, true, true);
                 var scoreCard = Screens.BuildStatCard(statsRow, "ScoreCard");
                 var starsCard = Screens.BuildStatCard(statsRow, "StarsCard");
@@ -917,7 +1026,7 @@ namespace Lumina.EditorTools
 
                 var status = Ui.Label(card, "PracticeStatus", "", 26f, Ui.TurquoiseDark, FontStyles.Bold, TextAlignmentOptions.Center);
                 Screens.FitText(status, 14f, true);
-                Screens.Elem(status, minH: 44f, prefH: 64f);
+                Screens.Elem(status, minH: 36f, prefH: 56f);
 
                 practiceView = new GameObject("LearningPractice").AddComponent<LearningPracticeView>();
                 Ui.Set(practiceView, "cameraFeed", feed);
@@ -926,7 +1035,8 @@ namespace Lumina.EditorTools
                 Ui.Set(practiceView, "countdownLabel", countdown);
                 Ui.Set(practiceView, "scoreCard", scoreCard);
                 Ui.Set(practiceView, "starsCard", starsCard);
-                Ui.Set(practiceView, "templates", AssetDatabase.LoadAssetAtPath<Senas.AI.MediaPipe.AlphabetLandmarkTemplateSet>(GreetingTemplatesPath));
+                SetEnum(practiceView, "kind", (int)kind);
+                Ui.Set(practiceView, "templates", AssetDatabase.LoadAssetAtPath<Senas.AI.MediaPipe.AlphabetLandmarkTemplateSet>(TemplatesPathFor(kind)));
             }
 
             // Dos filas de acciones: VER SEÑA · PRACTICAR  /  ANTERIOR · VOLVER · SIGUIENTE. Los botones se reparten el ancho.
@@ -934,7 +1044,7 @@ namespace Lumina.EditorTools
             Screens.Elem(rowA, minH: 80f, prefH: 92f);
             Screens.HStack(rowA, 16f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, true, true);
             var learn = Screens.FlexButton(rowA, "LearnButton", "VER SEÑA", Ui.Turquoise, Ui.TurquoiseDark, Ui.Ink, 88f, 32f, 16f, 120f, 300f);
-            var practice = Screens.FlexButton(rowA, "PracticeButton", kind == LevelKind.Months ? "EMPEZAR" : "PRACTICAR", Ui.Coral, Ui.CoralDark, Ui.Cream, 88f, 34f, 16f, 120f, 300f);
+            var practice = Screens.FlexButton(rowA, "PracticeButton", "EMPEZAR", Ui.Coral, Ui.CoralDark, Ui.Cream, 88f, 34f, 16f, 120f, 300f);
 
             var rowB = Ui.Rect("ActionsNav", card);
             Screens.Elem(rowB, minH: 72f, prefH: 84f);
@@ -952,10 +1062,9 @@ namespace Lumina.EditorTools
             Ui.Set(controller, "nameLabel", nameLabel);
             Ui.Set(controller, "positionLabel", position);
             Ui.Set(controller, "groupLabel", group);
-            Ui.Set(controller, "senaSaysLabel", senaSays);
             Ui.Set(controller, "instructionLabel", instruction);
             Ui.Set(controller, "demoNotice", demoNotice);
-            Ui.SetArray(controller, "countDots", dots);
+            Ui.SetArray(controller, "numberButtons", numberButtons);
             Ui.Set(controller, "previousButton", prev);
             Ui.Set(controller, "nextButton", next);
             Ui.Set(controller, "learnButton", learn);
@@ -967,19 +1076,16 @@ namespace Lumina.EditorTools
             Ui.Set(selector, "level", controller);
             Ui.Set(selector, "prompt", itemsPrompt);
             Ui.Set(selector, "promptLabel", PromptLabel(itemsPrompt));
-            if (kind == LevelKind.Months)
-            {
-                WireMonthsVideos(controller);
-                practiceView.transform.SetParent(houseGo.transform, false);
-                Ui.Set(controller, "practice", practiceView);
-            }
+            WireVideos(kind, controller);
+            practiceView.transform.SetParent(houseGo.transform, false);
+            Ui.Set(controller, "practice", practiceView);
         }
 
         /// <summary>
         /// Pantalla del televisor junto al panel (mitad izquierda del canvas): muestra el mismo video que el televisor 3D, porque comparte su
         /// RenderTexture, así que se ve siempre aunque el jugador no esté mirando el televisor de la casa.
         /// </summary>
-        private static void BuildTelevisionOnCanvas(Transform canvas)
+        private static void BuildTelevisionOnCanvas(Transform canvas, LevelKind kind)
         {
             var area = Ui.Rect("TelevisionArea", canvas);
             area.anchorMin = new Vector2(0.03f, 0.27f); area.anchorMax = new Vector2(0.49f, 0.8f); // deja sitio debajo para el pie
@@ -993,7 +1099,7 @@ namespace Lumina.EditorTools
             var screen = new GameObject("TelevisionScreen", typeof(RectTransform), typeof(RawImage)).GetComponent<RawImage>();
             screen.transform.SetParent(bezel.transform, false);
             Ui.Stretch(screen.rectTransform, 14f, 14f, 14f, 14f);
-            screen.texture = LoadOrCreateRenderTexture(LevelKind.Months);
+            screen.texture = LoadOrCreateRenderTexture(kind);
             screen.color = Color.white;
             screen.raycastTarget = false;
 

@@ -203,6 +203,7 @@ namespace Lumina.Core
             ("levels.starsCaption", "ESTRELLAS", "STARS"),
             ("levels.saved", "¡Guardado! +{0} XP", "Saved! +{0} XP"),
             ("levels.timeout", "Se acabó el tiempo. Inténtalo otra vez.", "Time is up. Try again."),
+            ("levels.continuePractice", "Continúa practicando", "Keep practicing"),
             ("levels.cameraStarting", "Encendiendo la cámara…", "Starting the camera…"),
             ("levels.getReady", "Prepárate…", "Get ready…"),
             ("levels.comingSoon", "PRÓXIMAMENTE", "COMING SOON"),
