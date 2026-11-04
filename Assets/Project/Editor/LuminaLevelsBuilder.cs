@@ -1218,7 +1218,7 @@ namespace Lumina.EditorTools
             }
             SetPracticeObjectActive(canvas, "EmptyLabel", false);
             SetPracticeObjectActive(canvas, "PracticeButton", false);
-            var old = canvas.Find("LevelShortcuts");
+            var old = canvas.Find("LevelShortcuts") ?? shortcutsParent.Find("LevelShortcuts");
             if (old != null) Object.DestroyImmediate(old.gameObject);
 
             // Los accesos ocupan la tarjeta de selección. La cuadrícula anterior se oculta desde PracticeController.
@@ -1226,6 +1226,12 @@ namespace Lumina.EditorTools
             root.anchorMin = Vector2.zero; root.anchorMax = Vector2.one;
             root.offsetMin = root.offsetMax = Vector2.zero;
             Screens.VStack(root, 18f, new RectOffset(40, 40, 38, 38), TextAnchor.MiddleCenter);
+
+            // Evita que asome la capa turquesa de la tarjeta bajo la separación entre botones.
+            var backing = Ui.Panel(root, "ShortcutBacking", Ui.Cream);
+            Ui.Stretch(backing.rectTransform, 12f, 12f, 12f, 12f);
+            Screens.Elem(backing, minW: 0f, minH: 0f).ignoreLayout = true;
+            backing.transform.SetAsFirstSibling();
 
             var plate = Ui.Panel(root, "HeadingPlate", Ui.Ink);
             Screens.Elem(plate, minH: 60f, prefH: 72f);
