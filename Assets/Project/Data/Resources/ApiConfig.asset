@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ApiConfig
   m_EditorClassIdentifier: 
   developmentBaseUrl: http://localhost:3000/api/v1
-  productionBaseUrl: 
+  productionBaseUrl: https://senas-pk9s.onrender.com/api/v1
   timeoutSeconds: 15
   useMockAuthentication: 0
