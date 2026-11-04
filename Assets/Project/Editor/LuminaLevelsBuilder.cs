@@ -340,6 +340,9 @@ namespace Lumina.EditorTools
             {
                 string file = VideoPathFor(kind, items[i].id);
                 clips[i] = AssetDatabase.LoadAssetAtPath<UnityEngine.Video.VideoClip>(file);
+                // Los números 21–29 vienen en su propia carpeta (Assets/video/numeros21-29/numeros/N.mp4).
+                if (clips[i] == null && kind == LevelKind.Numbers)
+                    clips[i] = AssetDatabase.LoadAssetAtPath<UnityEngine.Video.VideoClip>("Assets/video/numeros21-29/numeros/" + items[i].id.Substring(items[i].id.IndexOf('.') + 1) + ".mp4");
                 if (clips[i] == null) Debug.LogWarning("[Lumina] Falta el video " + file);
             }
             Ui.Set(controller, "television", television);
