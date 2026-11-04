@@ -58,13 +58,11 @@ namespace Lumina.UI
         [Tooltip("Si se asigna, PRACTICAR/EMPEZAR practica aquí mismo (cámara, calificación y estrellas) en vez de abrir la escena Practice.")]
         [SerializeField] private LearningPracticeView practice;
         [Tooltip("Distancia (m) delante de la cámara a la que se coloca el televisor durante la práctica.")]
-        [SerializeField] private float tvDistance = 2.1f;
+        [SerializeField] private float tvDistance = 3.4f;
         [Tooltip("Dónde queda el televisor en la pantalla durante la práctica: −1 izquierda … 1 derecha. −0,5 lo deja en el cuarto izquierdo, junto al panel.")]
         [SerializeField] private float tvScreenX = -0.5f;
-        [Tooltip("Qué tanto se inclina el televisor hacia atrás para compensar la mirada hacia abajo (1 = pantalla perpendicular a la vista).")]
-        [SerializeField, Range(0f, 1f)] private float tvTiltFactor = 0.85f;
-        [Tooltip("Altura (m) del centro del televisor entero, patas incluidas: hacia ahí apunta la cámara para centrarlo en vertical.")]
-        [SerializeField] private float tvCenterHeight = 0.9f;
+        [Tooltip("Cuánto se agranda el televisor (con sus patas) durante la práctica. Con distancia 3,4 m, 1,27 entra completo, base incluida, sin tocar lo que cuelga del techo.")]
+        [SerializeField, Range(1f, 2f)] private float tvScale = 1.27f;
         [Tooltip("Objetos que se ocultan mientras el panel está abierto (p. ej. el modelo de Sena, para que no se vea de fondo).")]
         [SerializeField] private GameObject[] hideWhileOpen;
 
@@ -191,38 +189,41 @@ namespace Lumina.UI
         private Vector3 _tvHomePosition;
         private Quaternion _tvHomeRotation;
         private bool _tvHomeSaved;
+        private Vector3 _tvHomeScale = Vector3.one;
 
         /// <summary>
-        /// Durante la práctica el televisor de la casa es EL televisor de la lección: se pone en el suelo, con sus patas, delante del jugador y la
-        /// cámara lo apunta para que quede CENTRADO en vertical y en el centro de la mitad izquierda de la pantalla (el panel ocupa la derecha),
-        /// y de frente, sin ladearse. Al cerrar el panel vuelve a su sitio.
+        /// Durante la práctica el televisor de la casa es EL televisor de la lección: más grande (<see cref="tvScale"/>), recto (sin inclinar),
+        /// apoyado en el suelo con sus patas y de frente a la cámara. La mirada del jugador queda a nivel y gira lo justo para dejarlo en el
+        /// cuarto izquierdo de la pantalla (el panel ocupa la derecha). Al cerrar el panel todo vuelve a su sitio.
         /// </summary>
         private void BringTelevision()
         {
             var cam = Camera.main;
             if (television == null || cam == null) return;
             var tv = television.transform;
-            if (!_tvHomeSaved) { _tvHomePosition = tv.position; _tvHomeRotation = tv.rotation; _tvHomeSaved = true; }
+            if (!_tvHomeSaved) { _tvHomePosition = tv.position; _tvHomeRotation = tv.rotation; _tvHomeScale = tv.localScale; _tvHomeSaved = true; }
 
             Vector3 forward = cam.transform.forward; forward.y = 0f; forward.Normalize();
-            Vector3 position = cam.transform.position + forward * tvDistance;
+            Vector3 eye = cam.transform.position;
+            Vector3 position = eye + forward * tvDistance;
             position.y = _tvHomePosition.y; // apoyado en el suelo, con sus patas
 
-            // La cámara apunta al centro del televisor (altura media de patas + pantalla) y lo deja a −0,5 de la pantalla (cuarto izquierdo).
-            if (player != null) player.LookTowards(position + Vector3.up * tvCenterHeight, tvScreenX);
+            // Mirada a nivel (sin inclinar la cámara hacia abajo, así el televisor no se ve en trapecio) y desplazada hacia la derecha lo justo
+            // para que el televisor quede en el cuarto izquierdo de la pantalla.
+            if (player != null) player.LookTowards(new Vector3(position.x, eye.y, position.z), tvScreenX);
 
-            // De frente respecto a la vista ya girada: la pantalla mira exactamente hacia la cámara, sin diagonal.
-            Vector3 view = cam.transform.forward;
-            float pitchDown = -Mathf.Asin(Mathf.Clamp(view.y, -1f, 1f)) * Mathf.Rad2Deg; // cuánto mira hacia abajo la cámara
-            view.y = 0f;
-            // Se inclina hacia atrás casi lo mismo que mira hacia abajo la cámara: la pantalla queda perpendicular a la vista y no se ve en trapecio.
-            tv.SetPositionAndRotation(position, Quaternion.LookRotation(-view.normalized) * Quaternion.Euler(-pitchDown * tvTiltFactor, 0f, 0f));
+            // Recto y de frente: la pantalla es perpendicular a la vista y no se inclina hacia ningún lado.
+            Vector3 view = cam.transform.forward; view.y = 0f;
+            tv.SetPositionAndRotation(position, Quaternion.LookRotation(-view.normalized));
+            tv.localScale = _tvHomeScale * tvScale;
         }
 
         private void RestoreTelevision()
         {
             if (television == null || !_tvHomeSaved) return;
-            television.transform.SetPositionAndRotation(_tvHomePosition, _tvHomeRotation);
+            var tv = television.transform;
+            tv.SetPositionAndRotation(_tvHomePosition, _tvHomeRotation);
+            tv.localScale = _tvHomeScale;
             var cam = Camera.main;
             if (player != null && cam != null)
             {

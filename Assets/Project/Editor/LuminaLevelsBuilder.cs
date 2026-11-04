@@ -242,20 +242,19 @@ namespace Lumina.EditorTools
             var sena = GameObject.Find("Sena");
             Vector3 forward = player.transform.forward; forward.y = 0f; forward.Normalize();
             // Delante del jugador y un poco a su izquierda, para que no le tape el televisor que queda de frente.
-            // En Números queda a 3 m (a menos distancia la cámara le corta los zapatos) y apenas por encima de la alfombra.
+            // A 3,4 m (a menos distancia la cámara le corta los zapatos) en las tres casas; en Números, apenas por encima de la alfombra.
             bool numbers = kind == LevelKind.Numbers;
-            var position = player.transform.position + forward * (numbers ? 3.4f : 2.2f) - player.transform.right * 1.1f;
+            var position = player.transform.position + forward * 3.4f - player.transform.right * 1.1f;
             position.y = numbers ? 0.04f : 0f;
             PlaceSena(sena, position, kind == LevelKind.Numbers ? NumbersWelcome : kind == LevelKind.Months ? MonthsWelcome : GreetingsWelcome);
             sena.transform.rotation = Quaternion.LookRotation(-forward);
 
-            if (numbers)
             {
                 // Más lejos que el radio de siempre: se amplía para poder hablar con ella desde el punto de inicio.
                 Ui.SetFloat(sena.GetComponent<ProximityInteractable>(), "interactionRadius", 4f);
 
-                // Los cubos que cuelgan del techo (≈ 2,15–2,9 m) cruzaban la burbuja de diálogo, que flotaba sobre su cabeza (1,85 m):
-                // la burbuja pasa a un costado (hacia el centro de la sala) y por debajo de los cubos.
+                // La burbuja de diálogo flotaba sobre su cabeza y chocaba con lo que cuelga del techo (en Números, los cubos): pasa a un costado
+                // (hacia el centro de la sala), más baja y más chica en pantalla.
                 var bubble = sena.transform.Find("WelcomeBubble");
                 if (bubble != null)
                 {
