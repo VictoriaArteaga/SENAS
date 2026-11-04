@@ -1182,9 +1182,18 @@ namespace Lumina.EditorTools
 
         // ------------------------------------------------------------------ Accesos en Practice
 
+        [MenuItem("Lumina/Pantallas/Actualizar accesos a las casas en Practice")]
+        private static void UpdatePracticeHouseShortcuts()
+        {
+            AddShortcutsToPractice();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("[Lumina] Accesos a las cuatro casas actualizados en Practice sin reconstruir el resto de la escena.");
+        }
+
         /// <summary>
-        /// Añade a Practice la fila «CASAS DE APRENDIZAJE» con las cuatro casas (Abecedario, Números, Meses, Saludos y frases).
-        /// Es idempotente y no reconstruye la escena. Ocupa una zona de la pantalla (no un tamaño fijo): los botones se reparten el ancho.
+        /// Reemplaza la antigua selección de categorías de Practice por accesos a las cuatro casas.
+        /// Es idempotente y mantiene la navegación sujeta al progreso del backend.
         /// </summary>
         internal static void AddShortcutsToPractice()
         {
@@ -1194,33 +1203,48 @@ namespace Lumina.EditorTools
             if (controller == null) { Debug.LogError("[Lumina] No se encontró PracticeController en Practice."); return; }
 
             var canvas = controller.transform;
+            var serializedController = new SerializedObject(controller);
+            var selectionPanel = serializedController.FindProperty("selectionPanel")?.objectReferenceValue as GameObject;
+            Transform shortcutsParent = selectionPanel != null ? selectionPanel.transform : canvas;
+            // Quita de la escena guardada el selector antiguo, no solo al entrar en Play.
+            SetPracticeObjectActive(canvas, "Categories", false);
+            var signGrid = serializedController.FindProperty("signContainer")?.objectReferenceValue as RectTransform;
+            if (signGrid != null)
+            {
+                Transform scrollRoot = signGrid.parent != null && signGrid.parent.parent != null
+                    ? signGrid.parent.parent
+                    : signGrid.parent;
+                if (scrollRoot != null) scrollRoot.gameObject.SetActive(false);
+            }
+            SetPracticeObjectActive(canvas, "EmptyLabel", false);
+            SetPracticeObjectActive(canvas, "PracticeButton", false);
             var old = canvas.Find("LevelShortcuts");
             if (old != null) Object.DestroyImmediate(old.gameObject);
 
-            // Abajo a la izquierda, bajo Sena y sin llegar a las tarjetas (que empiezan al 43 % del ancho).
-            var root = Ui.Rect("LevelShortcuts", canvas);
-            root.anchorMin = new Vector2(0.03f, 0.04f); root.anchorMax = new Vector2(0.40f, 0.30f);
+            // Los accesos ocupan la tarjeta de selección. La cuadrícula anterior se oculta desde PracticeController.
+            var root = Ui.Rect("LevelShortcuts", shortcutsParent);
+            root.anchorMin = Vector2.zero; root.anchorMax = Vector2.one;
             root.offsetMin = root.offsetMax = Vector2.zero;
-            Screens.VStack(root, 12f, new RectOffset(0, 0, 0, 0), TextAnchor.LowerCenter);
+            Screens.VStack(root, 18f, new RectOffset(40, 40, 38, 38), TextAnchor.MiddleCenter);
 
             var plate = Ui.Panel(root, "HeadingPlate", Ui.Ink);
-            Screens.Elem(plate, minH: 40f, prefH: 48f);
-            var heading = Ui.Label(plate.transform, "Heading", "CASAS DE APRENDIZAJE", 26f, Ui.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
-            Ui.Stretch(heading.rectTransform, 16f, 0f, 16f, 0f);
+            Screens.Elem(plate, minH: 60f, prefH: 72f);
+            var heading = Ui.Label(plate.transform, "Heading", "ELIGE UNA CASA", 32f, Ui.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
+            Ui.Stretch(heading.rectTransform, 18f, 0f, 18f, 0f);
             Screens.FitText(heading, 14f, false);
-            LocalizedText.Bind(heading, "levels.houses");
+            LocalizedText.Bind(heading, "practice.chooseHouse");
 
             var rowA = Ui.Rect("RowA", root);
-            Screens.Elem(rowA, minH: 72f, prefH: 80f);
+            Screens.Elem(rowA, minH: 112f, prefH: 132f, flexH: 1f);
             Screens.HStack(rowA, 12f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, true, true);
             var rowB = Ui.Rect("RowB", root);
-            Screens.Elem(rowB, minH: 72f, prefH: 80f);
+            Screens.Elem(rowB, minH: 112f, prefH: 132f, flexH: 1f);
             Screens.HStack(rowB, 12f, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter, true, true);
 
-            var alphabet = Screens.FlexButton(rowA, "AlphabetButton", "ABECEDARIO", Ui.CreamWarm, Ui.SandDark, Ui.Ink, 80f, 26f, 14f);
-            var numbers = Screens.FlexButton(rowA, "NumbersButton", "NÚMEROS", Ui.Turquoise, Ui.TurquoiseDark, Ui.Ink, 80f, 26f, 14f);
-            var months = Screens.FlexButton(rowB, "MonthsButton", "MESES", Ui.Coral, Ui.CoralDark, Ui.Cream, 80f, 26f, 14f);
-            var greetings = Screens.FlexButton(rowB, "GreetingsButton", "SALUDOS Y FRASES", Ui.CreamWarm, Ui.SandDark, Ui.Ink, 80f, 26f, 14f);
+            var alphabet = Screens.FlexButton(rowA, "AlphabetButton", "ABECEDARIO", Ui.CreamWarm, Ui.SandDark, Ui.Ink, 112f, 34f, 18f);
+            var numbers = Screens.FlexButton(rowA, "NumbersButton", "NÚMEROS", Ui.Turquoise, Ui.TurquoiseDark, Ui.Ink, 112f, 34f, 18f);
+            var months = Screens.FlexButton(rowB, "MonthsButton", "MESES", Ui.Coral, Ui.CoralDark, Ui.Cream, 112f, 34f, 18f);
+            var greetings = Screens.FlexButton(rowB, "GreetingsButton", "SALUDOS", Ui.CreamWarm, Ui.SandDark, Ui.Ink, 112f, 34f, 18f);
             LocalizedText.Bind(alphabet.GetComponentInChildren<TMP_Text>(true), "title.alphabet");
             LocalizedText.Bind(numbers.GetComponentInChildren<TMP_Text>(true), "title.numbers");
             LocalizedText.Bind(months.GetComponentInChildren<TMP_Text>(true), "title.months");
@@ -1235,6 +1259,16 @@ namespace Lumina.EditorTools
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
+        }
+
+        private static void SetPracticeObjectActive(Transform root, string objectName, bool active)
+        {
+            foreach (var transform in root.GetComponentsInChildren<Transform>(true))
+                if (transform != root && transform.name == objectName)
+                {
+                    transform.gameObject.SetActive(active);
+                    return;
+                }
         }
     }
 }
