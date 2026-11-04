@@ -606,8 +606,6 @@ namespace Lumina.Alphabet
                     _practiceSimilarity.ToString("P0")), _practiceBadgeTone);
             else if (attemptRunning)
                 _practiceView?.SetBadge(_practiceStatus, _practiceBadgeTone);
-            else if (levelCompleted)
-                _practiceView?.SetBadge("ABECEDARIO COMPLETADO", PracticeBadgeTone.Success);
             else if (letterPassed)
             {
                 bool hasSavedScore = _hasPracticeScore || _bestPrecision[_current] > 0f;
@@ -618,7 +616,6 @@ namespace Lumina.Alphabet
                     ? Loc.T("alphabet.letterPassedScore", entry.letter, displayedScore.ToString("P0"))
                     : Loc.T("alphabet.letterPassed", entry.letter);
                 if (_bestStars[_current] > 0) badge += " · " + _bestStars[_current] + "/3 " + Loc.T("levels.starsCaption");
-                if (levelCompleted) badge += " · " + Loc.T("alphabet.completed");
                 _practiceView?.SetBadge(badge, PracticeBadgeTone.Success);
             }
             else if (_showPracticeFeedback && _hasPracticeScore)
