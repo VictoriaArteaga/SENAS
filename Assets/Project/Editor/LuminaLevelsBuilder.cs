@@ -244,14 +244,17 @@ namespace Lumina.EditorTools
             // Delante del jugador y un poco a su izquierda, para que no le tape el televisor que queda de frente.
             // A 3,4 m (a menos distancia la cámara le corta los zapatos) en las tres casas; en Números, apenas por encima de la alfombra.
             bool numbers = kind == LevelKind.Numbers;
-            var position = player.transform.position + forward * 3.4f - player.transform.right * 1.1f;
+            // En Saludos queda más lejos todavía (4,2 m): el rincón de conversación (mesa baja y sofás) ocupa el centro y ahí el televisor de la práctica
+            // se coloca detrás de la mesa para no atravesarla.
+            float senaDistance = kind == LevelKind.Greetings ? 4.2f : 3.4f;
+            var position = player.transform.position + forward * senaDistance - player.transform.right * 1.1f;
             position.y = numbers ? 0.04f : 0f;
             PlaceSena(sena, position, kind == LevelKind.Numbers ? NumbersWelcome : kind == LevelKind.Months ? MonthsWelcome : GreetingsWelcome);
             sena.transform.rotation = Quaternion.LookRotation(-forward);
 
             {
                 // Más lejos que el radio de siempre: se amplía para poder hablar con ella desde el punto de inicio.
-                Ui.SetFloat(sena.GetComponent<ProximityInteractable>(), "interactionRadius", 4f);
+                Ui.SetFloat(sena.GetComponent<ProximityInteractable>(), "interactionRadius", senaDistance + 0.8f);
 
                 // La burbuja de diálogo flotaba sobre su cabeza y chocaba con lo que cuelga del techo (en Números, los cubos): pasa a un costado
                 // (hacia el centro de la sala), más baja y más chica en pantalla.
@@ -266,7 +269,14 @@ namespace Lumina.EditorTools
                 }
             }
 
-            BuildResumePrompt(Object.FindFirstObjectByType<LearningLevelController>());
+            var levelController = Object.FindFirstObjectByType<LearningLevelController>();
+            BuildResumePrompt(levelController);
+            if (kind == LevelKind.Greetings)
+            {
+                // La mesa baja está en (0; 4,3) con 0,95 m de diámetro: el televisor (a 4,2 m del jugador) queda detrás de ella, sin atravesarla.
+                Ui.SetFloat(levelController, "tvDistance", 4.2f);
+                Ui.SetFloat(levelController, "tvScale", 1.45f);
+            }
 
             // La puerta de salida alcanzaba al jugador en su punto de inicio: ahora hay que acercarse a ella.
             var exit = GameObject.Find("PuntoSalida");
