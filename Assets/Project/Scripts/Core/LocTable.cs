@@ -208,6 +208,7 @@ namespace Lumina.Core
             ("levels.timeout", "Se acabó el tiempo. Inténtalo otra vez.", "Time is up. Try again."),
             ("levels.continuePractice", "Continúa practicando", "Keep practicing"),
             ("levels.nextLevel", "Ir al siguiente nivel", "Go to the next level"),
+            ("levels.previousLevelPrompt", "Ir al nivel anterior", "Go to the previous level"),
             ("levels.cameraStarting", "Encendiendo la cámara…", "Starting the camera…"),
             ("levels.getReady", "Prepárate…", "Get ready…"),
             ("levels.comingSoon", "PRÓXIMAMENTE", "COMING SOON"),

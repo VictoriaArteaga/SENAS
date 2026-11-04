@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Lumina.Player
@@ -65,9 +66,11 @@ namespace Lumina.Player
 
             if (CursorLocked && keyboard != null && keyboard.escapeKey.wasPressedThisFrame)
                 SetCursorLocked(false);
-            else if (!CursorLocked && mouse != null && mouse.leftButton.wasPressedThisFrame)
-                SetCursorLocked(true);
+            else if (!CursorLocked && mouse != null && mouse.leftButton.wasPressedThisFrame && !PointerOverUi())
+                SetCursorLocked(true); // un clic sobre un botón no recupera el cursor: si no, el botón nunca recibiría el clic
         }
+
+        private static bool PointerOverUi() => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
 
         private void Look()
         {

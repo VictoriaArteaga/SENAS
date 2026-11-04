@@ -23,6 +23,9 @@ namespace Lumina.UI
         private bool _shown;
         private IPracticePanel _panel;
 
+        /// <summary>Indicador en pantalla (la N); <see cref="PreviousLevelPrompt"/> lo copia para su indicador del nivel anterior.</summary>
+        public InteractionPrompt Prompt => prompt;
+
         /// <summary>True si todas las señas del nivel están superadas.</summary>
         public static bool IsLevelCompleted(string code)
         {
