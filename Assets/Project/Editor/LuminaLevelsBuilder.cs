@@ -908,7 +908,7 @@ namespace Lumina.EditorTools
             Screens.Elem(position, minH: 28f, prefH: 38f);
 
             TMP_Text big, nameLabel = null, group = null, senaSays = null;
-            Image[] dots = new Image[0];
+            Button[] numberButtons = new Button[0];
 
             switch (kind)
             {
@@ -919,18 +919,31 @@ namespace Lumina.EditorTools
                     nameLabel = Ui.Label(card, "Word", "", 48f, Ui.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 8f);
                     Screens.FitText(nameLabel, 22f, false);
                     Screens.Elem(nameLabel, minH: 36f, prefH: 54f);
-                    // 31 puntos (0–30): en una cuadrícula que salta de línea, para que no se salgan del panel.
-                    var dotsRow = Ui.Rect("CountDots", card);
-                    Screens.Elem(dotsRow, minH: 52f, prefH: 76f);
-                    var dotsGrid = dotsRow.gameObject.AddComponent<GridLayoutGroup>();
-                    dotsGrid.cellSize = new Vector2(22f, 22f); dotsGrid.spacing = new Vector2(8f, 8f);
-                    dotsGrid.constraint = GridLayoutGroup.Constraint.Flexible;
-                    dotsGrid.childAlignment = TextAnchor.UpperCenter;
-                    dotsGrid.padding = new RectOffset(18, 18, 8, 8); // los puntos no tocan los bordes
-                    var list = new List<Image>();
+                    // Cuadrícula de 31 botones (0–30) que salta de línea: pulsar uno lleva a ese número (si no está bloqueado).
+                    var gridRow = Ui.Rect("NumberGrid", card);
+                    Screens.Elem(gridRow, minH: 76f, prefH: 88f);
+                    var grid = gridRow.gameObject.AddComponent<GridLayoutGroup>();
+                    grid.cellSize = new Vector2(40f, 34f); grid.spacing = new Vector2(5f, 6f);
+                    grid.constraint = GridLayoutGroup.Constraint.Flexible;
+                    grid.childAlignment = TextAnchor.UpperCenter;
+                    grid.padding = new RectOffset(14, 14, 6, 6); // los botones no tocan los bordes
+                    var buttonList = new List<Button>();
                     for (int i = 0; i < LearningLevels.Numbers.items.Length; i++)
-                        list.Add(Ui.Panel(dotsRow, "Dot" + (i + 1), Ui.Sand, Ui.Circle));
-                    dots = list.ToArray();
+                    {
+                        var face = Ui.Panel(gridRow, "Numero" + i, Ui.Sand, Ui.Round);
+                        var cell = face.gameObject.AddComponent<Button>();
+                        cell.targetGraphic = face;
+                        var colors = cell.colors;
+                        colors.normalColor = Color.white; colors.highlightedColor = new Color(1f, 1f, 1f, 0.85f);
+                        colors.pressedColor = new Color(0.8f, 0.8f, 0.8f, 1f); colors.disabledColor = new Color(1f, 1f, 1f, 0.45f);
+                        cell.colors = colors;
+                        var numberText = Ui.Label(face.transform, "Label", i.ToString(), 22f, Ui.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 2f);
+                        Ui.Stretch(numberText.rectTransform);
+                        Screens.FitText(numberText, 12f, false);
+                        numberText.raycastTarget = false;
+                        buttonList.Add(cell);
+                    }
+                    numberButtons = buttonList.ToArray();
                     break;
 
                 case LevelKind.Months:
@@ -1056,7 +1069,7 @@ namespace Lumina.EditorTools
             Ui.Set(controller, "groupLabel", group);
             Ui.Set(controller, "instructionLabel", instruction);
             Ui.Set(controller, "demoNotice", demoNotice);
-            Ui.SetArray(controller, "countDots", dots);
+            Ui.SetArray(controller, "numberButtons", numberButtons);
             Ui.Set(controller, "previousButton", prev);
             Ui.Set(controller, "nextButton", next);
             Ui.Set(controller, "learnButton", learn);

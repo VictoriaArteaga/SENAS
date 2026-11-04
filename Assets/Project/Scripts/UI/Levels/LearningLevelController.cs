@@ -38,7 +38,8 @@ namespace Lumina.UI
         [SerializeField] private TMP_Text senaSaysLabel;   // lo que dice Sena (solo Saludos)
         [SerializeField] private TMP_Text instructionLabel;
         [SerializeField] private TMP_Text demoNotice;
-        [SerializeField] private Image[] countDots;        // solo Números: un punto por unidad
+        [Tooltip("Solo Números: un botón por número (0–30). Al pulsarlo se salta a ese número, salvo que el backend lo marque bloqueado.")]
+        [SerializeField] private Button[] numberButtons;
 
         [Header("Acción y progreso")]
         [SerializeField] private Button previousButton;
@@ -85,6 +86,9 @@ namespace Lumina.UI
 
         private static readonly Color Coral = new Color(1f, 0.369f, 0.302f);
         private static readonly Color Sand = new Color(0.98f, 0.89f, 0.74f);
+        private static readonly Color Turquoise = new Color(0.0f, 0.8f, 0.75f);
+        private static readonly Color Ink = new Color(0.059f, 0.227f, 0.267f);
+        private static readonly Color Cream = new Color(1f, 0.976f, 0.925f);
 
         private LevelDefinition _level;
         private string _levelCode;
@@ -106,6 +110,12 @@ namespace Lumina.UI
             learnButton.onClick.AddListener(OnLearn);
             practiceButton.onClick.AddListener(OnPractice);
             closeButton.onClick.AddListener(Close);
+            if (numberButtons != null)
+                for (int i = 0; i < numberButtons.Length; i++)
+                {
+                    int target = i;
+                    if (numberButtons[i] != null) numberButtons[i].onClick.AddListener(() => GoTo(target));
+                }
             if (practice != null) { practice.RunningChanged += OnPracticeRunningChanged; practice.SignPassed += OnSignPassed; }
             panelRoot.SetActive(false);
         }
@@ -257,6 +267,35 @@ namespace Lumina.UI
             if (IsOpen && _level != null) RefreshPracticeButton(_level.items[_index]);
         }
 
+        /// <summary>Salta al elemento elegido en la cuadrícula de números (si el backend no lo tiene bloqueado).</summary>
+        private void GoTo(int index)
+        {
+            if (!IsOpen || _level == null || index < 0 || index >= _level.items.Length) return;
+            if (ProgressStore.StatusOf(_level.items[index].id) == SignStatusNames.Locked) return;
+            Select(index);
+        }
+
+        /// <summary>
+        /// Pinta la cuadrícula de números: el actual en coral, los superados en turquesa, el resto en arena y los bloqueados atenuados y sin
+        /// pulsar. Un estado desconocido (sin sesión o sin conexión) no bloquea, igual que EMPEZAR.
+        /// </summary>
+        private void RefreshNumberButtons()
+        {
+            if (numberButtons == null) return;
+            for (int i = 0; i < numberButtons.Length && i < _level.items.Length; i++)
+            {
+                var button = numberButtons[i];
+                if (button == null) continue;
+                string status = ProgressStore.StatusOf(_level.items[i].id);
+                bool current = i == _index;
+                button.interactable = status != SignStatusNames.Locked;
+                if (button.targetGraphic != null)
+                    ThemedGraphic.Set(button.targetGraphic, current ? Coral : status == SignStatusNames.Passed ? Turquoise : Sand);
+                var label = button.GetComponentInChildren<TMP_Text>(true);
+                if (label != null) ThemedGraphic.Set(label, current ? Cream : Ink);
+            }
+        }
+
         private void Move(int step)
         {
             int next = _index + step;
@@ -297,14 +336,7 @@ namespace Lumina.UI
                     bigLabel.text = number.ToString();
                     nameLabel.text = item.Name.ToUpperInvariant();
                     positionLabel.text = Loc.T("levels.numberOf", _index + 1, total);
-                    if (countDots != null && countDots.Length > 0)
-                    {
-                        bool showCount = number <= countDots.Length;
-                        if (countDots[0] != null) countDots[0].transform.parent.gameObject.SetActive(showCount);
-                        if (showCount)
-                            for (int i = 0; i < countDots.Length; i++)
-                                if (countDots[i] != null) ThemedGraphic.Set(countDots[i], i < number ? Coral : Sand);
-                    }
+                    RefreshNumberButtons();
                     break;
                 case LevelKind.Months:
                     bigLabel.text = (_index + 1).ToString("00");
