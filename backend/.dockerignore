@@ -1,0 +1,22 @@
+node_modules
+dist
+coverage
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+*.log
+npm-debug.log*
+*.tsbuildinfo
+.DS_Store
+.vscode
+.idea
+# Test-only files (the compose Postgres is for e2e, never for production)
+docker-compose*.yml
+test
+docs
+README.md
+render.yaml
+Dockerfile
+.dockerignore

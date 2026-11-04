@@ -16,7 +16,7 @@ async function bootstrap() {
       LOG_LEVELS['development'],
   });
   const cfg = configureApp(app);
-  await app.listen(cfg.port);
+  await app.listen(cfg.port, '0.0.0.0');
 
   const logger = new Logger('Bootstrap');
   logger.log(`API ready on port ${cfg.port} (/${cfg.apiPrefix})`);

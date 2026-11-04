@@ -3,17 +3,15 @@
 services:
   - type: web
     name: senas-backend
-    runtime: node
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     region: virginia # us-east: close to Supabase (aws-0-us-east-1)
     plan: free
     rootDir: backend
-    buildCommand: npm ci && npm run build
-    startCommand: npm run start:prod
     healthCheckPath: /api/v1/health
     autoDeploy: true
     envVars:
-      - key: NODE_VERSION
-        value: 22
       - key: NODE_ENV
         value: production
       - key: API_PREFIX
