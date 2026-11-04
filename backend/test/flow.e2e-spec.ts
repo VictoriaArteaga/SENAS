@@ -444,8 +444,8 @@ describe('Full flow (e2e, real PostgreSQL with synchronize and seed)', () => {
         false,
       ]);
       expect(res.body[1]).toMatchObject({
-        requiredXp: 300,
-        missingXp: 300,
+        requiredXp: 270,
+        missingXp: 270,
         passedSigns: 0,
         totalSigns: 31,
         earnedStars: 0,
@@ -705,10 +705,10 @@ describe('Full flow (e2e, real PostgreSQL with synchronize and seed)', () => {
       expect(progress.body.firstPassedAt).toEqual(expect.any(String));
     });
 
-    it('a level unlocks at 300 XP (10 letters × 30) and its first sign becomes available', async () => {
+    it('unlocks Numbers after all alphabet signs earn their minimum passing XP', async () => {
       const u = await registerUser(app, 'Climb');
       const h = auth(u.accessToken);
-      const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+      const letters = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split('');
       let last:
         { body: { unlockedLevels: string[]; totalXp: number } } | undefined;
 
@@ -724,12 +724,12 @@ describe('Full flow (e2e, real PostgreSQL with synchronize and seed)', () => {
         last = await request(http)
           .post(`${API}/evaluations`)
           .set(h)
-          .send(attemptBody(`${l}`, THREE_STARS))
+          .send(attemptBody(`${l}`, { precision: 65, stars: 1, xp: 10 }))
           .expect(201);
         if (i < letters.length - 1)
           expect(last.body.unlockedLevels).toEqual([]);
       }
-      expect(last?.body.totalXp).toBe(300);
+      expect(last?.body.totalXp).toBe(270);
       expect(last?.body.unlockedLevels).toEqual(['NUMBERS']);
 
       const levels = await request(http)
@@ -768,7 +768,7 @@ describe('Full flow (e2e, real PostgreSQL with synchronize and seed)', () => {
       expect(summary.body).toMatchObject({
         totalXp: 330,
         highestUnlockedLevel: { code: 'NUMBERS' },
-        nextLevel: { code: 'MONTHS', missingXp: 370 },
+        nextLevel: { code: 'MONTHS', missingXp: 250 },
         passedSigns: 11,
         totalSigns: 81,
         totalStars: 33,

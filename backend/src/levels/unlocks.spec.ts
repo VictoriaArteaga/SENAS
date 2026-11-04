@@ -1,10 +1,10 @@
 import { isLevelUnlocked, levelSignStatuses, SignStatus } from './unlocks';
 
 describe('isLevelUnlocked', () => {
-  it('unlocks on reaching exactly the required XP (299 vs 300)', () => {
-    expect(isLevelUnlocked(299, 300)).toBe(false);
-    expect(isLevelUnlocked(300, 300)).toBe(true);
-    expect(isLevelUnlocked(301, 300)).toBe(true);
+  it('unlocks on reaching the minimum cumulative XP (269 vs 270)', () => {
+    expect(isLevelUnlocked(269, 270)).toBe(false);
+    expect(isLevelUnlocked(270, 270)).toBe(true);
+    expect(isLevelUnlocked(271, 270)).toBe(true);
   });
 
   it('a level requiring 0 XP is always unlocked', () => {
