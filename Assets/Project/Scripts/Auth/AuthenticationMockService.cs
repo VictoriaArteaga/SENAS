@@ -49,7 +49,7 @@ namespace Lumina.Auth
         public async Task<AuthResult> RequestPasswordResetAsync(string email, CancellationToken cancellationToken = default)
         {
             await Task.Delay(_latencyMilliseconds / 2, cancellationToken);
-            return AuthResult.Ok(message: "Simulación: no se envió ningún correo.");
+            return AuthResult.Ok(message: "No podemos enviar un mensaje para cambiar tu contraseña. Pide ayuda a una persona adulta.");
         }
 
         public Task SignOutAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;

@@ -28,6 +28,8 @@ namespace Lumina.UI
         private bool _hasError;
         private bool _focused;
         private bool _revealed;
+        private int _characterLimit;
+        private string _limitMessage;
         private Coroutine _shake;
 
         public string Text => input.text;
@@ -53,7 +55,7 @@ namespace Lumina.UI
             input.onSelect.AddListener(_ => { _focused = true; Refresh(); });
             input.onDeselect.AddListener(_ => { _focused = false; Refresh(); });
             input.onSubmit.AddListener(_ => Submitted?.Invoke());
-            input.onValueChanged.AddListener(_ => { if (_hasError) ClearError(); TextChanged?.Invoke(); });
+            input.onValueChanged.AddListener(OnValueChanged);
 
             if (revealButton != null)
             {
@@ -90,6 +92,34 @@ namespace Lumina.UI
             Refresh();
             if (_shake != null) StopCoroutine(_shake);
             _shake = StartCoroutine(Shake());
+        }
+
+        /// <summary>Limita la longitud y avisa con el estilo de validación cuando el jugador llega al máximo.</summary>
+        public void SetCharacterLimit(int limit, string message)
+        {
+            _characterLimit = Mathf.Max(1, limit);
+            _limitMessage = message;
+            input.characterLimit = _characterLimit;
+            UpdateLimitFeedback();
+        }
+
+        private void OnValueChanged(string _)
+        {
+            if (_characterLimit > 0 && input.text.Length >= _characterLimit)
+                UpdateLimitFeedback();
+            else if (_hasError)
+                ClearError();
+
+            TextChanged?.Invoke();
+        }
+
+        private void UpdateLimitFeedback()
+        {
+            if (_characterLimit <= 0 || input.text.Length < _characterLimit || string.IsNullOrEmpty(_limitMessage)) return;
+            _hasError = true;
+            errorLabel.text = Loc.Translate(_limitMessage);
+            errorLabel.gameObject.SetActive(true);
+            Refresh();
         }
 
         public void ClearError()
