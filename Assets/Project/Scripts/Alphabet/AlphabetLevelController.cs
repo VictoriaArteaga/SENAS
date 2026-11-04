@@ -608,15 +608,8 @@ namespace Lumina.Alphabet
                 _practiceView?.SetBadge(_practiceStatus, _practiceBadgeTone);
             else if (letterPassed)
             {
-                bool hasSavedScore = _hasPracticeScore || _bestPrecision[_current] > 0f;
-                float displayedScore = _hasPracticeScore
-                    ? _practiceSimilarity
-                    : _bestPrecision[_current] / 100f;
-                string badge = hasSavedScore
-                    ? Loc.T("alphabet.letterPassedScore", entry.letter, displayedScore.ToString("P0"))
-                    : Loc.T("alphabet.letterPassed", entry.letter);
-                if (_bestStars[_current] > 0) badge += " · " + _bestStars[_current] + "/3 " + Loc.T("levels.starsCaption");
-                _practiceView?.SetBadge(badge, PracticeBadgeTone.Success);
+                // La coincidencia y las estrellas van en sus tarjetas; la píldora solo dice que la letra está superada.
+                _practiceView?.SetBadge(Loc.T("alphabet.letterPassed", entry.letter), PracticeBadgeTone.Success);
             }
             else if (_showPracticeFeedback && _hasPracticeScore)
                 _practiceView?.SetBadge(Loc.T(_practiceBadgeTone == PracticeBadgeTone.Warning ? "alphabet.matchAdjust" : "alphabet.matchHold",
@@ -627,6 +620,16 @@ namespace Lumina.Alphabet
                 _practiceView?.SetBadge(entry.validation == PoseValidation.ApproximateFromReference
                     ? "Referencia aproximada · en revisión"
                     : "Pose provisional · en revisión", PracticeBadgeTone.Neutral); // el panel lo traduce
+
+            // Tarjetas de coincidencia y estrellas (como en las otras casas): en vivo durante el intento, o lo guardado si ya se superó.
+            if (attemptRunning && _hasPracticeScore)
+                _practiceView?.SetStats(true, _practiceSimilarity, ScoreAdapter.FromSimilarity(_practiceSimilarity).Stars);
+            else if (letterPassed && (_hasPracticeScore || _bestPrecision[_current] > 0f || _bestStars[_current] > 0))
+                _practiceView?.SetStats(true, _hasPracticeScore ? _practiceSimilarity : _bestPrecision[_current] / 100f, _bestStars[_current]);
+            else if (!attemptRunning && _showPracticeFeedback && _hasPracticeScore)
+                _practiceView?.SetStats(true, _practiceSimilarity, ScoreAdapter.FromSimilarity(_practiceSimilarity).Stars);
+            else
+                _practiceView?.SetStats(false, 0f, 0);
 
             var passed = CountPracticedLetters();
             int seen = 0;

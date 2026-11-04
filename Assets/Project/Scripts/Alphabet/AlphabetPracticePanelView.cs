@@ -23,6 +23,7 @@ namespace Lumina.Alphabet
         private readonly Color _turquoise;
         private readonly Color _turquoiseSoft;
 
+        private TMP_Text _scoreValue, _scoreCaption, _starsValue, _starsCaption;
         private GameObject _root;
         private RawImage _image;
         private RectTransform _viewportRect;
@@ -200,6 +201,19 @@ namespace Lumina.Alphabet
             instruction.alignment = TextAlignmentOptions.TopLeft;
             SetElement(instruction.transform, minH: 60f, prefH: 120f, flexH: 1f);
 
+            // Tarjetas de coincidencia y estrellas, con el mismo aspecto que las de las casas de números, meses y saludos.
+            var statsRow = new GameObject("PracticeStats", typeof(RectTransform), typeof(HorizontalLayoutGroup));
+            statsRow.transform.SetParent(column.transform, false);
+            var statsLayout = statsRow.GetComponent<HorizontalLayoutGroup>();
+            statsLayout.spacing = 14f; statsLayout.childAlignment = TextAnchor.MiddleCenter;
+            statsLayout.childControlWidth = statsLayout.childControlHeight = true;
+            statsLayout.childForceExpandWidth = true; statsLayout.childForceExpandHeight = true;
+            SetElement(statsRow.transform, minH: 74f, prefH: 84f);
+            var cardSprite = _badgeBackground != null ? _badgeBackground.sprite : null;
+            _scoreValue = CreateStatCard(statsRow.transform, "ScoreCard", instruction.font, cardSprite, out _scoreCaption);
+            _starsValue = CreateStatCard(statsRow.transform, "StarsCard", instruction.font, cardSprite, out _starsCaption);
+            SetStats(false, 0f, 0);
+
             var row = new GameObject("PracticeRow", typeof(RectTransform), typeof(HorizontalLayoutGroup));
             row.transform.SetParent(column.transform, false);
             var rowLayout = row.GetComponent<HorizontalLayoutGroup>();
@@ -296,6 +310,58 @@ namespace Lumina.Alphabet
 
             // Nada se sale de su caja: el texto del botón PRACTICAR, el de la píldora y el aviso de la cámara se reducen para caber.
             AlphabetResponsiveLayout.ContainTexts(card);
+        }
+
+        /// <summary>Muestra la coincidencia (0–1) y las estrellas (0–3); con <paramref name="active"/> falso deja «—».</summary>
+        public void SetStats(bool active, float similarity, int stars)
+        {
+            if (_scoreValue == null || _starsValue == null) return;
+            _scoreValue.text = active ? Mathf.RoundToInt(similarity * 100f) + "%" : "—";
+            _starsValue.text = active ? stars + " / 3" : "—";
+            _scoreCaption.text = Loc.T("levels.scoreCaption");
+            _starsCaption.text = Loc.T("levels.starsCaption");
+        }
+
+        private TMP_Text CreateStatCard(Transform parent, string objectName, TMP_FontAsset font, Sprite sprite, out TMP_Text caption)
+        {
+            var outer = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            outer.transform.SetParent(parent, false);
+            var outerImage = outer.GetComponent<Image>();
+            outerImage.sprite = sprite;
+            outerImage.type = Image.Type.Sliced;
+            outerImage.color = _turquoiseSoft;
+            outerImage.raycastTarget = false;
+            SetElement(outer.transform, minW: 90f, minH: 70f, flexW: 1f, flexH: 1f);
+
+            var inner = new GameObject("Inner", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            inner.transform.SetParent(outer.transform, false);
+            var innerRect = inner.GetComponent<RectTransform>();
+            innerRect.anchorMin = Vector2.zero; innerRect.anchorMax = Vector2.one;
+            innerRect.offsetMin = new Vector2(5f, 5f); innerRect.offsetMax = new Vector2(-5f, -5f);
+            var innerImage = inner.GetComponent<Image>();
+            innerImage.sprite = sprite;
+            innerImage.type = Image.Type.Sliced;
+            innerImage.color = new Color(1f, 0.953f, 0.863f);
+            innerImage.raycastTarget = false;
+
+            var value = CreateText(inner.transform, "Value", font);
+            value.fontSize = 36f; value.fontStyle = FontStyles.Bold;
+            value.color = new Color(1f, 0.369f, 0.302f);
+            value.alignment = TextAlignmentOptions.Center;
+            AlphabetResponsiveLayout.Fit(value, 16f, false);
+            var valueRect = value.rectTransform;
+            valueRect.anchorMin = new Vector2(0f, 0.38f); valueRect.anchorMax = Vector2.one;
+            valueRect.offsetMin = new Vector2(10f, 0f); valueRect.offsetMax = new Vector2(-10f, -4f);
+
+            caption = CreateText(inner.transform, "Caption", font);
+            caption.fontSize = 18f; caption.fontStyle = FontStyles.Bold;
+            caption.color = _ink;
+            caption.alignment = TextAlignmentOptions.Center;
+            AlphabetResponsiveLayout.Fit(caption, 10f, false);
+            var captionRect = caption.rectTransform;
+            captionRect.anchorMin = Vector2.zero; captionRect.anchorMax = new Vector2(1f, 0.38f);
+            captionRect.offsetMin = new Vector2(8f, 3f); captionRect.offsetMax = new Vector2(-8f, 0f);
+            return value;
         }
 
         private static void SetElement(Transform target, float minW = -1f, float minH = -1f, float prefW = -1f, float prefH = -1f,
