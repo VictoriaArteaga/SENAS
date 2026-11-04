@@ -301,10 +301,10 @@ namespace Lumina.EditorTools
         /// Indicador «P — Continúa practicando»: copia del de la E (PromptObjetos), con otra tecla, arriba a la izquierda para no montarse con
         /// los demás. Aparece al cerrar la práctica y, con P, la vuelve a abrir.
         /// </summary>
-        private static void BuildResumePrompt(LearningLevelController controller)
+        private static void BuildResumePrompt(MonoBehaviour controller, string templateName = "PromptObjetos")
         {
             DestroyRoot("PromptPractica");
-            var template = GameObject.Find("PromptObjetos");
+            var template = GameObject.Find(templateName);
             var copy = Object.Instantiate(template);
             copy.name = "PromptPractica";
             var prompt = copy.GetComponentInChildren<InteractionPrompt>(true);
@@ -322,6 +322,48 @@ namespace Lumina.EditorTools
             var resume = copy.AddComponent<PracticeResumePrompt>();
             Ui.Set(resume, "level", controller);
             Ui.Set(resume, "prompt", prompt);
+        }
+
+        /// <summary>
+        /// Casa del Abecedario, igual que las otras: Sena aparece frente al jugador (a 3,4 m, sobre la alfombra), saluda al cargar, su burbuja de
+        /// diálogo sale a un costado y por completo en pantalla, la puerta de salida ya no alcanza al jugador en su punto de inicio y, al cerrar
+        /// la práctica, aparece «P — Continúa practicando». Reconstruye solo esas piezas; el panel y la mano del abecedario no se tocan.
+        /// </summary>
+        [MenuItem("Lumina/Niveles/Abecedario: Sena frente al jugador, burbuja y tecla P")]
+        public static void SetupAlphabetHouse()
+        {
+            var scene = EditorSceneManager.OpenScene(SourceScene, OpenSceneMode.Single);
+            var player = Object.FindFirstObjectByType<Lumina.Player.FirstPersonController>();
+            var sena = GameObject.Find("Sena");
+            var controller = Object.FindFirstObjectByType<Lumina.Alphabet.AlphabetLevelController>();
+            if (player == null || sena == null || controller == null) throw new System.InvalidOperationException("Faltan el jugador, Sena o AlphabetLevelController en AlphabetHouse.");
+
+            const float senaDistance = 3.4f;
+            Vector3 forward = player.transform.forward; forward.y = 0f; forward.Normalize();
+            var position = player.transform.position + forward * senaDistance - player.transform.right * 1.1f;
+            position.y = 0.06f; // sobre la alfombra: más abajo los pies quedan metidos en el piso
+            sena.transform.SetPositionAndRotation(position, Quaternion.LookRotation(-forward));
+
+            Ui.SetFloat(sena.GetComponent<ProximityInteractable>(), "interactionRadius", senaDistance + 0.8f);
+            var bubble = sena.transform.Find("WelcomeBubble");
+            if (bubble != null)
+            {
+                bubble.position = position + new Vector3(1.05f, 1.15f, 0f);
+                var so = new SerializedObject(bubble.GetComponent<DialogueBubble>());
+                so.FindProperty("referenceDistance").floatValue = 4.6f;
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
+            SetBool(sena.GetComponent<Lumina.NPC.SenaPresenter>(), "waveOnStart", true);
+
+            // La puerta de salida alcanzaba al jugador en su punto de inicio: ahora hay que acercarse a ella.
+            var exit = GameObject.Find("PuntoSalida");
+            if (exit != null) Ui.SetFloat(exit.GetComponent<ProximityInteractable>(), "interactionRadius", 1f);
+
+            BuildResumePrompt(controller, "PromptAbecedario");
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            Debug.Log("[Lumina] AlphabetHouse: Sena en " + position + ", burbuja a un costado y tecla P lista.");
         }
 
         private static void SetBool(Object target, string property, bool value)

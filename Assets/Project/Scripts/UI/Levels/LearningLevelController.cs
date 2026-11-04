@@ -23,7 +23,7 @@ namespace Lumina.UI
     /// El estado de cada seña y su disponibilidad para practicar provienen del backend. Números, Saludos y Meses
     /// cuentan con reconocimiento en Unity y envían sus resultados por el flujo oficial.
     /// </summary>
-    public class LearningLevelController : MonoBehaviour
+    public class LearningLevelController : MonoBehaviour, IPracticePanel
     {
         [SerializeField] private LevelKind kind;
         [Tooltip("Objeto raíz del panel (el canvas). Está desactivado mientras no se usa.")]

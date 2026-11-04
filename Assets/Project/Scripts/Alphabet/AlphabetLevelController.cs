@@ -22,7 +22,7 @@ namespace Lumina.Alphabet
     /// reconocida se envía como POST /evaluations; aquí no se guarda ni se calcula progreso. Lo único local es qué letras se
     /// han visto en esta visita.
     /// </summary>
-    public class AlphabetLevelController : MonoBehaviour
+    public class AlphabetLevelController : MonoBehaviour, IPracticePanel
     {
         [Header("Datos y mano")]
         [SerializeField] private LscAlphabet alphabet;
@@ -95,6 +95,12 @@ namespace Lumina.Alphabet
 
         public bool IsOpen => _open;
 
+        /// <summary>True si el panel ya se abrió al menos una vez en esta visita (para ofrecer «Continúa practicando»).</summary>
+        public bool WasOpened { get; private set; }
+
+        /// <summary>Abre la práctica en la primera letra sin superar (lo que ya hace <see cref="Open"/>).</summary>
+        public void OpenPractice() => Open();
+
         private void Awake()
         {
             if (alphabet == null || hand == null || uiRoot == null || learningCamera == null || player == null ||
@@ -154,6 +160,7 @@ namespace Lumina.Alphabet
             if (_open) return;
 
             _open = true;
+            WasOpened = true;
             uiRoot.SetActive(true);
             if (playerCamera != null) playerCamera.enabled = false;
             learningCamera.enabled = true;
