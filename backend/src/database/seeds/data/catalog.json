@@ -176,7 +176,7 @@
       "name": "Numbers",
       "description": "Numbers from 0 to 30.",
       "position": 2,
-      "requiredXp": 300,
+      "requiredXp": 270,
       "items": [
         {
           "code": "numeros.0",
@@ -371,7 +371,7 @@
       "name": "Months of the year",
       "description": "The twelve months of the year.",
       "position": 3,
-      "requiredXp": 700,
+      "requiredXp": 580,
       "items": [
         {
           "code": "MONTH_JANUARY",
@@ -452,7 +452,7 @@
       "name": "Greetings and phrases",
       "description": "Basic greetings and phrases for everyday conversation.",
       "position": 4,
-      "requiredXp": 1200,
+      "requiredXp": 700,
       "items": [
         {
           "code": "PHRASE_GOOD_MORNING",

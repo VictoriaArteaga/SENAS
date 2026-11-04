@@ -4,11 +4,11 @@ import { SignStatus } from '../../levels/unlocks';
 export class LevelReferenceDto {
   @ApiProperty({ example: 'NUMBERS' }) code: string;
   @ApiProperty({ example: 'Numbers' }) name: string;
-  @ApiProperty({ example: 300 }) requiredXp: number;
+  @ApiProperty({ example: 270 }) requiredXp: number;
 }
 
 export class NextLevelDto extends LevelReferenceDto {
-  @ApiProperty({ example: 120 }) missingXp: number;
+  @ApiProperty({ example: 90 }) missingXp: number;
 }
 
 export class ProgressSummaryDto {

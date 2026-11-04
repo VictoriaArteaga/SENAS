@@ -20,8 +20,8 @@ describe('ProgressService.summary', () => {
       nextLevel: {
         code: 'NUMBERS',
         name: 'Numbers',
-        requiredXp: 300,
-        missingXp: 300,
+        requiredXp: 270,
+        missingXp: 270,
       },
       passedSigns: 0,
       totalSigns: 81,
@@ -40,7 +40,7 @@ describe('ProgressService.summary', () => {
     const r = await build(db).summary(USER_ID);
 
     expect(r.highestUnlockedLevel?.code).toBe('NUMBERS');
-    expect(r.nextLevel).toMatchObject({ code: 'MONTHS', missingXp: 390 });
+    expect(r.nextLevel).toMatchObject({ code: 'MONTHS', missingXp: 270 });
     expect(r.passedSigns).toBe(2);
     expect(r.totalStars).toBe(4);
     expect(r.totalAttempts).toBe(4);
@@ -94,7 +94,7 @@ describe('ProgressService.bySign', () => {
   });
 
   it('sign in a level locked by XP → LOCKED', async () => {
-    const r = await build(new FakeDb(299)).bySign(USER_ID, 'numeros.0');
+    const r = await build(new FakeDb(269)).bySign(USER_ID, 'numeros.0');
     expect(r.status).toBe(SignStatus.LOCKED);
   });
 

@@ -49,8 +49,8 @@ describe('LevelsService', () => {
     expect(levels[1]).toMatchObject({
       code: 'NUMBERS',
       unlocked: false,
-      requiredXp: 300,
-      missingXp: 180,
+      requiredXp: 270,
+      missingXp: 150,
       passedSigns: 0,
       totalSigns: 31,
       possibleStars: 93,
