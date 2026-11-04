@@ -1,118 +1,71 @@
 # Señas: El mundo de las manos
 
 > Videojuego educativo 3D para aprender y practicar la **Lengua de Señas Colombiana (LSC)** con retroalimentación en tiempo real mediante visión artificial.
+
 ---
 
 ## Descripción
 
-**Señas: El mundo de las manos** propone una forma más activa de aprender LSC. La mayoría de los recursos disponibles (imágenes, textos y videos) permiten *ver* cómo se hace una seña, pero no dicen si el estudiante la está ejecutando bien.
+La mayoría de los recursos para aprender LSC (imágenes, textos y videos) permiten *ver* cómo se hace una seña, pero no dicen si el estudiante la ejecuta bien. En **Señas** el jugador:
 
-En este juego el jugador:
+1. Crea una cuenta y elige su avatar.
+2. Explora el mundo de **Lúmina** en primera persona.
+3. Habla con **Sena**, la guía, y entra a las casas temáticas.
+4. Ve la demostración de cada seña.
+5. La repite frente a la cámara y recibe una **puntuación de precisión** con estrellas.
 
-1. Crea y personaliza su avatar.
-2. Recorre distintos escenarios del mundo de **Lúmina**.
-3. Ve cómo **Sena**, el personaje guía, demuestra cada seña con animaciones 3D.
-4. Repite la seña frente a la cámara.
-5. Recibe una **puntuación de precisión** y retroalimentación inmediata para mejorar.
+## Estado actual del desarrollo
 
-## Objetivo
+### Ya funciona
 
-Desarrollar una experiencia de videojuego que combine **educación, interacción 3D y reconocimiento de movimiento** para ofrecer una alternativa más participativa al aprendizaje de la LSC.
+| Área | Qué hay |
+|---|---|
+| **Cuentas** | Registro, inicio de sesión y cierre de sesión contra el backend real (JWT con refresh tokens rotativos). Pantallas de login y registro animadas. |
+| **Avatares** | Selección de avatar al registrarse y cambio posterior desde el perfil. Catálogo de avatares migrado al paquete Avatars2. |
+| **Mundo Lúmina** | Escena explorable en primera persona con plaza central, caminos, casas, vegetación y cielo. Control de jugador, interacción por proximidad y salida protegida de las casas. |
+| **Sena** | Personaje guía con diálogos de bienvenida y burbujas de conversación. |
+| **Casas de aprendizaje** | Cuatro casas jugables: **Abecedario**, **Números (0–30)**, **Meses** y **Saludos y frases**. Cada una tiene selector de elementos, pantalla de demostración, práctica y avisos de nivel anterior/siguiente. |
+| **Reconocimiento** | Captura de cámara y reconocimiento de manos con MediaPipe. Reconocedores propios para números y saludos (secuencias de manos con referencias de cabeza y torso). |
+| **Práctica y resultados** | Flujo Práctica → Resultados con puntuación, estrellas, XP y reintento. |
+| **Progreso** | Perfil con estadísticas, progreso por nivel y desbloqueo progresivo de niveles guardado en el servidor. |
+| **Menú y ajustes** | Menú principal, ajustes (idioma, audio) y tema visual unificado. |
+| **Idiomas** | Interfaz y textos de Sena en **español e inglés**. |
+| **Backend** | API REST (NestJS + PostgreSQL/Supabase) con usuarios, perfiles, catálogo (4 niveles, 81 señas), progreso, XP, desbloqueos e historial. El backend solo recibe el *resultado* de cada evaluación, nunca imágenes. |
 
-## Características principales
+### Pendiente
 
-- 🧍 **Avatar personalizable** (apariencia, tono de piel, cabello, ropa, accesorios y rasgos faciales).
-- 🧑‍🏫 **Sena, personaje guía** que explica, demuestra, motiva y desbloquea niveles.
-- 📷 **Reconocimiento de manos y rostro** en tiempo real con MediaPipe.
-- 📊 **Evaluación por patrón de referencia**: no compara solo una imagen, sino posición, orientación, forma, movimiento y trayectoria.
-- ⭐ **Gamificación**: estrellas, puntos de experiencia (XP), niveles desbloqueables y perfil de progreso.
-- 🗺️ **Dificultad progresiva**: de señas individuales a frases y situaciones comunicativas.
+- Personajes secundarios (Ana, Mateo y Luna) y sus diálogos.
+- Contenido completo de los niveles 2, 3 y 4 (familia, frases y situaciones, reto universitario).
+- Personalización avanzada del avatar (ropa, accesorios, rasgos) y tienda de desbloqueables con XP.
+- Evaluación por frases con puntuación por componente.
+- Pruebas con usuarios y ajuste de umbrales de puntuación.
+- Build de distribución.
 
 ## La historia
 
-En el mundo de **Lúmina**, una antigua energía llamada **La Voz de las Manos** está desapareciendo. Esta energía representa la capacidad de las personas para comunicarse, comprenderse y conectarse.
-
-El jugador debe recorrer las regiones de Lúmina, aprender las señas que permiten comunicarse con sus habitantes y recuperar los fragmentos de La Voz de las Manos hasta restaurarla por completo.
+En el mundo de **Lúmina**, una antigua energía llamada **La Voz de las Manos** está desapareciendo. El jugador recorre la región, aprende las señas que permiten comunicarse con sus habitantes y recupera los fragmentos de esa energía hasta restaurarla.
 
 > *La comunicación no depende únicamente de la voz. También podemos comunicarnos con nuestras manos, nuestros gestos y nuestras expresiones.*
 
-## Personajes
+## Niveles de diseño
 
-| Personaje | Rol |
+| Nivel | Contenido previsto |
 |---|---|
-| **Jugador** | Protagonista, con avatar personalizable |
-| **Sena** | Guía: explica reglas, enseña señas, da retroalimentación y desbloquea niveles |
-| **Ana** | Estudiante que necesita ayuda para encontrar un objeto |
-| **Mateo** | Plantea desafíos con el vocabulario aprendido |
-| **Luna** | Niña que introduce nuevas palabras y expresiones |
+| **1. Primeras señas** | Abecedario, números, saludos, meses *(desarrollado)* |
+| **2. Mi mundo** | Familia, colegio, comida, animales, emociones |
+| **3. Situaciones cotidianas** | Frases como "Necesito ayuda" o "¿Dónde está el colegio?" |
+| **4. Reto universitario** | Universidad, trabajo, tecnología, salud |
 
-Los personajes secundarios funcionan con diálogos y eventos predefinidos (sin sistemas complejos de IA).
-
-## Niveles
-
-```
-                    LÚMINA
-                       │
-     ┌─────────┬───────┴───────┬──────────┐
-  NIVEL 1   NIVEL 2        NIVEL 3     NIVEL 4
-  Primeras  Mi mundo       Situaciones Reto
-  señas                    cotidianas  universitario
-```
-
-| Nivel | Público aprox. | Contenido | Señas |
-|---|---|---|---|
-| **1. Primeras señas** | 10–14 años | Alfabeto, números, colores, saludos, sí/no, gracias, por favor | 10 |
-| **2. Mi mundo** | 15–18 años | Familia, amigos, colegio, comida, animales, lugares, emociones, actividades | 10 |
-| **3. Situaciones cotidianas** | General | Combinaciones de señas: "Necesito ayuda", "Quiero agua", "¿Dónde está el colegio?" | 10 |
-| **4. Reto universitario** | Universitarios | Universidad, trabajo, tecnología, salud, presentaciones, situaciones profesionales | 10 |
-
-La progresión pedagógica es: **señas individuales → palabras → frases → situaciones comunicativas**.
-
-> **Alcance:** el proyecto no pretende enseñar toda la LSC. Se plantea un corpus inicial de **30 a 40 señas y frases**, lo que permite desarrollar y evaluar el sistema de forma realista.
+La progresión pedagógica es **señas individuales → palabras → frases → situaciones comunicativas**. El corpus inicial apunta a 30–40 señas y frases; el catálogo del backend ya contiene 81 entradas.
 
 ## Bucle principal del juego
 
 ```
-EXPLORAR → CONOCER NPC → APRENDER SEÑA → AVATAR LA DEMUESTRA
-    → JUGADOR PRACTICA → CÁMARA CAPTURA → MEDIAPIPE ANALIZA
-    → EVALUACIÓN → PUNTUACIÓN → ¿LO HIZO BIEN?
-                                    ├── Sí → Desbloquea siguiente
-                                    └── No → Reintenta
-```
-
-## ¿Dónde entra la inteligencia artificial?
-
-El proyecto **no entrena un modelo desde cero**: usa modelos de visión artificial preentrenados y construye encima un sistema propio de evaluación.
-
-**Módulo 1 – Avatar (sin IA)**
-
-```
-Seña → Animación previamente creada → Animator de Unity → Avatar realiza la seña
-```
-
-**Módulo 2 – Reconocimiento (con visión artificial)**
-
-```
-Cámara → MediaPipe → Landmarks de manos y rostro
-       → Procesamiento del movimiento → Comparación con patrón esperado
-       → Puntuación → Retroalimentación
-```
-
-### Patrón de referencia por seña
-
-Cada seña se describe con un patrón que considera:
-
-```
-SEÑA: "HOLA"
-├── Mano derecha
-│   ├── Posición inicial
-│   ├── Orientación
-│   ├── Forma
-│   ├── Trayectoria
-│   └── Posición final
-└── Rostro
-    ├── Expresión
-    └── Orientación
+EXPLORAR → HABLAR CON SENA → ENTRAR A UNA CASA → VER LA SEÑA
+    → PRACTICAR → CÁMARA CAPTURA → MEDIAPIPE ANALIZA
+    → PUNTUACIÓN → ¿LO HIZO BIEN?
+                      ├── Sí → Estrellas + XP + desbloquea siguiente
+                      └── No → Reintenta
 ```
 
 ## Sistema de puntuación
@@ -124,48 +77,40 @@ SEÑA: "HOLA"
 | 60 – 74 % | ★ |
 | < 60 % | Reintentar |
 
-Cada seña correcta otorga **XP** (por ejemplo, `+100 XP`) que permite desbloquear nuevas zonas, ropa, accesorios, personajes y señas.
-
-**Ejemplo de retroalimentación:**
+## Arquitectura
 
 ```
-Seña: HOLA       ★★★★☆   Precisión: 86 %
-"¡Muy bien! Tu movimiento fue correcto.
- Intenta mantener la mano un poco más cerca del rostro."
+Unity (cliente)                              Backend (NestJS)
+├─ UI y escenas                              ├─ auth (JWT + refresh rotativo, argon2id)
+├─ MediaPipe → landmarks → evaluador   ───►  ├─ profiles / users
+│  (la IA corre dentro de Unity)             ├─ levels / signs (catálogo)
+└─ Api/ (ApiClient, ProgressStore, …)        ├─ evaluations (resultados)
+                                             └─ progress (XP, desbloqueos, historial)
+                                                        │
+                                                   PostgreSQL (Supabase)
 ```
 
-En el nivel 3 el sistema evalúa cada componente de la frase:
-
-```
-HOLA        ✓ 94 %
-AYUDA       ✓ 87 %
-BIBLIOTECA  ~ 72 %
-Puntuación: 84 %
-```
+El proyecto **no entrena un modelo desde cero**: usa modelos de visión artificial preentrenados (MediaPipe) y construye encima un sistema propio de evaluación por patrón de referencia (posición, orientación, forma y trayectoria).
 
 ## Tecnologías
 
 | Componente | Tecnología |
 |---|---|
-| Motor de juego | Unity |
-| Lenguaje | C# |
-| Visión artificial | MediaPipe (Hands + Face Mesh) |
-| Plataforma | PC (con cámara web) |
-| Estilo visual | 3D estilizado, colorido y amigable |
+| Motor de juego | Unity **6000.0.34f1**, URP, Input System |
+| Lenguaje cliente | C# |
+| Visión artificial | MediaPipe (manos, rostro y torso) |
+| Backend | NestJS · TypeScript · TypeORM · PostgreSQL (Supabase) · Swagger · Jest |
+| Plataforma | PC con cámara web |
 
 ## Estructura del repositorio
 
-> Estructura propuesta; ajústala a medida que avance el desarrollo.
-
 ```
-senas-el-mundo-de-las-manos/
 ├── Assets/
-│   ├── Animations/      # Animaciones de las señas
-│   ├── Characters/      # Avatar, Sena y NPC
-│   ├── Scenes/          # Mundos y niveles
-│   ├── Scripts/         # Lógica del juego, evaluación y UI
-│   └── ...
-├── Docs/                # Documento de concepto (GDD) y diagramas
+│   └── Project/
+│       ├── Scenes/      # Login, Register, MainMenu, LuminaWorld, casas, Practice, Results, Profile, Settings
+│       └── Scripts/     # Alphabet, Api, Auth, Core, Interaction, NPC, Player, Signs, UI
+├── backend/             # API REST (NestJS)
+├── docs/                # Documentación técnica y capturas
 ├── Packages/
 ├── ProjectSettings/
 └── README.md
@@ -173,37 +118,40 @@ senas-el-mundo-de-las-manos/
 
 ## Instalación y ejecución
 
-> El proyecto se encuentra en fase de diseño. Estas instrucciones se completarán cuando exista una primera versión funcional.
-
-**Requisitos previos**
-
-- Unity (versión por definir)
-- Cámara web
-- PC con capacidad suficiente para ejecutar Unity y MediaPipe en tiempo real
-
-**Pasos (previstos)**
+**Requisitos:** Unity 6000.0.34f1, Node.js 22+, un proyecto de Supabase y una cámara web.
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/<usuario>/<repositorio>.git
+# 1. Clonar
+git clone https://github.com/VictoriaArteaga/<repositorio>.git
 
-# 2. Abrir la carpeta con Unity Hub
-# 3. Instalar el plugin de MediaPipe para Unity
-# 4. Abrir la escena principal y ejecutar
+# 2. Backend
+cd backend
+npm ci
+cp .env.example .env      # completar variables (ver backend/README.md)
+npm run start:dev         # http://localhost:3000/api/v1
 ```
+
+3. Abrir la carpeta raíz con Unity Hub.
+4. Abrir **siempre la escena `LoginScene`**, registrarse o iniciar sesión y jugar.
+
+Guías detalladas:
+
+- [Ejecutar el juego con el backend en local](docs/unity-con-backend.md)
+- [Documentación del backend](backend/README.md) y [contrato de integración](backend/docs/integration-contract.md)
+- [Escena Lúmina](docs/lumina-scene.md) · [UI de autenticación](docs/auth-ui.md)
 
 ## Hoja de ruta
 
 - [x] Documento de concepto (GDD)
-- [ ] Definición del corpus de 30–40 señas
-- [ ] Prototipo de captura de manos con MediaPipe
-- [ ] Sistema de patrones de referencia y puntuación
-- [ ] Avatar, Sena y animaciones de señas
-- [ ] Nivel 1 jugable
+- [x] Prototipo de captura de manos con MediaPipe
+- [x] Sistema de puntuación por referencia (números y saludos)
+- [x] Backend con cuentas, progreso, XP y desbloqueos
+- [x] Avatares, Sena y mundo Lúmina explorable
+- [x] Nivel 1 jugable (abecedario, números, meses, saludos)
+- [x] Interfaz bilingüe (ES/EN)
 - [ ] Niveles 2, 3 y 4
-- [ ] Sistema de progreso, XP y personalización
+- [ ] Personajes secundarios y personalización avanzada
 - [ ] Pruebas con usuarios y ajustes
-
 
 ## Autoría
 
