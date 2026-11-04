@@ -244,11 +244,10 @@ namespace Lumina.EditorTools
             // Delante del jugador y un poco a su izquierda, para que no le tape el televisor que queda de frente.
             // A 3,4 m (a menos distancia la cámara le corta los zapatos) en las tres casas; en Números, apenas por encima de la alfombra.
             bool numbers = kind == LevelKind.Numbers;
-            // En Saludos queda más lejos todavía (4,2 m): el rincón de conversación (mesa baja y sofás) ocupa el centro y ahí el televisor de la práctica
-            // se coloca detrás de la mesa para no atravesarla.
-            float senaDistance = kind == LevelKind.Greetings ? 4.2f : 3.4f;
+            // En Saludos queda a 3 m: más cerca, para que su burbuja de diálogo salga por delante del televisor de la casa (que está a 5,6 m).
+            float senaDistance = kind == LevelKind.Greetings ? 3f : 3.4f;
             var position = player.transform.position + forward * senaDistance - player.transform.right * 1.1f;
-            position.y = numbers ? 0.04f : 0f;
+            position.y = 0.06f; // sobre la alfombra: más abajo los pies quedan metidos en el piso
             PlaceSena(sena, position, kind == LevelKind.Numbers ? NumbersWelcome : kind == LevelKind.Months ? MonthsWelcome : GreetingsWelcome);
             sena.transform.rotation = Quaternion.LookRotation(-forward);
 
@@ -271,12 +270,6 @@ namespace Lumina.EditorTools
 
             var levelController = Object.FindFirstObjectByType<LearningLevelController>();
             BuildResumePrompt(levelController);
-            if (kind == LevelKind.Greetings)
-            {
-                // La mesa baja está en (0; 4,3) con 0,95 m de diámetro: el televisor (a 4,2 m del jugador) queda detrás de ella, sin atravesarla.
-                Ui.SetFloat(levelController, "tvDistance", 4.2f);
-                Ui.SetFloat(levelController, "tvScale", 1.45f);
-            }
 
             // La puerta de salida alcanzaba al jugador en su punto de inicio: ahora hay que acercarse a ella.
             var exit = GameObject.Find("PuntoSalida");

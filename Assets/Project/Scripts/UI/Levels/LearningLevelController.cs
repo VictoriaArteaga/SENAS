@@ -58,11 +58,13 @@ namespace Lumina.UI
         [Tooltip("Si se asigna, PRACTICAR/EMPEZAR practica aquí mismo (cámara, calificación y estrellas) en vez de abrir la escena Practice.")]
         [SerializeField] private LearningPracticeView practice;
         [Tooltip("Distancia (m) delante de la cámara a la que se coloca el televisor durante la práctica.")]
-        [SerializeField] private float tvDistance = 3.4f;
+        [SerializeField] private float tvDistance = 2.6f;
         [Tooltip("Dónde queda el televisor en la pantalla durante la práctica: −1 izquierda … 1 derecha. −0,5 lo deja en el cuarto izquierdo, junto al panel.")]
         [SerializeField] private float tvScreenX = -0.5f;
         [Tooltip("Cuánto se agranda el televisor (con sus patas) durante la práctica. Con distancia 3,4 m, 1,27 entra completo, base incluida, sin tocar lo que cuelga del techo.")]
-        [SerializeField, Range(1f, 2f)] private float tvScale = 1.27f;
+        [SerializeField, Range(1f, 2.5f)] private float tvScale = 1.6f;
+        [Tooltip("Cuánto más abajo (m) que los ojos queda el centro de la pantalla; así no roza lo que cuelga del techo.")]
+        [SerializeField] private float tvBelowEyes = 0.17f;
         [Tooltip("Objetos que se ocultan mientras el panel está abierto (p. ej. el modelo de Sena, para que no se vea de fondo).")]
         [SerializeField] private GameObject[] hideWhileOpen;
 
@@ -191,10 +193,13 @@ namespace Lumina.UI
         private bool _tvHomeSaved;
         private Vector3 _tvHomeScale = Vector3.one;
 
+        // Partes del carrito que se esconden SOLO durante la práctica: queda únicamente la pantalla del televisor (marco, pantalla y barbilla).
+        private static readonly string[] TvStand = { "BasePlaca", "Rueda", "Poste", "Repisa", "Reproductor", "LuzReproductor", "Soporte" };
+
         /// <summary>
-        /// Durante la práctica el televisor de la casa es EL televisor de la lección: más grande (<see cref="tvScale"/>), recto (sin inclinar),
-        /// apoyado en el suelo con sus patas y de frente a la cámara. La mirada del jugador queda a nivel y gira lo justo para dejarlo en el
-        /// cuarto izquierdo de la pantalla (el panel ocupa la derecha). Al cerrar el panel todo vuelve a su sitio.
+        /// Durante la práctica el televisor de la casa es EL televisor de la lección, pero solo su pantalla (sin carrito ni patas): más grande
+        /// (<see cref="tvScale"/>), recta y de frente a la cámara, a la altura de los ojos y en el cuarto izquierdo de la pantalla (el panel ocupa la
+        /// derecha). La mirada del jugador queda a nivel. Al cerrar el panel el televisor vuelve a su sitio, con su carrito, tal como estaba.
         /// </summary>
         private void BringTelevision()
         {
@@ -206,22 +211,24 @@ namespace Lumina.UI
             Vector3 forward = cam.transform.forward; forward.y = 0f; forward.Normalize();
             Vector3 eye = cam.transform.position;
             Vector3 position = eye + forward * tvDistance;
-            position.y = _tvHomePosition.y; // apoyado en el suelo, con sus patas
+            // El centro de la pantalla está 1,42 m por encima de la base del televisor (a escala 1): queda a la altura de los ojos.
+            position.y = eye.y - 1.42f * _tvHomeScale.y * tvScale - tvBelowEyes;
 
-            // Mirada a nivel (sin inclinar la cámara hacia abajo, así el televisor no se ve en trapecio) y desplazada hacia la derecha lo justo
-            // para que el televisor quede en el cuarto izquierdo de la pantalla.
+            // Mirada a nivel y desplazada hacia la derecha lo justo para dejar el televisor en el cuarto izquierdo.
             if (player != null) player.LookTowards(new Vector3(position.x, eye.y, position.z), tvScreenX);
 
             // Recto y de frente: la pantalla es perpendicular a la vista y no se inclina hacia ningún lado.
             Vector3 view = cam.transform.forward; view.y = 0f;
             tv.SetPositionAndRotation(position, Quaternion.LookRotation(-view.normalized));
             tv.localScale = _tvHomeScale * tvScale;
+            SetStandVisible(false);
         }
 
         private void RestoreTelevision()
         {
             if (television == null || !_tvHomeSaved) return;
             var tv = television.transform;
+            SetStandVisible(true);
             tv.SetPositionAndRotation(_tvHomePosition, _tvHomeRotation);
             tv.localScale = _tvHomeScale;
             var cam = Camera.main;
@@ -230,6 +237,12 @@ namespace Lumina.UI
                 Vector3 forward = cam.transform.forward; forward.y = 0f;
                 player.LookTowards(cam.transform.position + forward.normalized); // mirada otra vez a nivel
             }
+        }
+
+        private void SetStandVisible(bool visible)
+        {
+            foreach (Transform child in television.transform)
+                if (System.Array.IndexOf(TvStand, child.name) >= 0) child.gameObject.SetActive(visible);
         }
 
         private void OnPracticeRunningChanged()
