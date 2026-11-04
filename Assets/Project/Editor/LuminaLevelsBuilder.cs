@@ -253,9 +253,7 @@ namespace Lumina.EditorTools
             {
                 // Más lejos que el radio de siempre: se amplía para poder hablar con ella desde el punto de inicio.
                 Ui.SetFloat(sena.GetComponent<ProximityInteractable>(), "interactionRadius", 4f);
-                // Durante la lección Sena no se ve de fondo: se oculta su modelo mientras el panel está abierto.
-                var model = sena.transform.Find("Model");
-                if (model != null) Ui.SetArray(Object.FindFirstObjectByType<LearningLevelController>(), "hideWhileOpen", new Object[] { model.gameObject });
+
                 // Los cubos que cuelgan del techo (≈ 2,15–2,9 m) cruzaban la burbuja de diálogo, que flotaba sobre su cabeza (1,85 m):
                 // la burbuja pasa a un costado (hacia el centro de la sala) y por debajo de los cubos.
                 var bubble = sena.transform.Find("WelcomeBubble");
@@ -272,6 +270,10 @@ namespace Lumina.EditorTools
             // La puerta de salida alcanzaba al jugador en su punto de inicio: ahora hay que acercarse a ella.
             var exit = GameObject.Find("PuntoSalida");
             if (exit != null) Ui.SetFloat(exit.GetComponent<ProximityInteractable>(), "interactionRadius", 1f);
+
+            // Durante la lección Sena no se ve de fondo: se oculta su modelo mientras el panel está abierto.
+            var senaModel = sena.transform.Find("Model");
+            if (senaModel != null) Ui.SetArray(Object.FindFirstObjectByType<LearningLevelController>(), "hideWhileOpen", new Object[] { senaModel.gameObject });
 
             SetBool(sena.GetComponent<Lumina.NPC.SenaPresenter>(), "waveOnStart", true);
             var welcome = sena.GetComponent<Lumina.NPC.SenaWelcomeInteraction>();
@@ -856,7 +858,6 @@ namespace Lumina.EditorTools
             var card = Screens.ResponsiveCard(canvas.transform, "LevelPanel",
                 roomy ? new Vector2(0.52f, 0.025f) : new Vector2(0.52f, 0.08f), roomy ? new Vector2(0.975f, 0.975f) : new Vector2(0.975f, 0.92f), out var outer);
             Screens.VStack(card, roomy ? 10f : 12f, roomy ? new RectOffset(56, 56, 34, 76) : new RectOffset(40, 40, 28, 28));
-            BuildTelevisionOnCanvas(canvas.transform, kind);
 
             var bar = Screens.BuildBar(card, 0f, 0f, 0f);
             Screens.Elem(bar, minH: 40f, prefH: 48f);

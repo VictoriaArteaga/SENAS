@@ -57,9 +57,12 @@ namespace Lumina.UI
         [Header("Práctica dentro de la casa (opcional)")]
         [Tooltip("Si se asigna, PRACTICAR/EMPEZAR practica aquí mismo (cámara, calificación y estrellas) en vez de abrir la escena Practice.")]
         [SerializeField] private LearningPracticeView practice;
-        [Tooltip("Dónde se coloca el jugador para ver el televisor al abrir la práctica (opcional).")]
-        [SerializeField] private Transform viewSpot;
-        [SerializeField] private float viewSpotMinDistance = 4f;
+        [Tooltip("Distancia (m) delante de la cámara a la que se coloca el televisor durante la práctica.")]
+        [SerializeField] private float tvDistance = 1.5f;
+        [Tooltip("Dónde queda el televisor en la pantalla durante la práctica: −1 izquierda … 1 derecha. −0,5 lo deja en el cuarto izquierdo, junto al panel.")]
+        [SerializeField] private float tvScreenX = -0.5f;
+        [Tooltip("Cuánto más abajo (m) que los ojos queda el centro de la pantalla; evita que decoraciones del techo toquen el video.")]
+        [SerializeField] private float tvBelowEyes = 0.2f;
         [Tooltip("Objetos que se ocultan mientras el panel está abierto (p. ej. el modelo de Sena, para que no se vea de fondo).")]
         [SerializeField] private GameObject[] hideWhileOpen;
 
@@ -143,7 +146,8 @@ namespace Lumina.UI
         {
             IsOpen = true;
             panelRoot.SetActive(true);
-            if (player != null) { player.enabled = false; player.SetCursorLocked(false); FaceTelevision(); }
+            if (player != null) { player.enabled = false; player.SetCursorLocked(false); }
+            BringTelevision();
             if (practice != null) practice.Begin();
             SetHidden(true);
             Select(index);
@@ -157,6 +161,7 @@ namespace Lumina.UI
             if (practice != null) practice.End();
             if (television != null) television.Stop(); // al salir del panel el video deja de reproducirse
             SetHidden(false);
+            RestoreTelevision();
             panelRoot.SetActive(false);
             foreach (var target in _targets) if (target != null) target.SetHighlighted(false);
             if (player != null) { player.enabled = true; player.SetCursorLocked(true); }
@@ -177,16 +182,34 @@ namespace Lumina.UI
             Open(first);
         }
 
+        private Vector3 _tvHomePosition;
+        private Quaternion _tvHomeRotation;
+        private bool _tvHomeSaved;
+
         /// <summary>
-        /// Deja el televisor a la vista en la mitad izquierda de la pantalla (el panel ocupa la derecha). Si el jugador está lejos
-        /// y hay un punto de observación, lo coloca ahí.
+        /// Durante la práctica el televisor de la casa es EL televisor de la lección: se acerca delante de la cámara, en la mitad izquierda de la
+        /// pantalla (el panel ocupa la derecha), mirando al jugador y a la altura de sus ojos. Al cerrar el panel vuelve a su sitio.
         /// </summary>
-        private void FaceTelevision()
+        private void BringTelevision()
         {
-            if (television == null) return;
-            if (viewSpot != null && Vector3.Distance(player.transform.position, television.transform.position) > viewSpotMinDistance)
-                player.TeleportTo(viewSpot.position);
-            player.LookTowards(television.transform.position + Vector3.up * 1.42f, -0.5f);
+            var cam = Camera.main;
+            if (television == null || cam == null) return;
+            var tv = television.transform;
+            if (!_tvHomeSaved) { _tvHomePosition = tv.position; _tvHomeRotation = tv.rotation; _tvHomeSaved = true; }
+
+            Vector3 forward = cam.transform.forward; forward.y = 0f; forward.Normalize();
+            Vector3 right = Vector3.Cross(Vector3.up, forward);
+            float halfWidth = Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * cam.aspect * tvDistance;
+            Vector3 position = cam.transform.position + forward * tvDistance + right * (tvScreenX * halfWidth);
+            position.y = cam.transform.position.y - 1.42f - tvBelowEyes; // el centro de la pantalla (1,42 m sobre la base) queda un poco bajo los ojos
+
+            Vector3 toCamera = cam.transform.position - position; toCamera.y = 0f;
+            tv.SetPositionAndRotation(position, Quaternion.LookRotation(toCamera));
+        }
+
+        private void RestoreTelevision()
+        {
+            if (television != null && _tvHomeSaved) television.transform.SetPositionAndRotation(_tvHomePosition, _tvHomeRotation);
         }
 
         private void OnPracticeRunningChanged()
