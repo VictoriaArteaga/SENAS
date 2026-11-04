@@ -98,8 +98,26 @@ namespace Lumina.UI
             Cancel();
             _sign = sign;
             _bestSimilarity = 0f;
-            ShowScore(0f, false);
+            ShowSavedScore();
             SetStatus(Loc.T("levels.watchTv"));
+        }
+
+        /// <summary>Muestra el mejor resultado ya guardado de la seña (si lo hay); si no, deja la calificación en blanco.</summary>
+        private void ShowSavedScore()
+        {
+            var saved = _sign != null ? ProgressStore.SignOf(_sign.id) : null;
+            bool hasResult = saved != null && (saved.status == SignStatusNames.Passed || saved.bestStars > 0 || saved.bestPrecision > 0f);
+            if (!hasResult) { ShowScore(0f, false); return; }
+            if (scoreCard != null) scoreCard.Set(Mathf.RoundToInt(saved.bestPrecision) + "%", Loc.T("levels.scoreCaption"));
+            if (starsCard != null) starsCard.Set(saved.bestStars + " / 3", Loc.T("levels.starsCaption"));
+        }
+
+        // El detalle del nivel puede llegar del backend después de abrir la seña, o cambiar tras guardar un intento.
+        private void OnEnable() => ProgressStore.Changed += OnProgressChanged;
+
+        private void OnProgressChanged()
+        {
+            if (!IsRunning && !_saving && _sign != null) ShowSavedScore();
         }
 
         /// <summary>EMPEZAR / CANCELAR.</summary>
@@ -226,6 +244,7 @@ namespace Lumina.UI
 
         private void OnDisable()
         {
+            ProgressStore.Changed -= OnProgressChanged;
             if (cameraFeed != null && IsRunning) Cancel();
         }
     }

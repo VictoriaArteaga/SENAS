@@ -108,6 +108,17 @@ namespace Lumina.Api
             return null;
         }
 
+        /// <summary>Mejor resultado guardado de una seña (precisión 0–100 y estrellas) o null si su nivel no está cargado.</summary>
+        public static LevelSignDto SignOf(string signCode)
+        {
+            var detail = GetLevel(SignCodes.LevelFor(signCode));
+            if (detail?.signs == null) return null;
+            var backendCode = SignCodes.BackendCodeFor(signCode);
+            foreach (var sign in detail.signs)
+                if (string.Equals(sign.code, backendCode, StringComparison.OrdinalIgnoreCase)) return sign;
+            return null;
+        }
+
         public static void Clear()
         {
             Levels = null;

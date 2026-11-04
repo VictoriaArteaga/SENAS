@@ -77,6 +77,7 @@ namespace Lumina.Alphabet
         private bool[] _practiced;          // true = el backend dice que la letra está PASSED
         private string[] _statuses;         // LOCKED / AVAILABLE / PASSED por letra, según el backend
         private float[] _bestPrecision;     // 0–100, mejor precisión guardada en el backend
+        private int[] _bestStars;           // 0–3, mejores estrellas guardadas en el backend
         private bool _statesLoaded;
         private bool _loadingStates;
         private bool _submitting;
@@ -116,6 +117,7 @@ namespace Lumina.Alphabet
             _practiced = new bool[alphabet.letters.Length];
             _statuses = new string[alphabet.letters.Length];
             _bestPrecision = new float[alphabet.letters.Length];
+            _bestStars = new int[alphabet.letters.Length];
             _cts = new CancellationTokenSource();
 
             for (int i = 0; i < letterButtons.Length; i++)
@@ -245,15 +247,18 @@ namespace Lumina.Alphabet
                 string code = SignCodes.ForLetter(alphabet.letters[i].letter);
                 string status = SignStatusNames.Locked;
                 float best = 0f;
+                int bestStars = 0;
                 foreach (var sign in detail.signs)
                 {
                     if (!string.Equals(sign.code, code, StringComparison.OrdinalIgnoreCase)) continue;
                     status = sign.status;
                     best = sign.bestPrecision;
+                    bestStars = sign.bestStars;
                     break;
                 }
                 _statuses[i] = status;
                 _bestPrecision[i] = best;
+                _bestStars[i] = bestStars;
                 _practiced[i] = status == SignStatusNames.Passed;
             }
             _statesLoaded = true;
@@ -595,9 +600,8 @@ namespace Lumina.Alphabet
             var levelCompleted = CountPracticedLetters() == _practiced.Length;
             bool letterPassed = _practiced[_current];
             bool attemptRunning = _showPracticeFeedback && _practiceCapture != null;
-            if (levelCompleted && !attemptRunning)
-                _practiceView?.SetBadge("ABECEDARIO COMPLETADO", PracticeBadgeTone.Success);
-            else if (attemptRunning && _hasPracticeScore)
+            // Con todo el abecedario superado se sigue mostrando la coincidencia y las estrellas de la letra actual.
+            if (attemptRunning && _hasPracticeScore)
                 _practiceView?.SetBadge(Loc.T(_practiceBadgeTone == PracticeBadgeTone.Warning ? "alphabet.matchAdjust" : "alphabet.matchHold",
                     _practiceSimilarity.ToString("P0")), _practiceBadgeTone);
             else if (attemptRunning)
@@ -610,9 +614,12 @@ namespace Lumina.Alphabet
                 float displayedScore = _hasPracticeScore
                     ? _practiceSimilarity
                     : _bestPrecision[_current] / 100f;
-                _practiceView?.SetBadge(hasSavedScore
+                string badge = hasSavedScore
                     ? Loc.T("alphabet.letterPassedScore", entry.letter, displayedScore.ToString("P0"))
-                    : Loc.T("alphabet.letterPassed", entry.letter), PracticeBadgeTone.Success);
+                    : Loc.T("alphabet.letterPassed", entry.letter);
+                if (_bestStars[_current] > 0) badge += " · " + _bestStars[_current] + "/3 " + Loc.T("levels.starsCaption");
+                if (levelCompleted) badge += " · " + Loc.T("alphabet.completed");
+                _practiceView?.SetBadge(badge, PracticeBadgeTone.Success);
             }
             else if (_showPracticeFeedback && _hasPracticeScore)
                 _practiceView?.SetBadge(Loc.T(_practiceBadgeTone == PracticeBadgeTone.Warning ? "alphabet.matchAdjust" : "alphabet.matchHold",
