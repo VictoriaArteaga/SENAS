@@ -37,6 +37,7 @@ namespace Lumina.UI
         [SerializeField] private Button restoreButton;
 
         private string[] _cameras = new string[0];
+        private float _nextSfxPreview;
 
         private void OnEnable() => GameSettings.LanguageChanged += RefreshLabels;
         private void OnDisable() => GameSettings.LanguageChanged -= RefreshLabels;
@@ -45,7 +46,22 @@ namespace Lumina.UI
         {
             header.SetTitle("title.settings");
             musicSlider.onValueChanged.AddListener(v => { GameSettings.MusicVolume = v; ShowPercent(musicValue, v); });
-            sfxSlider.onValueChanged.AddListener(v => { GameSettings.SfxVolume = v; ShowPercent(sfxValue, v); });
+            // Los efectos de sonido son los del juego: al mover el control suena el de «seña superada» (sin repetirse a cada pixel) y al
+            // soltarlo el de «nivel completado», para oír el volumen elegido.
+            sfxSlider.onValueChanged.AddListener(v =>
+            {
+                GameSettings.SfxVolume = v;
+                ShowPercent(sfxValue, v);
+                if (v > 0f && Time.unscaledTime >= _nextSfxPreview)
+                {
+                    _nextSfxPreview = Time.unscaledTime + 0.45f;
+                    GameAudio.PlaySignPassed();
+                }
+            });
+            var release = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
+            release.callback.AddListener(_ => { if (GameSettings.SfxVolume > 0f) GameAudio.PlayLevelCompleted(); });
+            var trigger = sfxSlider.gameObject.GetComponent<EventTrigger>() ?? sfxSlider.gameObject.AddComponent<EventTrigger>();
+            trigger.triggers.Add(release);
             qualitySelector.Changed += i => { GameSettings.QualityLevel = i; GameSettings.Save(); };
             cameraSelector.Changed += i => { GameSettings.CameraDevice = _cameras[i]; GameSettings.Save(); if (cameraFeed.IsRunning) cameraFeed.Show(_cameras[i]); };
             languageSelector.Changed += i => GameSettings.Language = i == 1 ? GameLanguage.English : GameLanguage.Spanish;
