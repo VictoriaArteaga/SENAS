@@ -20,9 +20,6 @@ namespace Lumina.UI
         [SerializeField] private TMP_Text musicValue;
         [SerializeField] private TMP_Text sfxValue;
 
-        [Header("Gráficos")]
-        [SerializeField] private OptionSelectorUI qualitySelector;
-
         [Header("Cámara")]
         [SerializeField] private OptionSelectorUI cameraSelector;
         [SerializeField] private Button testCameraButton;
@@ -32,6 +29,10 @@ namespace Lumina.UI
         [Header("Preferencias")]
         [SerializeField] private OptionSelectorUI languageSelector;
         [SerializeField] private OptionSelectorUI themeSelector;
+
+        [Header("Personalización")]
+        [Tooltip("Abre la pantalla para elegir otro avatar (mismo selector que el registro).")]
+        [SerializeField] private Button changeAvatarButton;
 
         [Header("Acciones")]
         [SerializeField] private Button restoreButton;
@@ -62,11 +63,11 @@ namespace Lumina.UI
             release.callback.AddListener(_ => { if (GameSettings.SfxVolume > 0f) GameAudio.PlayLevelCompleted(); });
             var trigger = sfxSlider.gameObject.GetComponent<EventTrigger>() ?? sfxSlider.gameObject.AddComponent<EventTrigger>();
             trigger.triggers.Add(release);
-            qualitySelector.Changed += i => { GameSettings.QualityLevel = i; GameSettings.Save(); };
             cameraSelector.Changed += i => { GameSettings.CameraDevice = _cameras[i]; GameSettings.Save(); if (cameraFeed.IsRunning) cameraFeed.Show(_cameras[i]); };
             languageSelector.Changed += i => GameSettings.Language = i == 1 ? GameLanguage.English : GameLanguage.Spanish;
             themeSelector.Changed += i => GameSettings.DarkMode = i == 1;
             testCameraButton.onClick.AddListener(ToggleTest);
+            if (changeAvatarButton != null) changeAvatarButton.onClick.AddListener(() => ScreenFader.Load(SceneNames.AvatarChange));
             restoreButton.onClick.AddListener(() => { GameSettings.ResetToDefaults(); Refresh(); });
 
             Refresh();
@@ -80,7 +81,6 @@ namespace Lumina.UI
             ShowPercent(musicValue, musicSlider.value);
             ShowPercent(sfxValue, sfxSlider.value);
 
-            qualitySelector.SetOptions(QualitySettings.names, GameSettings.QualityLevel);
             languageSelector.SetOptions(LanguageNames, (int)GameSettings.Language);
             themeSelector.SetOptions(ThemeNames(), GameSettings.DarkMode ? 1 : 0);
 

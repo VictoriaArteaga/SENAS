@@ -24,6 +24,7 @@ namespace Lumina.EditorTools
         internal const string ScenesDir = "Assets/Project/Scenes/";
         private const string LoginPath = ScenesDir + "LoginScene.unity";
         private const string RegisterPath = ScenesDir + "RegisterScene.unity";
+        private const string AvatarChangePath = ScenesDir + "AvatarChangeScene.unity";
         private const string MainMenuPath = ScenesDir + "MainMenu.unity";
         private const string WorldPath = ScenesDir + "LuminaWorld.unity";
 
@@ -572,6 +573,154 @@ namespace Lumina.EditorTools
             LuminaUiKit.EnsureEventSystem();
             if (save) EditorSceneManager.SaveScene(scene, RegisterPath);
             return scene;
+        }
+
+        // ------------------------------------------------------------------ AvatarChangeScene (Configuración › Personalización)
+
+        /// <summary>
+        /// Escena para cambiar de avatar siendo ya jugador: el mismo escenario y selector del registro, con la plataforma centrada y un botón
+        /// VOLVER a Configuración. Menú: Lumina > Autenticación > Construir cambio de avatar.
+        /// </summary>
+        [MenuItem("Lumina/Autenticación/Construir cambio de avatar")]
+        public static void BuildAvatarChangeMenu()
+        {
+            EnsureFolders();
+            LuminaAvatarRoster.RequirePrefabs();
+            BuildAvatarChange();
+            RegisterAvatarChangeInBuildSettings();
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Lumina] AvatarChangeScene construida.");
+        }
+
+        private static void RegisterAvatarChangeInBuildSettings()
+        {
+            var list = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
+            list.RemoveAll(sc => sc.path == AvatarChangePath);
+            list.Add(new EditorBuildSettingsScene(AvatarChangePath, true));
+            EditorBuildSettings.scenes = list.ToArray();
+        }
+
+        private static void BuildAvatarChange()
+        {
+            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            SetupSceneBasics(new Vector3(0f, 0.42f, -5.6f), new Vector3(-5f, 0f, 0f), 36f, WorldSkyPath);
+
+            var world = new GameObject("--- AVATAR CHANGE WORLD ---").transform;
+            var env = Child(world, "Environment");
+            BuildGround(env, 600f);
+            BuildVillageBackdrop(env, mirror: true);
+            Vector3 stageCenter = Vector3.zero; // centrada: la cámara mira al origen
+            BuildLanternsAndFlowers(env, stageCenter);
+            BuildFloatingDecor(world, new Vector3(0f, 0f, 2.5f), 13, 77);
+            BuildMotes(world, new Vector3(0f, 2.2f, 3.0f), new Vector3(13f, 4.5f, 9f));
+
+            // Plataforma de exhibición en tres anillos (turquesa, crema y coral) con un foco cálido.
+            var stage = Child(world, "ExhibitionStage");
+            stage.position = stageCenter;
+            Cylinder(stage, "RingCoral", 3.5f, 0.10f, Lit("Lumina_Stage_Coral", LuminaUiKit.Coral), 0.05f);
+            Cylinder(stage, "RingCream", 3.1f, 0.16f, Lit("Lumina_Stage_Cream", LuminaUiKit.Cream), 0.10f);
+            Cylinder(stage, "Top", 2.6f, 0.24f, Lit("Lumina_Stage_Turquoise", LuminaUiKit.Turquoise), 0.16f);
+
+            var spotGo = new GameObject("StageSpot");
+            spotGo.transform.SetParent(stage, false);
+            spotGo.transform.localPosition = new Vector3(0.6f, 4.2f, -2.4f);
+            spotGo.transform.LookAt(stage.position + new Vector3(0f, 0.9f, 0f));
+            var spot = spotGo.AddComponent<Light>();
+            spot.type = LightType.Spot; spot.color = new Color(1f, 0.93f, 0.8f); spot.intensity = 90f; spot.range = 12f; spot.spotAngle = 52f;
+            spot.shadows = LightShadows.Soft;
+
+            // Avatares: todos bajo un pivote que gira; solo se ve el elegido.
+            var pivot = Child(stage, "AvatarPivot");
+            pivot.localPosition = new Vector3(0f, 0.24f, 0f);
+            var options = new List<AvatarOption>();
+            {
+                // Los cuatro antiguos se instancian DESACTIVADOS (siguen en la escena pero no son opciones); las opciones visibles son solo los avatares aprobados.
+                foreach (var legacy in LuminaAvatarRoster.Legacy)
+                {
+                    var old = (GameObject)PrefabUtility.InstantiatePrefab(legacy.LoadPrefab(), pivot);
+                    old.name = legacy.Id;
+                    old.transform.localPosition = Vector3.zero;
+                    old.transform.localRotation = Quaternion.identity;
+                    old.SetActive(false);
+                }
+                foreach (var avatar in LuminaAvatarRoster.Selectable)
+                {
+                    var instance = (GameObject)PrefabUtility.InstantiatePrefab(avatar.LoadPrefab(), pivot);
+                    instance.name = avatar.Id;
+                    instance.transform.localPosition = Vector3.zero;
+                    instance.transform.localRotation = Quaternion.identity;
+                    options.Add(new AvatarOption { id = avatar.Id, displayName = avatar.DisplayName, model = instance });
+                }
+            }
+
+            // Interfaz.
+            var canvas = MakeCanvas("AvatarChangeCanvas");
+            const float cx = 960f; // centro horizontal del lienzo de referencia (1920 × 1080)
+            var left = LuminaUiKit.Rect("AvatarSelectorUI", canvas.transform);
+            LuminaUiKit.Stretch(left);
+            // Sobre el cielo claro el crema no se lee: va en una píldora tinta semitransparente (el color del texto sigue siendo crema).
+            LuminaUiKit.PlateLabel(left, "Hint", "Arrastra para girar a tu avatar", 30f, LuminaUiKit.Cream,
+                new Color(LuminaUiKit.Ink.r, LuminaUiKit.Ink.g, LuminaUiKit.Ink.b, 0.6f), out var hintPlate, 1f);
+            LuminaUiKit.Place(hintPlate.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 1f), new Vector2(cx, -40f), new Vector2(640f, 56f));
+            var chooseTitle = LuminaUiKit.Label(left, "ChooseTitle", "ELIGE A TU AVATAR", 54f, LuminaUiKit.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 4f,
+                LuminaUiKit.TextEdge.Outline(LuminaUiKit.Ink, 0.14f));
+            var chooseShadow = LuminaUiKit.Label(left, "ChooseTitleShadow", "ELIGE A TU AVATAR", 54f, LuminaUiKit.CoralDark, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
+            LuminaUiKit.Place(chooseShadow.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 1f), new Vector2(cx + 4f, -104f), new Vector2(800f, 70f));
+            LuminaUiKit.Place(chooseTitle.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 1f), new Vector2(cx, -98f), new Vector2(800f, 70f));
+            chooseShadow.transform.SetSiblingIndex(chooseTitle.transform.GetSiblingIndex());
+
+            var prev = LuminaUiKit.MakeButton(left, "PreviousButton", "<", LuminaUiKit.Turquoise, LuminaUiKit.TurquoiseDark, LuminaUiKit.Ink, new Vector2(96f, 96f), 52f, 8f, 0f);
+            LuminaUiKit.Place((RectTransform)prev.transform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(cx - 360f, 30f), new Vector2(96f, 96f));
+            var next = LuminaUiKit.MakeButton(left, "NextButton", ">", LuminaUiKit.Turquoise, LuminaUiKit.TurquoiseDark, LuminaUiKit.Ink, new Vector2(96f, 96f), 52f, 8f, 0f);
+            LuminaUiKit.Place((RectTransform)next.transform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(cx + 360f, 30f), new Vector2(96f, 96f));
+
+            var badge = LuminaUiKit.Panel(left, "SelectedBadge", LuminaUiKit.Turquoise);
+            LuminaUiKit.Place(badge.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(cx, 292f), new Vector2(230f, 44f));
+            var badgeText = LuminaUiKit.Label(badge.transform, "Label", "TU AVATAR", 22f, LuminaUiKit.Ink, FontStyles.Bold, TextAlignmentOptions.Center, 4f);
+            LuminaUiKit.Stretch(badgeText.rectTransform);
+            badge.gameObject.SetActive(false);
+
+            var namePill = LuminaUiKit.Panel(left, "NamePill", LuminaUiKit.Coral);
+            LuminaUiKit.Place(namePill.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(cx, 236f), new Vector2(320f, 64f));
+            var nameLabel = LuminaUiKit.Label(namePill.transform, "Label", options[0].displayName.ToUpperInvariant(), 38f, LuminaUiKit.Cream, FontStyles.Bold, TextAlignmentOptions.Center, 8f);
+            LuminaUiKit.Stretch(nameLabel.rectTransform);
+
+            var dots = new List<Image>();
+            for (int i = 0; i < options.Count; i++)
+            {
+                var dot = LuminaUiKit.Panel(left, "Dot" + (i + 1), LuminaUiKit.TurquoiseSoft, LuminaUiKit.Circle);
+                float x = cx + (i - (options.Count - 1) * 0.5f) * 40f;
+                LuminaUiKit.Place(dot.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(x, 184f), new Vector2(20f, 20f));
+                dots.Add(dot);
+            }
+
+            var select = LuminaUiKit.MakeButton(left, "SelectButton", "SELECCIONAR", LuminaUiKit.Coral, LuminaUiKit.CoralDark, LuminaUiKit.Cream, new Vector2(330f, 82f), 28f, 8f, 3f);
+            LuminaUiKit.Place((RectTransform)select.transform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(cx, 104f), new Vector2(330f, 82f));
+
+            var selector = left.gameObject.AddComponent<AvatarSelectorController>();
+            LuminaUiKit.Set(selector, "pivot", pivot);
+            SetAvatarOptions(selector, options);
+            LuminaUiKit.Set(selector, "previousButton", prev);
+            LuminaUiKit.Set(selector, "nextButton", next);
+            LuminaUiKit.Set(selector, "selectButton", select);
+            LuminaUiKit.Set(selector, "selectLabel", select.GetComponentInChildren<TMP_Text>());
+            LuminaUiKit.Set(selector, "nameLabel", nameLabel);
+            LuminaUiKit.Set(selector, "selectedBadge", badge.gameObject);
+            LuminaUiKit.SetArray(selector, "dots", dots.ToArray());
+
+
+            // VOLVER a Configuración.
+            var back = LuminaUiKit.MakeButton(canvas.transform, "BackButton", "VOLVER", LuminaUiKit.Sand, LuminaUiKit.SandDark, LuminaUiKit.Ink, new Vector2(260f, 76f), 30f, 8f, 3f);
+            LuminaUiKit.Place((RectTransform)back.transform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(48f, -40f), new Vector2(260f, 76f));
+
+            {
+                var controller = new GameObject("AvatarChangeController").AddComponent<AvatarChangeController>();
+                LuminaUiKit.Set(controller, "avatars", selector);
+                LuminaUiKit.Set(controller, "backButton", back);
+            }
+
+            LuminaUiKit.EnsureEventSystem();
+            EditorSceneManager.SaveScene(scene, AvatarChangePath);
         }
 
         /// <summary>Solo pruebas: construye RegisterScene en una escena en memoria SIN guardarla ni tocar RegisterScene.unity.</summary>

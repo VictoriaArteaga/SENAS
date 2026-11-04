@@ -98,8 +98,10 @@ namespace Lumina.Core
             ("settings.appearance", "APARIENCIA", "APPEARANCE"),
             ("settings.light", "Claro", "Light"),
             ("settings.dark", "Oscuro", "Dark"),
-            ("settings.accessibility", "ACCESIBILIDAD", "ACCESSIBILITY"),
-            ("settings.accessibilityNote", "Pronto habrá más opciones para adaptar el juego a ti.", "More options to adapt the game to you are coming soon."),
+            ("settings.customization", "PERSONALIZACIÓN", "CUSTOMIZATION"),
+            ("settings.changeAvatar", "CAMBIAR AVATAR", "CHANGE AVATAR"),
+            ("settings.avatarSaved", "¡Avatar actualizado!", "Avatar updated!"),
+            ("settings.avatarNotSaved", "No se pudo guardar tu avatar. Inténtalo otra vez.", "Couldn't save your avatar. Try again."),
 
             // ---- Inicio de sesión / registro
             ("auth.brand", "SEÑAS · EL MUNDO DE LAS MANOS", "SEÑAS · THE WORLD OF HANDS"),
