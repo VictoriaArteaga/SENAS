@@ -14,10 +14,8 @@ namespace Lumina.Core
         private const float MusicGain = 0.6f; // el fondo queda por debajo de los efectos
         private static GameAudio _instance;
 
-        /// <summary>Escenas sin música de fondo: sus videos traen sonido propio y la música lo taparía.</summary>
-        private static readonly string[] SilentScenes = { "NumbersHouse", "GreetingsHouse" };
-
-        private bool _silenced;
+        private bool _suppressed; // la música está en pausa a petición de una escena (p. ej. mientras suena el video de una lección)
+        private bool _pausedBySuppression;
         private AudioSource _music;
         private AudioSource _sfx;
         private AudioClip _signPassed, _levelCompleted;
@@ -29,6 +27,15 @@ namespace Lumina.Core
             var go = new GameObject("GameAudio");
             DontDestroyOnLoad(go);
             _instance = go.AddComponent<GameAudio>();
+        }
+
+        /// <summary>
+        /// Pausa o reanuda la música de fondo. La casa de aprendizaje la pausa mientras dura la lección (los videos traen sonido propio y la
+        /// música lo taparía) y la reanuda al cerrarla. Al cambiar de escena se reanuda sola.
+        /// </summary>
+        public static void SetMusicSuppressed(bool suppressed)
+        {
+            if (_instance != null) _instance._suppressed = suppressed;
         }
 
         /// <summary>Una seña alcanzó la coincidencia mínima.</summary>
@@ -54,22 +61,22 @@ namespace Lumina.Core
             if (_music.clip == null) Debug.LogWarning("[GameAudio] No se encontró Resources/Audio/fondo.");
             ApplyVolumes();
             if (_music.clip != null) _music.Play();
+            SceneManager.sceneLoaded += (_, __) => _suppressed = false;
         }
 
         private float _nextVolumeCheck;
 
         private void Update()
         {
-            bool silent = System.Array.IndexOf(SilentScenes, SceneManager.GetActiveScene().name) >= 0;
-            if (silent)
+            if (_suppressed)
             {
                 if (_music.isPlaying) _music.Pause();
-                _silenced = true;
+                _pausedBySuppression = true;
             }
-            else if (_silenced)
+            else if (_pausedBySuppression)
             {
-                _silenced = false;
-                _music.UnPause(); // al salir de la casa la música sigue donde se quedó
+                _pausedBySuppression = false;
+                _music.UnPause(); // sigue donde se quedó
             }
             // La música se reanuda sola si el sistema la pausó (por ejemplo al perder el foco la ventana).
             else if (_music.clip != null && !_music.isPlaying && Application.isFocused) _music.Play();

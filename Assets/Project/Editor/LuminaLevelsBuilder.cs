@@ -270,6 +270,8 @@ namespace Lumina.EditorTools
 
             var levelController = Object.FindFirstObjectByType<LearningLevelController>();
             BuildResumePrompt(levelController);
+            // Números y Saludos: la música suena en la casa hasta que empieza la práctica; entonces se pausa (los videos traen su propio sonido).
+            SetBool(levelController, "muteMusicWhileOpen", kind != LevelKind.Months);
 
             // La puerta de salida alcanzaba al jugador en su punto de inicio: ahora hay que acercarse a ella.
             var exit = GameObject.Find("PuntoSalida");

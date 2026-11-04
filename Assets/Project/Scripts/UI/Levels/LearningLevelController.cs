@@ -54,6 +54,10 @@ namespace Lumina.UI
         [Tooltip("Un video por elemento, en el mismo orden del nivel (Meses: enero … diciembre). Vacío = sin video.")]
         [SerializeField] private VideoClip[] itemVideos;
 
+        [Header("Música")]
+        [Tooltip("Pausa la música de fondo mientras el panel de la lección está abierto (sus videos traen sonido propio). Al cerrarlo, vuelve.")]
+        [SerializeField] private bool muteMusicWhileOpen;
+
         [Header("Práctica dentro de la casa (opcional)")]
         [Tooltip("Si se asigna, PRACTICAR/EMPEZAR practica aquí mismo (cámara, calificación y estrellas) en vez de abrir la escena Practice.")]
         [SerializeField] private LearningPracticeView practice;
@@ -108,6 +112,7 @@ namespace Lumina.UI
 
         private void OnDestroy()
         {
+            if (muteMusicWhileOpen) GameAudio.SetMusicSuppressed(false);
             if (practice == null) return;
             practice.RunningChanged -= OnPracticeRunningChanged;
             practice.SignPassed -= OnSignPassed;
@@ -151,6 +156,7 @@ namespace Lumina.UI
         {
             IsOpen = true;
             WasOpened = true;
+            if (muteMusicWhileOpen) GameAudio.SetMusicSuppressed(true);
             panelRoot.SetActive(true);
             if (player != null) { player.enabled = false; player.SetCursorLocked(false); }
             BringTelevision();
@@ -164,6 +170,7 @@ namespace Lumina.UI
         {
             if (!IsOpen) return;
             IsOpen = false;
+            if (muteMusicWhileOpen) GameAudio.SetMusicSuppressed(false);
             if (practice != null) practice.End();
             if (television != null) television.Stop(); // al salir del panel el video deja de reproducirse
             SetHidden(false);
