@@ -58,11 +58,13 @@ namespace Lumina.UI
         [Tooltip("Si se asigna, PRACTICAR/EMPEZAR practica aquí mismo (cámara, calificación y estrellas) en vez de abrir la escena Practice.")]
         [SerializeField] private LearningPracticeView practice;
         [Tooltip("Distancia (m) delante de la cámara a la que se coloca el televisor durante la práctica.")]
-        [SerializeField] private float tvDistance = 1.8f;
+        [SerializeField] private float tvDistance = 2.1f;
         [Tooltip("Dónde queda el televisor en la pantalla durante la práctica: −1 izquierda … 1 derecha. −0,5 lo deja en el cuarto izquierdo, junto al panel.")]
         [SerializeField] private float tvScreenX = -0.5f;
-        [Tooltip("Cuánto más abajo (m) que los ojos queda el centro de la pantalla; evita que decoraciones del techo toquen el video.")]
-        [SerializeField] private float tvBelowEyes = 0.24f;
+        [Tooltip("Qué tanto se inclina el televisor hacia atrás para compensar la mirada hacia abajo (1 = pantalla perpendicular a la vista).")]
+        [SerializeField, Range(0f, 1f)] private float tvTiltFactor = 0.85f;
+        [Tooltip("Altura (m) del centro del televisor entero, patas incluidas: hacia ahí apunta la cámara para centrarlo en vertical.")]
+        [SerializeField] private float tvCenterHeight = 0.9f;
         [Tooltip("Objetos que se ocultan mientras el panel está abierto (p. ej. el modelo de Sena, para que no se vea de fondo).")]
         [SerializeField] private GameObject[] hideWhileOpen;
 
@@ -73,6 +75,9 @@ namespace Lumina.UI
         public bool DemonstrationAvailable { get; set; }
 
         public bool IsOpen { get; private set; }
+
+        /// <summary>True si el panel ya se abrió al menos una vez en esta visita (para ofrecer «Continúa practicando»).</summary>
+        public bool WasOpened { get; private set; }
 
         private static readonly Color Coral = new Color(1f, 0.369f, 0.302f);
         private static readonly Color Sand = new Color(0.98f, 0.89f, 0.74f);
@@ -145,6 +150,7 @@ namespace Lumina.UI
         public void Open(int index)
         {
             IsOpen = true;
+            WasOpened = true;
             panelRoot.SetActive(true);
             if (player != null) { player.enabled = false; player.SetCursorLocked(false); }
             BringTelevision();
@@ -186,12 +192,10 @@ namespace Lumina.UI
         private Quaternion _tvHomeRotation;
         private bool _tvHomeSaved;
 
-        // Partes del carrito que se esconden durante la práctica: así el televisor queda como una pantalla entera y completa en el encuadre.
-        private static readonly string[] TvStand = { "BasePlaca", "Rueda", "Poste", "Repisa", "Reproductor", "LuzReproductor", "Soporte" };
-
         /// <summary>
-        /// Durante la práctica el televisor de la casa es EL televisor de la lección: se coloca de frente delante de la cámara (paralelo a la
-        /// pantalla, sin ladearse), en el cuarto izquierdo (el panel ocupa la derecha) y entero dentro del encuadre. Al cerrar el panel vuelve a su sitio.
+        /// Durante la práctica el televisor de la casa es EL televisor de la lección: se pone en el suelo, con sus patas, delante del jugador y la
+        /// cámara lo apunta para que quede CENTRADO en vertical y en el centro de la mitad izquierda de la pantalla (el panel ocupa la derecha),
+        /// y de frente, sin ladearse. Al cerrar el panel vuelve a su sitio.
         /// </summary>
         private void BringTelevision()
         {
@@ -201,29 +205,30 @@ namespace Lumina.UI
             if (!_tvHomeSaved) { _tvHomePosition = tv.position; _tvHomeRotation = tv.rotation; _tvHomeSaved = true; }
 
             Vector3 forward = cam.transform.forward; forward.y = 0f; forward.Normalize();
-            if (player != null) player.LookTowards(cam.transform.position + forward); // mirada a nivel: el televisor queda centrado en vertical
+            Vector3 position = cam.transform.position + forward * tvDistance;
+            position.y = _tvHomePosition.y; // apoyado en el suelo, con sus patas
 
-            Vector3 right = Vector3.Cross(Vector3.up, forward);
-            float halfWidth = Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * cam.aspect * tvDistance;
-            Vector3 position = cam.transform.position + forward * tvDistance + right * (tvScreenX * halfWidth);
-            position.y = cam.transform.position.y - 1.42f - tvBelowEyes; // el centro de la pantalla (1,42 m sobre la base) queda un poco bajo los ojos
+            // La cámara apunta al centro del televisor (altura media de patas + pantalla) y lo deja a −0,5 de la pantalla (cuarto izquierdo).
+            if (player != null) player.LookTowards(position + Vector3.up * tvCenterHeight, tvScreenX);
 
-            // De frente: la pantalla mira exactamente hacia la cámara (su eje es el opuesto a la dirección de la vista), no hacia donde está la cámara.
-            tv.SetPositionAndRotation(position, Quaternion.LookRotation(-forward));
-            SetStandVisible(false);
+            // De frente respecto a la vista ya girada: la pantalla mira exactamente hacia la cámara, sin diagonal.
+            Vector3 view = cam.transform.forward;
+            float pitchDown = -Mathf.Asin(Mathf.Clamp(view.y, -1f, 1f)) * Mathf.Rad2Deg; // cuánto mira hacia abajo la cámara
+            view.y = 0f;
+            // Se inclina hacia atrás casi lo mismo que mira hacia abajo la cámara: la pantalla queda perpendicular a la vista y no se ve en trapecio.
+            tv.SetPositionAndRotation(position, Quaternion.LookRotation(-view.normalized) * Quaternion.Euler(-pitchDown * tvTiltFactor, 0f, 0f));
         }
 
         private void RestoreTelevision()
         {
             if (television == null || !_tvHomeSaved) return;
             television.transform.SetPositionAndRotation(_tvHomePosition, _tvHomeRotation);
-            SetStandVisible(true);
-        }
-
-        private void SetStandVisible(bool visible)
-        {
-            foreach (Transform child in television.transform)
-                if (System.Array.IndexOf(TvStand, child.name) >= 0) child.gameObject.SetActive(visible);
+            var cam = Camera.main;
+            if (player != null && cam != null)
+            {
+                Vector3 forward = cam.transform.forward; forward.y = 0f;
+                player.LookTowards(cam.transform.position + forward.normalized); // mirada otra vez a nivel
+            }
         }
 
         private void OnPracticeRunningChanged()

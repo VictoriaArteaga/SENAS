@@ -267,13 +267,20 @@ namespace Lumina.EditorTools
                 }
             }
 
+            BuildResumePrompt(Object.FindFirstObjectByType<LearningLevelController>());
+
             // La puerta de salida alcanzaba al jugador en su punto de inicio: ahora hay que acercarse a ella.
             var exit = GameObject.Find("PuntoSalida");
             if (exit != null) Ui.SetFloat(exit.GetComponent<ProximityInteractable>(), "interactionRadius", 1f);
 
             // Durante la lección Sena no se ve de fondo: se oculta su modelo mientras el panel está abierto.
             var senaModel = sena.transform.Find("Model");
-            if (senaModel != null) Ui.SetArray(Object.FindFirstObjectByType<LearningLevelController>(), "hideWhileOpen", new Object[] { senaModel.gameObject });
+            // También el indicador «E — Hablar con Sena»: si no, se monta sobre el panel mientras dura la lección.
+            var senaPrompt = GameObject.Find("PromptSena");
+            var hidden = new System.Collections.Generic.List<Object>();
+            if (senaModel != null) hidden.Add(senaModel.gameObject);
+            if (senaPrompt != null) hidden.Add(senaPrompt);
+            Ui.SetArray(Object.FindFirstObjectByType<LearningLevelController>(), "hideWhileOpen", hidden.ToArray());
 
             SetBool(sena.GetComponent<Lumina.NPC.SenaPresenter>(), "waveOnStart", true);
             var welcome = sena.GetComponent<Lumina.NPC.SenaWelcomeInteraction>();
@@ -284,6 +291,33 @@ namespace Lumina.EditorTools
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             Debug.Log("[Lumina] " + HouseName(kind) + ": práctica dentro de la casa lista (Sena en " + position + ").");
+        }
+
+        /// <summary>
+        /// Indicador «P — Continúa practicando»: copia del de la E (PromptObjetos), con otra tecla, arriba a la izquierda para no montarse con
+        /// los demás. Aparece al cerrar la práctica y, con P, la vuelve a abrir.
+        /// </summary>
+        private static void BuildResumePrompt(LearningLevelController controller)
+        {
+            DestroyRoot("PromptPractica");
+            var template = GameObject.Find("PromptObjetos");
+            var copy = Object.Instantiate(template);
+            copy.name = "PromptPractica";
+            var prompt = copy.GetComponentInChildren<InteractionPrompt>(true);
+
+            var rect = (RectTransform)prompt.transform;
+            rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
+            rect.pivot = new Vector2(0f, 1f);
+            rect.anchoredPosition = new Vector2(40f, -40f);
+
+            var label = PromptLabel(prompt);
+            label.text = "Continúa practicando";
+            LocalizedText.Bind(label, "levels.continuePractice");
+            foreach (var text in prompt.GetComponentsInChildren<TMP_Text>(true)) if (text.name == "KeyLabel") text.text = "P";
+
+            var resume = copy.AddComponent<PracticeResumePrompt>();
+            Ui.Set(resume, "level", controller);
+            Ui.Set(resume, "prompt", prompt);
         }
 
         private static void SetBool(Object target, string property, bool value)
