@@ -21,6 +21,7 @@ namespace Lumina.Api
     public static class ApiClient
     {
         private static Task<bool> _refreshing;
+        private static int _refreshingGeneration = -1;
 
         public static Task<T> GetAsync<T>(string path, CancellationToken ct = default) where T : class =>
             SendAsync<T>("GET", path, null, true, ct);
@@ -74,54 +75,99 @@ namespace Lumina.Api
             }
 
             if (!ApiSession.HasSession) throw ApiException.NotSignedIn();
-            if (ApiSession.AccessExpiresSoon) await RefreshOrThrowAsync();
+            int generation = ApiSession.TokenGeneration;
+            if (ApiSession.AccessExpiresSoon) await RefreshOrThrowAsync(generation);
+            if (!ApiSession.HasSession) throw SessionEnded();
 
-            var raw = await RawAsync(method, path, json, ApiSession.AccessToken, ct);
+            generation = ApiSession.TokenGeneration;
+            string accessToken = ApiSession.AccessToken;
+            var raw = await RawAsync(method, path, json, accessToken, ct);
             if (raw.Status == 401)
             {
-                // Access token vencido o inválido: UN refresh y UN reintento.
-                await RefreshOrThrowAsync();
+                // Si otra petición ya rotó los tokens mientras esta estaba en vuelo, reutiliza el par nuevo.
+                // El backend revoca la sesión si recibe dos veces el mismo refresh token.
+                if (ApiSession.TokenGeneration == generation)
+                    await RefreshOrThrowAsync(generation);
+                if (!ApiSession.HasSession) throw SessionEnded();
+
+                generation = ApiSession.TokenGeneration;
                 raw = await RawAsync(method, path, json, ApiSession.AccessToken, ct);
                 if (raw.Status == 401)
                 {
-                    EndSession();
-                    throw SessionEnded();
+                    // No cierres una sesión que haya sido sustituida por otra petición concurrente.
+                    if (ApiSession.TokenGeneration != generation && ApiSession.HasSession)
+                    {
+                        generation = ApiSession.TokenGeneration;
+                        raw = await RawAsync(method, path, json, ApiSession.AccessToken, ct);
+                    }
+                    if (raw.Status == 401 && ApiSession.TokenGeneration == generation) EndSession();
+                    if (raw.Status == 401) throw SessionEnded();
                 }
             }
             if (raw.Status >= 400) throw ToException(raw);
             return raw;
         }
 
-        private static async Task RefreshOrThrowAsync()
+        private static async Task RefreshOrThrowAsync(int expectedGeneration)
         {
-            if (!await RefreshAsync()) throw SessionEnded();
+            if (ApiSession.TokenGeneration != expectedGeneration)
+            {
+                if (ApiSession.HasSession) return;
+                throw SessionEnded();
+            }
+            if (!await RefreshAsync(expectedGeneration)) throw SessionEnded();
         }
 
         /// <summary>
         /// Rota los tokens. True si hay tokens nuevos; false si la sesión ya no es válida (se cierra la sesión). Un fallo de red
         /// o un 5xx/429 NO cierra la sesión: se lanza el error para que el llamador lo muestre.
         /// </summary>
-        public static async Task<bool> RefreshAsync()
+        public static Task<bool> RefreshAsync() => RefreshAsync(ApiSession.TokenGeneration);
+
+        private static async Task<bool> RefreshAsync(int expectedGeneration)
         {
-            if (_refreshing != null) return await _refreshing;
-            var task = DoRefreshAsync();
+            if (!ApiSession.HasSession) { EndSession(); return false; }
+            if (ApiSession.TokenGeneration != expectedGeneration) return ApiSession.HasSession;
+            if (_refreshing != null)
+            {
+                Task<bool> inFlight = _refreshing;
+                int inFlightGeneration = _refreshingGeneration;
+                bool result = await inFlight;
+                if (ApiSession.TokenGeneration != expectedGeneration) return ApiSession.HasSession;
+                return inFlightGeneration == expectedGeneration && result;
+            }
+
+            var task = DoRefreshAsync(expectedGeneration, ApiSession.RefreshToken);
             _refreshing = task;
+            _refreshingGeneration = expectedGeneration;
             try { return await task; }
-            finally { if (_refreshing == task) _refreshing = null; }
+            finally
+            {
+                if (_refreshing == task)
+                {
+                    _refreshing = null;
+                    _refreshingGeneration = -1;
+                }
+            }
         }
 
-        private static async Task<bool> DoRefreshAsync()
+        private static async Task<bool> DoRefreshAsync(int expectedGeneration, string refreshToken)
         {
-            string refreshToken = ApiSession.RefreshToken;
-            if (string.IsNullOrEmpty(refreshToken)) { EndSession(); return false; }
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                if (ApiSession.TokenGeneration == expectedGeneration) EndSession();
+                return ApiSession.HasSession;
+            }
 
             var body = new JsonObject().Add("refreshToken", refreshToken).ToString();
             var raw = await RawAsync("POST", "/auth/refresh", body, null, default);
             if (raw.Status == 200)
             {
+                if (ApiSession.TokenGeneration != expectedGeneration) return ApiSession.HasSession;
                 ApiSession.Set(Parse<TokensResponse>(raw.Text));
                 return true;
             }
+            if (ApiSession.TokenGeneration != expectedGeneration) return ApiSession.HasSession;
             if (raw.Status == 401 || raw.Status == 403) { EndSession(); return false; }
             throw ToException(raw);
         }

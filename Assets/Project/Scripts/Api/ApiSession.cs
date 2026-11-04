@@ -12,6 +12,8 @@ namespace Lumina.Api
 
         public static string AccessToken { get; private set; }
         public static string RefreshToken { get; private set; }
+        /// <summary>Cambia cada vez que se sustituyen o limpian credenciales, para descartar refreshes concurrentes obsoletos.</summary>
+        public static int TokenGeneration { get; private set; }
         private static DateTime _accessExpiresUtc;
 
         public static bool HasSession => !string.IsNullOrEmpty(AccessToken) && !string.IsNullOrEmpty(RefreshToken);
@@ -26,6 +28,7 @@ namespace Lumina.Api
             AccessToken = tokens.accessToken;
             RefreshToken = tokens.refreshToken; // El refresh token rota en cada uso: siempre se sustituye por el nuevo.
             _accessExpiresUtc = DateTime.UtcNow.AddSeconds(tokens.expiresIn > 0 ? tokens.expiresIn : 60);
+            TokenGeneration++;
         }
 
         public static void Clear()
@@ -33,6 +36,7 @@ namespace Lumina.Api
             AccessToken = null;
             RefreshToken = null;
             _accessExpiresUtc = DateTime.MinValue;
+            TokenGeneration++;
         }
     }
 }
