@@ -86,7 +86,7 @@ namespace Lumina.Interaction
                 alignment = TextAnchor.MiddleCenter,
                 fontSize = 22
             };
-            GUI.Label(new Rect(0, Screen.height * 0.75f, Screen.width, 40), promptText, style);
+            GUI.Label(new Rect(0, Screen.height * 0.75f, Screen.width, 40), Lumina.Core.Loc.Translate(promptText), style);
         }
 
         private void OnDrawGizmosSelected()

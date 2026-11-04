@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Lumina.Core;
 
 namespace Lumina.UI
 {
@@ -108,7 +109,7 @@ namespace Lumina.UI
         {
             if (!enabled || _wantsOpen) return;
 
-            speakerLabel.text = speaker;
+            speakerLabel.text = Loc.Translate(speaker);
             SetMessage(message, actionText, progressText);
             _wantsOpen = true;
             visualRoot.SetActive(true);
@@ -119,8 +120,8 @@ namespace Lumina.UI
         /// <summary>Cambia el texto mostrado sin reabrir la burbuja.</summary>
         public void SetMessage(string message, string actionText, string progressText)
         {
-            messageLabel.text = message;
-            actionLabel.text = actionText;
+            messageLabel.text = Loc.Translate(message);
+            actionLabel.text = Loc.Translate(actionText);
             progressLabel.text = progressText;
         }
 

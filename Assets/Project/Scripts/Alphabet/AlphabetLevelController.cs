@@ -283,7 +283,7 @@ namespace Lumina.Alphabet
                 viewBackdrop.position = _viewPivot + away * backdropDistance;
                 viewBackdrop.rotation = Quaternion.LookRotation(away);
             }
-            if (viewLabel != null) viewLabel.text = "VISTA: " + viewNames[index];
+            if (viewLabel != null) viewLabel.text = Loc.T("alphabet.view", Loc.Translate(viewNames[index]));
         }
 
         public void Close()
@@ -352,14 +352,14 @@ namespace Lumina.Alphabet
 
             hand.ShowLetter(entry);
             letterBig.text = entry.letter;
-            instruction.text = entry.instruction;
-            validationBadge.text = entry.validation == PoseValidation.ApproximateFromReference
+            instruction.text = Loc.Translate(entry.instruction);
+            validationBadge.text = Loc.Translate(entry.validation == PoseValidation.ApproximateFromReference
                 ? "Referencia aproximada · pendiente de validación"
-                : "Pose provisional · pendiente de validación";
+                : "Pose provisional · pendiente de validación");
 
             int seen = 0;
             foreach (bool s in _seen) if (s) seen++;
-            progressLabel.text = $"Letras vistas  {seen}/{_seen.Length}";
+            progressLabel.text = Loc.T("alphabet.lettersSeen", seen, _seen.Length);
 
             RefreshButtons();
             RefreshPracticeUI();
@@ -591,16 +591,15 @@ namespace Lumina.Alphabet
             var entry = alphabet.letters[_current];
             if (entry == null) return;
 
-            instruction.text = entry.instruction;
+            instruction.text = Loc.Translate(entry.instruction);
             var levelCompleted = CountPracticedLetters() == _practiced.Length;
             bool letterPassed = _practiced[_current];
             bool attemptRunning = _showPracticeFeedback && _practiceCapture != null;
             if (levelCompleted && !attemptRunning)
                 _practiceView?.SetBadge("ABECEDARIO COMPLETADO", PracticeBadgeTone.Success);
             else if (attemptRunning && _hasPracticeScore)
-                _practiceView?.SetBadge($"Coincidencia {_practiceSimilarity:P0} · " +
-                    (_practiceBadgeTone == PracticeBadgeTone.Warning ? "ajusta la seña" : "mantén la seña"),
-                    _practiceBadgeTone);
+                _practiceView?.SetBadge(Loc.T(_practiceBadgeTone == PracticeBadgeTone.Warning ? "alphabet.matchAdjust" : "alphabet.matchHold",
+                    _practiceSimilarity.ToString("P0")), _practiceBadgeTone);
             else if (attemptRunning)
                 _practiceView?.SetBadge(_practiceStatus, _practiceBadgeTone);
             else if (levelCompleted)
@@ -612,28 +611,27 @@ namespace Lumina.Alphabet
                     ? _practiceSimilarity
                     : _bestPrecision[_current] / 100f;
                 _practiceView?.SetBadge(hasSavedScore
-                    ? $"{entry.letter} SUPERADA · {displayedScore:P0}"
-                    : $"{entry.letter} SUPERADA", PracticeBadgeTone.Success);
+                    ? Loc.T("alphabet.letterPassedScore", entry.letter, displayedScore.ToString("P0"))
+                    : Loc.T("alphabet.letterPassed", entry.letter), PracticeBadgeTone.Success);
             }
             else if (_showPracticeFeedback && _hasPracticeScore)
-                _practiceView?.SetBadge($"Coincidencia {_practiceSimilarity:P0} · " +
-                                   (_practiceBadgeTone == PracticeBadgeTone.Warning ? "ajusta la seña" : "mantén la seña"),
-                    _practiceBadgeTone);
+                _practiceView?.SetBadge(Loc.T(_practiceBadgeTone == PracticeBadgeTone.Warning ? "alphabet.matchAdjust" : "alphabet.matchHold",
+                    _practiceSimilarity.ToString("P0")), _practiceBadgeTone);
             else if (_showPracticeFeedback)
                 _practiceView?.SetBadge(_practiceStatus, _practiceBadgeTone);
             else
                 _practiceView?.SetBadge(entry.validation == PoseValidation.ApproximateFromReference
                     ? "Referencia aproximada · en revisión"
-                    : "Pose provisional · en revisión", PracticeBadgeTone.Neutral);
+                    : "Pose provisional · en revisión", PracticeBadgeTone.Neutral); // el panel lo traduce
 
             var passed = CountPracticedLetters();
             int seen = 0;
             foreach (var value in _seen) if (value) seen++;
-            progressLabel.text = $"Vistas {seen}/{_seen.Length} · Superadas {passed}/{_practiced.Length}";
+            progressLabel.text = Loc.T("alphabet.progress", seen, _seen.Length, passed, _practiced.Length);
 
             var buttonLabel = replayButton.GetComponentInChildren<TMP_Text>();
             if (buttonLabel != null)
-                buttonLabel.text = _practiceCapture != null ? "DETENER" : _practiced[_current] ? "REPETIR" : "PRACTICAR";
+                buttonLabel.text = Loc.T(_practiceCapture != null ? "alphabet.stop" : _practiced[_current] ? "alphabet.repeat" : "practice.go");
         }
 
         private int CountPracticedLetters()

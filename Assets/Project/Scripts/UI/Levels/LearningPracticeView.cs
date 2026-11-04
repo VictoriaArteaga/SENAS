@@ -184,7 +184,7 @@ namespace Lumina.UI
 
         private void SetStatus(string message)
         {
-            if (statusLabel != null) statusLabel.text = message;
+            if (statusLabel != null) statusLabel.text = Loc.Translate(message);
         }
 
         private async void OnCompleted(SignAttemptResult result)

@@ -108,7 +108,7 @@ namespace Lumina.UI
 
             var message = new StringBuilder();
             message.Append(!r.passed ? Loc.T("results.notPassed")
-                : string.IsNullOrWhiteSpace(_feedback) ? Loc.T("results.good") : _feedback);
+                : string.IsNullOrWhiteSpace(_feedback) ? Loc.T("results.good") : Loc.Translate(_feedback));
             if (r.passed && r.awardedXp == 0) message.Append('\n').Append(Loc.T("results.noXp"));
             message.Append('\n').Append(Loc.T("results.totalXp", r.totalXp.ToString("N0")));
             if (!string.IsNullOrEmpty(r.unlockedSign))

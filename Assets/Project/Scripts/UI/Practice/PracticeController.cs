@@ -95,7 +95,7 @@ namespace Lumina.UI
 
         private void OnRecognizerStatusUpdated(string message)
         {
-            if (_step == Step.Practice && statusLabel != null) statusLabel.text = message;
+            if (_step == Step.Practice && statusLabel != null) statusLabel.text = Loc.Translate(message);
         }
 
         private void Awake()
