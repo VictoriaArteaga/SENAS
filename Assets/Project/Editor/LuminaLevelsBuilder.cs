@@ -253,6 +253,9 @@ namespace Lumina.EditorTools
             {
                 // Más lejos que el radio de siempre: se amplía para poder hablar con ella desde el punto de inicio.
                 Ui.SetFloat(sena.GetComponent<ProximityInteractable>(), "interactionRadius", 4f);
+                // Durante la lección Sena no se ve de fondo: se oculta su modelo mientras el panel está abierto.
+                var model = sena.transform.Find("Model");
+                if (model != null) Ui.SetArray(Object.FindFirstObjectByType<LearningLevelController>(), "hideWhileOpen", new Object[] { model.gameObject });
                 // Los cubos que cuelgan del techo (≈ 2,15–2,9 m) cruzaban la burbuja de diálogo, que flotaba sobre su cabeza (1,85 m):
                 // la burbuja pasa a un costado (hacia el centro de la sala) y por debajo de los cubos.
                 var bubble = sena.transform.Find("WelcomeBubble");

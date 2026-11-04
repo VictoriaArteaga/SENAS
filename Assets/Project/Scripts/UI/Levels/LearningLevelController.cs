@@ -60,6 +60,8 @@ namespace Lumina.UI
         [Tooltip("Dónde se coloca el jugador para ver el televisor al abrir la práctica (opcional).")]
         [SerializeField] private Transform viewSpot;
         [SerializeField] private float viewSpotMinDistance = 4f;
+        [Tooltip("Objetos que se ocultan mientras el panel está abierto (p. ej. el modelo de Sena, para que no se vea de fondo).")]
+        [SerializeField] private GameObject[] hideWhileOpen;
 
         /// <summary>Se lanza al pulsar VER SEÑA. TODO(avatar): conectar la animación de la seña en el personaje.</summary>
         public UnityEvent DemonstrationRequested = new UnityEvent();
@@ -143,6 +145,7 @@ namespace Lumina.UI
             panelRoot.SetActive(true);
             if (player != null) { player.enabled = false; player.SetCursorLocked(false); FaceTelevision(); }
             if (practice != null) practice.Begin();
+            SetHidden(true);
             Select(index);
             if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(learnButton.gameObject);
         }
@@ -153,9 +156,16 @@ namespace Lumina.UI
             IsOpen = false;
             if (practice != null) practice.End();
             if (television != null) television.Stop(); // al salir del panel el video deja de reproducirse
+            SetHidden(false);
             panelRoot.SetActive(false);
             foreach (var target in _targets) if (target != null) target.SetHighlighted(false);
             if (player != null) { player.enabled = true; player.SetCursorLocked(true); }
+        }
+
+        private void SetHidden(bool hidden)
+        {
+            if (hideWhileOpen == null) return;
+            foreach (var go in hideWhileOpen) if (go != null) go.SetActive(!hidden);
         }
 
         /// <summary>Abre la práctica en la primera seña que aún no está superada (o en la primera). Es lo que llama Sena al terminar.</summary>
