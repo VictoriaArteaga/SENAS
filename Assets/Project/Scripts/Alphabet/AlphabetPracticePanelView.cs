@@ -286,8 +286,14 @@ namespace Lumina.Alphabet
             _hint.rectTransform.offsetMin = Vector2.zero;
             _hint.rectTransform.offsetMax = Vector2.zero;
 
+            _hint.rectTransform.offsetMin = new Vector2(8f, 8f);
+            _hint.rectTransform.offsetMax = new Vector2(-8f, -8f);
+
             SetBadge("Referencia provisional · en revisión", PracticeBadgeTone.Neutral);
             SetVisible(false);
+
+            // Nada se sale de su caja: el texto del botón PRACTICAR, el de la píldora y el aviso de la cámara se reducen para caber.
+            AlphabetResponsiveLayout.ContainTexts(card);
         }
 
         private static void SetElement(Transform target, float minW = -1f, float minH = -1f, float prefW = -1f, float prefH = -1f,

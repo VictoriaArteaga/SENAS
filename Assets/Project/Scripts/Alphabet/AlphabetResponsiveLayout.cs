@@ -21,6 +21,29 @@ namespace Lumina.Alphabet
             ArrangeLettersPanel(root.Find("PanelLetras") as RectTransform);
             ArrangeRightColumn(root);
             Anchor(root.Find("PanelInstruccion") as RectTransform, new Vector2(0.40f, 0.03f), new Vector2(0.98f, 0.27f));
+            ContainTexts(uiRoot.transform);
+        }
+
+        /// <summary>
+        /// Ningún texto sobresale de su caja: todos se reducen (hasta un mínimo) para caber, y los textos de botones se ajustan al botón con
+        /// un margen. Se puede volver a llamar tras construir piezas nuevas; respeta los textos que ya se ajustan solos.
+        /// </summary>
+        internal static void ContainTexts(Transform root)
+        {
+            foreach (var text in root.GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (text.GetComponentInParent<Button>(true) is Button button && text.transform != button.transform)
+                {
+                    // Texto de un botón: ocupa el botón con un margen y no se sale aunque el botón sea estrecho.
+                    var rect = text.rectTransform;
+                    rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
+                    rect.offsetMin = new Vector2(10f, 4f); rect.offsetMax = new Vector2(-10f, -4f);
+                    text.alignment = TextAlignmentOptions.Center;
+                }
+                if (!text.enableAutoSizing) Fit(text, 9f, text.textWrappingMode != TextWrappingModes.NoWrap);
+                text.fontSizeMin = Mathf.Min(text.fontSizeMin, 9f);
+                text.overflowMode = TextOverflowModes.Ellipsis;
+            }
         }
 
         // ---------- Panel de letras (izquierda) ----------
