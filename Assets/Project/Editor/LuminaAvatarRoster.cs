@@ -29,7 +29,7 @@ namespace Lumina.EditorTools
         // Avatares de AVATARS2 aprobados: lo que ve el jugador en el selector, en este orden. El prefab es Avatar_{id}.prefab (el mismo que usa PlayerAvatar).
         private static readonly (string id, string name)[] Approved =
         {
-            ("carol", "Carol"), ("luna-crimson", "Luna Crimson"), ("tom", "Tom"), ("crimson", "Crimson"), ("neon", "Neon"), ("tensy", "Tensy"),
+            ("carol", "Isa"), ("luna-crimson", "Mavi"), ("tom", "Tom"), ("crimson", "Crimson"), ("neon", "Neon"), ("tensy", "Tensy"),
         };
 
         /// <summary>Cuatro avatares modulares antiguos: válidos en el catálogo, no seleccionables.</summary>

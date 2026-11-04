@@ -51,6 +51,7 @@ namespace Lumina.UI
         private float _pop = 1f;
         private bool _dragging;
         private Vector3 _pivotScale = Vector3.one;
+        private bool _started;
 
         public bool HasSelection => _chosen >= 0;
         public string SelectedId => HasSelection ? options[_chosen].id : null;
@@ -81,7 +82,8 @@ namespace Lumina.UI
             // Los modelos aplican su personalización en su propio Start; se esperan dos fotogramas antes de ocultar los demás.
             yield return null;
             yield return null;
-            Show(0, false);
+            _started = true;
+            Show(_index, false);
         }
 
         private void Update()
@@ -167,6 +169,19 @@ namespace Lumina.UI
             bool isChosen = _chosen == _index;
             if (selectedBadge != null) selectedBadge.SetActive(isChosen);
             if (selectLabel != null) selectLabel.text = Loc.T(isChosen ? "auth.selected" : "auth.select");
+        }
+
+        /// <summary>Muestra el avatar con ese id y lo deja marcado como el actual (p. ej. el que ya tiene el jugador). Si el id no existe no hace nada.</summary>
+        public void Focus(string avatarId)
+        {
+            if (options == null || string.IsNullOrEmpty(avatarId)) return;
+            for (int i = 0; i < options.Length; i++)
+            {
+                if (options[i].id != avatarId) continue;
+                _index = _chosen = i;
+                if (_started) Show(i, false);
+                return;
+            }
         }
 
         /// <summary>Llama la atención sobre el botón SELECCIONAR (cuando el formulario se envía sin elegir avatar).</summary>

@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Lumina.Core;
 
 namespace Lumina.Alphabet
 {
@@ -76,6 +77,7 @@ namespace Lumina.Alphabet
         public void SetHint(string message)
         {
             if (_hint == null) return;
+            message = Loc.Translate(message);
             if (_hint.text != message) _hint.text = message;
             _hint.gameObject.SetActive(true);
         }
@@ -127,7 +129,7 @@ namespace Lumina.Alphabet
         {
             if (_badge == null) return;
 
-            _badge.text = message;
+            _badge.text = Loc.Translate(message);
             _badge.color = _ink;
             bool success = tone == PracticeBadgeTone.Success;
             _badge.alignment = success ? TextAlignmentOptions.MidlineLeft : TextAlignmentOptions.Center;
@@ -277,7 +279,7 @@ namespace Lumina.Alphabet
             _image.rectTransform.anchoredPosition = Vector2.zero;
 
             _hint = CreateText(viewport.transform, "CameraPreviewHint", instruction.font);
-            _hint.text = "Centra tu mano";
+            _hint.text = Loc.Translate("Centra tu mano");
             _hint.fontSize = 16f;
             _hint.color = _cream;
             _hint.alignment = TextAlignmentOptions.Center;

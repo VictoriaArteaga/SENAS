@@ -15,6 +15,7 @@ namespace Lumina.UI
         public const string Practice = "Practice";
         public const string Profile = "Profile"; // Pantalla «MI PROGRESO».
         public const string Settings = "Settings";
+        public const string AvatarChange = "AvatarChangeScene"; // Cambiar de avatar desde Configuración › Personalización.
         public const string Results = "Results";
         // Casas de aprendizaje (Abecedario, Números, Meses y Saludos y frases).
         public const string Alphabet = "AlphabetHouse";

@@ -25,6 +25,7 @@ namespace Lumina.UI
         private static void Enter(string scene)
         {
             if (LevelAccess.IsBlocked(scene)) return;
+            HouseNavButtons.FromPractice = true; // la casa mostrará el botón VOLVER
             ScreenFader.Load(scene);
         }
     }

@@ -26,10 +26,10 @@ MonoBehaviour:
     displayName: Sol
     prefab: {fileID: 7692019102000394263, guid: ffabd43a64d710746a6f6c84522f24fe, type: 3}
   - id: carol
-    displayName: Carol
+    displayName: Isa
     prefab: {fileID: 4013038727056660398, guid: f6ae9c178603a0049b2bb90ca7199809, type: 3}
   - id: luna-crimson
-    displayName: Luna Crimson
+    displayName: Mavi
     prefab: {fileID: 4995033157342866914, guid: c8ff014a5e571454fb38fa07df86b2f5, type: 3}
   - id: tom
     displayName: Tom

@@ -33,14 +33,16 @@ namespace Lumina.Core
             {
                 var entry = new Entry { key = key, es = es, en = en };
                 if (_byKey.ContainsKey(key)) { Debug.LogError($"[Loc] Id duplicado: {key}"); continue; }
-                if (es.Contains("{0}"))
+                if (Regex.IsMatch(es, @"\{\d\}"))
                 {
-                    entry.pattern = new Regex("^" + Regex.Escape(es).Replace(@"\{0}", "(.+?)").Replace(@"\{1}", "(.+?)") + "$", RegexOptions.Singleline);
+                    entry.pattern = new Regex("^" + Regex.Replace(Regex.Escape(es), @"\\\{\d\}", "(.+?)") + "$", RegexOptions.Singleline);
                     _patterns.Add(entry);
                 }
                 _byKey[key] = entry;
                 if (!_keyBySpanish.ContainsKey(es)) _keyBySpanish[es] = key;
             }
+            // Primero los patrones más específicos (más texto fijo): «Haz el movimiento completo de {0}.» no debe adelantarse a otro más largo.
+            _patterns.Sort((a, b) => b.es.Length.CompareTo(a.es.Length));
         }
 
         /// <summary>True si la versión inglesa es más larga que la española (para dejar sitio al texto en rótulos de tamaño fijo).</summary>

@@ -70,6 +70,16 @@ namespace Lumina.EditorTools
             Debug.Log("[Lumina] Profile, Settings y Results reconstruidas.");
         }
 
+        /// <summary>Reconstruye solo Settings (CONFIGURACIÓN) sin tocar Profile, Results, Practice ni las casas.</summary>
+        [MenuItem("Lumina/Pantallas/Construir solo Settings")]
+        public static void BuildSettingsOnly()
+        {
+            BuildSettings();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("[Lumina] Settings reconstruida.");
+        }
+
         // BuildPractice parte de una escena nueva, así que borra la fila «CASAS DE APRENDIZAJE» que añade el builder de Niveles.
         // AddShortcutsToPractice es idempotente (sustituye la fila anterior), por eso se vuelve a aplicar aquí.
         private static void BuildPracticeWithShortcuts()
@@ -571,25 +581,27 @@ namespace Lumina.EditorTools
             var card = Ui.Card(canvas.transform, "SettingsPanel", new Vector2(1560f, 800f), out var outer);
             Ui.Place(outer, Mid, Mid, Mid, new Vector2(0f, -60f), new Vector2(1560f, 800f));
 
-            // Columna izquierda: audio, gráficos y preferencias (idioma y apariencia).
+            // Columna izquierda: audio, preferencias (idioma y apariencia) y personalización (cambiar de avatar).
             var left = Column(card, "LeftColumn", true);
             Section(left, "AUDIO");
             var music = SliderRow(left, "MÚSICA", out var musicValue);
             var sfx = SliderRow(left, "EFECTOS DE SONIDO", out var sfxValue);
-            Section(left, "GRÁFICOS");
-            var quality = SelectorRow(left, "Quality");
             Section(left, "PREFERENCIAS");
             var language = SelectorRow(left, "Language", "IDIOMA");
             var theme = SelectorRow(left, "Theme", "APARIENCIA");
+            Section(left, "PERSONALIZACIÓN");
+            var avatarRow = Ui.LayoutRow(left, "AvatarRow", 88f);
+            var changeAvatar = Ui.MakeButton(avatarRow, "ChangeAvatarButton", "CAMBIAR AVATAR", Ui.Coral, Ui.CoralDark, Ui.Cream, new Vector2(560f, 80f), 32f, 8f, 3f);
+            Ui.Place((RectTransform)changeAvatar.transform, Mid, Mid, Mid, Vector2.zero, new Vector2(560f, 80f)); // centrado en la columna
 
-            // Columna derecha: cámara, acciones y accesibilidad.
+            // Columna derecha: cámara y acciones.
             var right = Column(card, "RightColumn", false);
             Section(right, "CÁMARA");
             var cameraSel = SelectorRow(right, "Camera");
 
-            var previewRow = Ui.LayoutRow(right, "Preview", 252f);
+            var previewRow = Ui.LayoutRow(right, "Preview", 315f);
             var frame = Ui.Panel(previewRow, "CameraFrame", Ui.Ink);
-            Ui.Place(frame.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(448f, 252f));
+            Ui.Place(frame.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(560f, 315f));
             var view = new GameObject("CameraView", typeof(RectTransform), typeof(RawImage)).GetComponent<RawImage>();
             view.transform.SetParent(frame.transform, false);
             Ui.Stretch(view.rectTransform, 14f, 14f, 14f, 14f);
@@ -606,10 +618,6 @@ namespace Lumina.EditorTools
             var restore = Ui.MakeButton(actions, "RestoreButton", "RESTAURAR", Ui.CreamWarm, Ui.SandDark, Ui.Ink, new Vector2(270f, 80f), 30f, 8f, 3f);
             Ui.Place((RectTransform)restore.transform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0f, 0f), new Vector2(270f, 80f));
 
-            Section(right, "ACCESIBILIDAD");
-            // TODO(accesibilidad): añadir aquí las opciones (tamaño de texto, contraste, etc.) cuando se definan.
-            var note = Ui.Label(right, "AccessibilityNote", "Pronto habrá más opciones para adaptar el juego a ti.", 24f, TextSoft, FontStyles.Normal, TextAlignmentOptions.MidlineLeft);
-            Ui.FixHeight(note, 40f);
 
             var controller = canvas.gameObject.AddComponent<SettingsController>();
             Ui.Set(controller, "header", header);
@@ -617,7 +625,6 @@ namespace Lumina.EditorTools
             Ui.Set(controller, "sfxSlider", sfx);
             Ui.Set(controller, "musicValue", musicValue);
             Ui.Set(controller, "sfxValue", sfxValue);
-            Ui.Set(controller, "qualitySelector", quality);
             Ui.Set(controller, "cameraSelector", cameraSel);
             Ui.Set(controller, "testCameraButton", test);
             Ui.Set(controller, "testCameraLabel", test.GetComponentInChildren<TMP_Text>());
@@ -625,6 +632,7 @@ namespace Lumina.EditorTools
             Ui.Set(controller, "languageSelector", language);
             Ui.Set(controller, "themeSelector", theme);
             Ui.Set(controller, "restoreButton", restore);
+            Ui.Set(controller, "changeAvatarButton", changeAvatar);
 
             Save(ScenePaths[2]);
         }
