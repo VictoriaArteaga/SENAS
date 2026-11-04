@@ -117,34 +117,34 @@ describe('EvaluationsService.register', () => {
       });
     });
 
-    it('unlocks a level on crossing the XP threshold (290 + 10 = 300)', async () => {
-      const db = new FakeDb(290);
+    it('unlocks a level on crossing the XP threshold (260 + 10 = 270)', async () => {
+      const db = new FakeDb(260);
       const { response } = await build(db).register(
         USER_ID,
         attempt({ precision: 65, stars: 1, xp: 10 }),
       );
-      expect(response.totalXp).toBe(300);
+      expect(response.totalXp).toBe(270);
       expect(response.unlockedLevels).toEqual(['NUMBERS']);
     });
 
-    it('does not announce a level if it stays at 299', async () => {
-      const db = new FakeDb(289);
+    it('does not announce a level if it stays at 269', async () => {
+      const db = new FakeDb(259);
       const { response } = await build(db).register(
         USER_ID,
         attempt({ precision: 65, stars: 1, xp: 10 }),
       );
-      expect(response.totalXp).toBe(299);
+      expect(response.totalXp).toBe(269);
       expect(response.unlockedLevels).toEqual([]);
     });
 
     it('only announces the levels crossed by this attempt, not those already open', async () => {
-      const db = new FakeDb(690);
+      const db = new FakeDb(670);
       const { response } = await build(db).register(
         USER_ID,
         attempt({ precision: 95, stars: 3, xp: 30 }),
       );
-      expect(response.totalXp).toBe(720);
-      expect(response.unlockedLevels).toEqual(['MONTHS']);
+      expect(response.totalXp).toBe(700);
+      expect(response.unlockedLevels).toEqual(['GREETINGS_PHRASES']);
     });
 
     it('the last sign of a level unlocks no sign', async () => {
@@ -221,7 +221,7 @@ describe('EvaluationsService.register', () => {
     });
 
     it('level locked by XP → 403 LEVEL_LOCKED', async () => {
-      const db = new FakeDb(299);
+      const db = new FakeDb(269);
       const e = await build(db)
         .register(USER_ID, attempt({ signCode: 'numeros.0' }))
         .catch((x: ApiError) => x);
@@ -229,8 +229,8 @@ describe('EvaluationsService.register', () => {
       expect((e as ApiError).code).toBe('LEVEL_LOCKED');
     });
 
-    it('with 300 XP the Numbers level opens (the first sign is available)', async () => {
-      const db = new FakeDb(300);
+    it('with 270 XP the Numbers level opens (the first sign is available)', async () => {
+      const db = new FakeDb(270);
       const { response } = await build(db).register(
         USER_ID,
         attempt({ signCode: 'numeros.0', precision: 65, stars: 1, xp: 10 }),

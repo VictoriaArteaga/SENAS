@@ -70,7 +70,6 @@ namespace Lumina.UI
         public bool DemonstrationAvailable { get; set; }
 
         private Step _step;
-        private SignCategory _category;
         private SignEntry _sign;
         private ISignRecognizer _recognizer;
         private MediaPipeNumberSignRecognizer _numberRecognizer;
@@ -100,10 +99,8 @@ namespace Lumina.UI
 
         private void Awake()
         {
-            categoryTemplate.gameObject.SetActive(false);
-            signTemplate.gameObject.SetActive(false);
+            HideLegacySelector();
             replayButton.onClick.AddListener(OnReplay);
-            practiceButton.onClick.AddListener(() => Enter(Step.Learning));
             myTurnButton.onClick.AddListener(() => Enter(Step.Preparation));
             startButton.onClick.AddListener(StartCountdown);
             finishButton.onClick.AddListener(() => Finish(null));
@@ -124,7 +121,7 @@ namespace Lumina.UI
             if (_sign == null && _step != Step.Selection) return;
             switch (_step)
             {
-                case Step.Selection: header.SetTitle("title.practice"); BuildSelection(); break;
+                case Step.Selection: header.SetTitle("title.practice"); break;
                 case Step.Learning: learningInstructionLabel.text = _sign.GetInstruction(); break;
                 case Step.Preparation: sessionInstructionLabel.text = Loc.T("practice.prepare"); break;
                 case Step.Practice:
@@ -151,7 +148,6 @@ namespace Lumina.UI
                 _greetingRecognizer.Configure(greetingTemplates, cameraFeed);
             }
 
-            _category = catalog != null && catalog.categories.Length > 0 ? catalog.categories[0] : null;
             if (PracticeSession.StartAtLearning && PracticeSession.Sign != null)
             {
                 // Viene de una casa de aprendizaje: se abre directo en APRENDE con la seña elegida allí.
@@ -190,7 +186,6 @@ namespace Lumina.UI
                 case Step.Selection:
                     header.SetTitle("title.practice");
                     header.ResetBackHandler();
-                    BuildSelection();
                     break;
 
                 case Step.Learning:
@@ -238,79 +233,19 @@ namespace Lumina.UI
             }
         }
 
-        // ---------- Selección ----------
+        // ---------- Selección de casas ----------
 
-        private void BuildSelection(bool focusSign = false)
+        /// <summary>Oculta los controles antiguos por categoría; la selección ahora se hace desde LevelShortcutsUI.</summary>
+        private void HideLegacySelector()
         {
-            Clear(categoryContainer, categoryTemplate);
-            Clear(signContainer, signTemplate);
-
-            if (catalog == null || catalog.categories.Length == 0)
+            if (categoryContainer != null) categoryContainer.gameObject.SetActive(false);
+            if (signContainer != null && signContainer.parent != null)
             {
-                emptyLabel.gameObject.SetActive(true);
-                emptyLabel.text = Loc.T("practice.noSigns");
-                return;
+                Transform scrollRoot = signContainer.parent.parent != null ? signContainer.parent.parent : signContainer.parent;
+                scrollRoot.gameObject.SetActive(false);
             }
-
-            Button selectedTab = null;
-            foreach (var category in catalog.categories)
-            {
-                var captured = category;
-                bool selected = category == _category;
-                var tab = Spawn(categoryTemplate, categoryContainer, category.LocalizedName.ToUpperInvariant(), selected);
-                tab.onClick.AddListener(() => { _category = captured; _sign = null; BuildSelection(); });
-                if (selected) selectedTab = tab;
-            }
-
-            bool hasSigns = _category != null && _category.signs.Length > 0;
-            emptyLabel.gameObject.SetActive(!hasSigns);
-            emptyLabel.text = Loc.T("practice.noSignsInCategory");
-            if (hasSigns)
-            {
-                foreach (var sign in _category.signs)
-                {
-                    var captured = sign;
-                    var button = Spawn(signTemplate, signContainer, ButtonLabel(sign), sign == _sign);
-                    button.onClick.AddListener(() => { _sign = captured; PracticeSession.Begin(captured); BuildSelection(true); });
-                }
-            }
-
-            practiceButton.interactable = _sign != null;
-            practiceButton.GetComponentInChildren<TMP_Text>().text = Loc.T(_sign != null ? "practice.go" : "practice.choose");
-            Focus(focusSign ? practiceButton : selectedTab);
-        }
-
-        /// <summary>Texto del botón de una seña: el nombre en mayúsculas; los números llevan además la cifra («7 · SIETE»).</summary>
-        private static string ButtonLabel(SignEntry sign)
-        {
-            string name = sign.GetName().ToUpperInvariant();
-            return SignCodes.IsNumber(sign.id) ? SignCodes.DisplayName(sign.id) + " · " + name : name; // los meses ya se llaman «Enero»…
-        }
-
-        /// <summary>Crea un botón desde la plantilla. La pestaña elegida se marca con subrayado además del color.</summary>
-        internal static Button Spawn(Button template, RectTransform parent, string text, bool selected)
-        {
-            var button = Instantiate(template, parent);
-            var label = button.GetComponentInChildren<TMP_Text>(true);
-            label.text = text;
-            if (selected)
-            {
-                label.fontStyle |= FontStyles.Underline;
-                var face = button.transform.Find("Face")?.GetComponent<Image>();
-                if (face != null) ThemedGraphic.Set(face, new Color(0.059f, 0.227f, 0.267f));
-                ThemedGraphic.Set(label, new Color(1f, 0.976f, 0.925f));
-            }
-            button.gameObject.SetActive(true);
-            return button;
-        }
-
-        private static void Clear(RectTransform container, Button template)
-        {
-            for (int i = container.childCount - 1; i >= 0; i--)
-            {
-                var child = container.GetChild(i).gameObject;
-                if (child != template.gameObject) Destroy(child);
-            }
+            if (emptyLabel != null) emptyLabel.gameObject.SetActive(false);
+            if (practiceButton != null) practiceButton.gameObject.SetActive(false);
         }
 
         // ---------- Preparación y práctica ----------

@@ -142,7 +142,7 @@ Errors: `400 INVALID_AVATAR | INVALID_AVATAR_CONFIG`.
     "unlocked": true, "requiredXp": 0, "missingXp": 0,
     "passedSigns": 5, "totalSigns": 27, "earnedStars": 11, "possibleStars": 81 },
   { "code": "NUMBERS", "name": "Numbers", "position": 2,
-    "unlocked": false, "requiredXp": 300, "missingXp": 180,
+    "unlocked": false, "requiredXp": 270, "missingXp": 150,
     "passedSigns": 0, "totalSigns": 31, "earnedStars": 0, "possibleStars": 93 }
 ]
 ```
@@ -244,8 +244,8 @@ Paginated history, most recent first. Query: `page` (1…), `limit` (1–100, de
 ```json
 {
   "totalXp": 310,
-  "highestUnlockedLevel": { "code": "NUMBERS", "name": "Numbers", "requiredXp": 300 },
-  "nextLevel": { "code": "MONTHS", "name": "Months of the year", "requiredXp": 700, "missingXp": 390 },
+  "highestUnlockedLevel": { "code": "NUMBERS", "name": "Numbers", "requiredXp": 270 },
+  "nextLevel": { "code": "MONTHS", "name": "Months of the year", "requiredXp": 580, "missingXp": 270 },
   "passedSigns": 12, "totalSigns": 81, "totalStars": 25,
   "totalAttempts": 40, "passRate": 0.55
 }
@@ -298,7 +298,7 @@ The AI produces the result; the backend verifies it against this table.
 
 ## 6. Unlocks
 
-- **Levels:** a level opens when `totalXp ≥ requiredXp` (0 / 300 / 700 / 1200).
+- **Levels:** a level opens when `totalXp ≥ requiredXp` (0 / 270 / 580 / 700). At the minimum passing score, each passed sign grants 10 XP; the thresholds match the cumulative minimum for the previous levels (27 alphabet signs, 31 numbers, and 12 months).
 - **Signs:** in an open level, the sign with `position = 1` is `AVAILABLE`; the sign
   `position = k` unlocks when `k-1` has been **passed** at least once.
 - A passed sign can be practiced again to improve (more stars = more XP, up to 30 per sign).
@@ -314,9 +314,9 @@ everything Unity has not implemented yet, the backend's catalog is the reference
 | Level | Code | Required XP | Items | Where the ids come from |
 | --- | --- | --- | --- | --- |
 | 1 | `ALPHABET` | 0 | 27 | **Unity**: the bare letter used by `LscAlphabet`, the AI templates and `AlphabetLevelController` |
-| 2 | `NUMBERS` | 300 | 31 | **Unity**: `SignAttemptResult.signId` = `numeros.N`, as sent by `MediaPipeNumberSignRecognizer` |
-| 3 | `MONTHS` | 700 | 12 | **Backend** (Unity has not implemented this level) |
-| 4 | `GREETINGS_PHRASES` | 1200 | 11 | **Backend** (Unity has not implemented this level) |
+| 2 | `NUMBERS` | 270 | 31 | **Unity**: `SignAttemptResult.signId` = `numeros.N`, as sent by `MediaPipeNumberSignRecognizer` |
+| 3 | `MONTHS` | 580 | 12 | **Backend** (Unity has not implemented this level) |
+| 4 | `GREETINGS_PHRASES` | 700 | 11 | **Backend** (Unity has not implemented this level) |
 
 ### Final codes and order
 
@@ -446,7 +446,7 @@ Not added to the backend:
 ### 9.4 Other behavior to be aware of
 
 - **Sequential unlock:** the backend rejects (`403 SIGN_LOCKED`) practicing a sign whose
-  previous one is not passed, and levels need XP (300 / 700 / 1200). The practice screens
+  previous one is not passed, and levels need XP (270 / 580 / 700). The practice screens
    must start from the `AVAILABLE`/`PASSED` signs the backend reports. Numbers, Greetings and
    Months use backend sign status; the alphabet retains its own sequential practice flow.
 - **The numbers recognizer does not report attempts below its `MinimumSimilarity`** (it only

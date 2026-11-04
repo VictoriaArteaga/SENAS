@@ -8,9 +8,9 @@ export class LevelSummaryDto {
   @ApiProperty({ nullable: true, type: String }) description: string | null;
   @ApiProperty({ example: 1 }) position: number;
   @ApiProperty() unlocked: boolean;
-  @ApiProperty({ example: 300 }) requiredXp: number;
+  @ApiProperty({ example: 270 }) requiredXp: number;
   @ApiProperty({
-    example: 120,
+    example: 150,
     description: 'XP still needed to unlock (0 if already unlocked).',
   })
   missingXp: number;

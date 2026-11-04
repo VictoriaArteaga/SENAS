@@ -36,6 +36,7 @@ namespace Lumina.Core
             ("cat.numeros", "Números", "Numbers"),
             ("cat.meses", "Meses", "Months"),
             ("cat.saludos", "Saludos y frases", "Greetings & phrases"),
+            ("practice.chooseHouse", "ELIGE UNA CASA DE APRENDIZAJE", "CHOOSE A LEARNING HOUSE"),
             ("practice.choose", "ELIGE UNA SEÑA", "CHOOSE A SIGN"),
             ("practice.go", "PRACTICAR", "PRACTICE"),
             ("practice.replay", "VER DE NUEVO", "WATCH AGAIN"),
