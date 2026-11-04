@@ -111,7 +111,6 @@ namespace Lumina.Core
             ("auth.forgot", "¿Olvidé mi contraseña?", "Forgot my password?"),
             ("auth.firstTime", "¿Es tu primera vez en Lúmina?", "First time in Lúmina?"),
             ("auth.create", "CREAR CUENTA", "CREATE ACCOUNT"),
-            ("auth.testMode", "Modo de prueba · todavía no hay cuentas reales", "Test mode · there are no real accounts yet"),
             ("auth.createTitle", "CREA TU CUENTA", "CREATE YOUR ACCOUNT"),
             ("auth.adventure", "TU AVENTURA EMPIEZA AQUÍ", "YOUR ADVENTURE STARTS HERE"),
             ("auth.playerName", "Nombre del jugador", "Player name"),
@@ -152,8 +151,7 @@ namespace Lumina.Core
             ("auth.wentWrong", "Algo salió mal. Inténtalo otra vez.", "Something went wrong. Please try again."),
             ("auth.forgotAskEmail", "Escribe tu correo y vuelve a pulsar «¿Olvidé mi contraseña?».", "Enter your email and press “Forgot my password?” again."),
             ("auth.forgotSena", "Dime tu correo y te ayudo a recuperar tu cuenta.", "Tell me your email and I'll help you recover your account."),
-            ("auth.forgotTest", "Función de prueba: aún no se envía ningún correo real.", "Test feature: no real email is sent yet."),
-            ("auth.forgotSoon", "Pronto podrás recuperar tu contraseña desde aquí.", "Soon you'll be able to recover your password from here."),
+            ("auth.forgotSoon", "Pide ayuda a una persona adulta para cambiar tu contraseña.", "Ask a trusted adult to help you change your password."),
             ("auth.registerIntro", "Cuéntanos quién eres y elige a tu compañero de aventura.", "Tell us who you are and choose your adventure companion."),
             ("auth.chooseAvatarError", "Elige un avatar con el botón SELECCIONAR.", "Choose an avatar with the SELECT button."),
             ("auth.registerFailed", "No se pudo crear la cuenta.", "Couldn't create the account."),
@@ -166,14 +164,14 @@ namespace Lumina.Core
             ("val.passwordMin", "Usa al menos {0} caracteres.", "Use at least {0} characters."),
             ("val.nameRequired", "Escribe tu nombre.", "Enter your name."),
             ("val.usernameRequired", "Elige un nombre de usuario.", "Choose a username."),
-            ("val.usernameMax", "Usa máximo {0} caracteres.", "Use at most {0} characters."),
+            ("val.usernameMax", "¡Llegaste al máximo de {0} caracteres!", "You've reached the limit of {0} characters!"),
             ("val.usernameChars", "Solo letras, números, punto y guion bajo.", "Only letters, numbers, dots and underscores."),
             ("val.confirmRequired", "Repite tu contraseña.", "Repeat your password."),
             ("val.confirmMismatch", "Las contraseñas no coinciden.", "Passwords don't match."),
             ("svc.invalidCredentials", "No encontramos una cuenta con esos datos.", "We couldn't find an account with those details."),
             ("svc.emailUsed", "Ese correo ya está en uso.", "That email is already in use."),
             ("svc.usernameTaken", "Ese nombre de usuario ya está tomado.", "That username is already taken."),
-            ("svc.noEmail", "Simulación: no se envió ningún correo.", "Simulation: no email was sent."),
+            ("svc.noEmail", "No podemos enviar un mensaje para cambiar tu contraseña. Pide ayuda a una persona adulta.", "We can't send a message to change your password. Ask a trusted adult for help."),
 
             // ---- Niveles de aprendizaje (Números, Meses, Saludos y frases)
             ("title.alphabet", "ABECEDARIO", "ALPHABET"),
@@ -222,7 +220,7 @@ namespace Lumina.Core
             // ---- Autenticación con el backend (validaciones nuevas y mensajes)
             ("val.passwordLetter", "Incluye al menos una letra.", "Include at least one letter."),
             ("val.passwordDigit", "Incluye al menos un número.", "Include at least one number."),
-            ("auth.resetUnavailable", "La recuperación de contraseña todavía no está disponible.", "Password recovery isn't available yet."),
+            ("auth.resetUnavailable", "No podemos cambiarla desde aquí. Pide ayuda a una persona adulta.", "We can't change it here. Ask a trusted adult for help."),
 
             // ---- Errores de la API (se eligen por el código del backend)
             ("api.err.network", "No hay conexión con el servidor. Revisa tu internet e inténtalo otra vez.", "Can't reach the server. Check your internet and try again."),

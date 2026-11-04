@@ -62,6 +62,12 @@ namespace Lumina.UI
             _cts = new CancellationTokenSource();
             _createLabelText = createLabel != null ? createLabel.text : string.Empty;
 
+            nameField.SetCharacterLimit(AuthValidation.MaxDisplayNameLength, $"¡Llegaste al máximo de {AuthValidation.MaxDisplayNameLength} caracteres!");
+            usernameField.SetCharacterLimit(AuthValidation.MaxUsernameLength, $"¡Llegaste al máximo de {AuthValidation.MaxUsernameLength} caracteres!");
+            emailField.SetCharacterLimit(AuthValidation.MaxEmailLength, $"¡Llegaste al máximo de {AuthValidation.MaxEmailLength} caracteres!");
+            passwordField.SetCharacterLimit(AuthValidation.MaxPasswordLength, $"¡Llegaste al máximo de {AuthValidation.MaxPasswordLength} caracteres!");
+            confirmField.SetCharacterLimit(AuthValidation.MaxPasswordLength, $"¡Llegaste al máximo de {AuthValidation.MaxPasswordLength} caracteres!");
+
             createButton.onClick.AddListener(OnCreateClicked);
             backButton.onClick.AddListener(() => { if (!_busy) ScreenFader.Load(SceneNames.Login); });
             continueButton.onClick.AddListener(() => ScreenFader.Load(SceneNames.MainMenu));
