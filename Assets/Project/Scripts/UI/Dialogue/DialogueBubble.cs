@@ -62,6 +62,10 @@ namespace Lumina.UI
 
             _visualTransform = visualRoot.transform;
             _visualBaseScale = _visualTransform.localScale;
+
+            // La burbuja es solo un rectángulo de bordes redondeados: se esconde el pico («Tail» y «TailInner») que la escena trae debajo.
+            foreach (var part in visualRoot.GetComponentsInChildren<Transform>(true))
+                if (part.name == "Tail" || part.name == "TailInner") part.gameObject.SetActive(false);
             if (viewCamera == null && Camera.main != null) viewCamera = Camera.main.transform;
 
             // El controlador del jugador recupera el cursor al pulsar el ratón, y un clic completo

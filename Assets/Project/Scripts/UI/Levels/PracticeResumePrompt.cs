@@ -10,16 +10,19 @@ namespace Lumina.UI
     /// </summary>
     public class PracticeResumePrompt : MonoBehaviour
     {
-        [SerializeField] private LearningLevelController level;
+        [Tooltip("Controlador del nivel de la casa (LearningLevelController o AlphabetLevelController): implementa IPracticePanel.")]
+        [SerializeField] private MonoBehaviour level;
         [SerializeField] private InteractionPrompt prompt;
 
         private bool _shown;
+        private IPracticePanel _panel;
 
         private void Update()
         {
-            if (level == null || prompt == null) return;
+            if (_panel == null) _panel = level as IPracticePanel;
+            if (_panel == null || prompt == null) return;
 
-            bool show = level.WasOpened && !level.IsOpen;
+            bool show = _panel.WasOpened && !_panel.IsOpen;
             if (show != _shown)
             {
                 _shown = show;
@@ -27,7 +30,7 @@ namespace Lumina.UI
             }
 
             var keyboard = Keyboard.current;
-            if (show && keyboard != null && keyboard.pKey.wasPressedThisFrame) level.OpenPractice();
+            if (show && keyboard != null && keyboard.pKey.wasPressedThisFrame) _panel.OpenPractice();
         }
     }
 }

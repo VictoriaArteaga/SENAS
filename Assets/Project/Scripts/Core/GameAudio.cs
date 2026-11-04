@@ -61,7 +61,25 @@ namespace Lumina.Core
             if (_music.clip == null) Debug.LogWarning("[GameAudio] No se encontró Resources/Audio/fondo.");
             ApplyVolumes();
             if (_music.clip != null) _music.Play();
-            SceneManager.sceneLoaded += (_, __) => _suppressed = false;
+            _levelMusic = Resources.Load<AudioClip>("Audio/fondo2");
+            if (_levelMusic == null) Debug.LogWarning("[GameAudio] No se encontró Resources/Audio/fondo2.");
+            _worldMusic = _music.clip;
+            SceneManager.sceneLoaded += (scene, __) => { _suppressed = false; ApplySceneMusic(scene.name); };
+            ApplySceneMusic(SceneManager.GetActiveScene().name);
+        }
+
+        private AudioClip _worldMusic, _levelMusic;
+
+        // Las cuatro casas de aprendizaje (niveles) suenan con fondo2; el resto del juego con fondo.
+        private static bool IsLevelScene(string sceneName) =>
+            sceneName == "AlphabetHouse" || sceneName == "NumbersHouse" || sceneName == "MonthsHouse" || sceneName == "GreetingsHouse";
+
+        private void ApplySceneMusic(string sceneName)
+        {
+            var wanted = IsLevelScene(sceneName) && _levelMusic != null ? _levelMusic : _worldMusic;
+            if (wanted == null || _music.clip == wanted) return;
+            _music.clip = wanted;
+            _music.Play();
         }
 
         private float _nextVolumeCheck;
