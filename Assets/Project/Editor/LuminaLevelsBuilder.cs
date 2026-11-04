@@ -933,6 +933,7 @@ namespace Lumina.EditorTools
                         var face = Ui.Panel(gridRow, "Numero" + i, Ui.Sand, Ui.Round);
                         var cell = face.gameObject.AddComponent<Button>();
                         cell.targetGraphic = face;
+                        face.raycastTarget = true; // Ui.Panel crea imágenes que no captan clics: sin esto el ratón atraviesa el botón
                         var colors = cell.colors;
                         colors.normalColor = Color.white; colors.highlightedColor = new Color(1f, 1f, 1f, 0.85f);
                         colors.pressedColor = new Color(0.8f, 0.8f, 0.8f, 1f); colors.disabledColor = new Color(1f, 1f, 1f, 0.45f);
@@ -979,14 +980,8 @@ namespace Lumina.EditorTools
                     break;
             }
 
-            // Meses y Saludos: sin la descripción («Es la seña para decir…»); el panel solo lleva el nombre, el video y la práctica.
+            // Sin la descripción de la seña («Es la seña del número 0…»): el panel solo lleva el nombre, el video y la práctica.
             TMP_Text instruction = null;
-            if (kind == LevelKind.Numbers)
-            {
-                instruction = Ui.Label(card, "Instruction", "", 26f, Ui.Ink, FontStyles.Normal, TextAlignmentOptions.Center);
-                Screens.FitText(instruction, 15f, true);
-                Screens.Elem(instruction, minH: 56f, prefH: 80f, flexH: 1f);
-            }
             var demoNotice = Ui.Label(card, "DemoNotice", "La demostración animada llegará pronto.", 24f, Ui.TurquoiseDark, FontStyles.Bold);
             Screens.FitText(demoNotice, 14f, true);
             Screens.Elem(demoNotice, minH: 28f, prefH: 36f);
